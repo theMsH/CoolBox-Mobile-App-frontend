@@ -9,4 +9,7 @@
 - Navigoi Editor -> Code Style -> Kotlin
 - Klikkaa Scheme fieldin asetukset ikonia
 - Paina Import Scheme...
-- Etsi CoolBox-mobiiliprojecti-app.xml koneeltasi ja paina ok.
+- Etsi CoolBox-mobiiliprojecti-app.xml koneeltasi ja paina Ok.
+- Paina Apply ja Ok
+
+- Käytä formatteria CTRL + ALT + L
