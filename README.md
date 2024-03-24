@@ -12,4 +12,4 @@
 - Etsi CoolBox-mobiiliprojecti-app.xml koneeltasi ja paina Ok.
 - Paina Apply ja Ok
 
-- Käytä formatteria CTRL + ALT + L
++ Käytä formatteria CTRL + ALT + L
