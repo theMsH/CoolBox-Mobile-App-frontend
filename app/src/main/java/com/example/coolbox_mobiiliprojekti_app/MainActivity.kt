@@ -50,6 +50,13 @@ class MainActivity : ComponentActivity() {
                             composable("mainScreen") {
                                 MainScreen(onMenuClick = {
                                     scope.launch { drawerState.open() }
+                                }, gotoConsumption = {
+                                    navController.navigate("consumptionScreen")
+                                })
+                            }
+                            composable("consumptionScreen") {
+                                ConsumptionScreen(goBack = {
+                                    navController.navigateUp()
                                 })
                             }
                         }
