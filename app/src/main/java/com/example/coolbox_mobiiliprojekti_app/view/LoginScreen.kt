@@ -1,4 +1,4 @@
-package com.example.coolbox_mobiiliprojekti_app
+package com.example.coolbox_mobiiliprojekti_app.view
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -25,9 +25,10 @@ fun LoginScreen(onLoginClick: () -> Unit) {
         when {
             loginVm.loginState.value.loading -> CircularProgressIndicator(
                 modifier = Modifier.align(
-                    Alignment.Center)
+                    Alignment.Center
+                )
             )
-            else -> Column (
+            else -> Column(
                 modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -36,7 +37,8 @@ fun LoginScreen(onLoginClick: () -> Unit) {
                 OutlinedTextField(
                     value = loginVm.loginState.value.username,
                     onValueChange = { newUsername ->
-                        loginVm.setUsername(newUsername)},
+                        loginVm.setUsername(newUsername)
+                    },
                     placeholder = { Text("Username") })
 
                 Spacer(modifier = Modifier.height(5.dp))
@@ -45,7 +47,8 @@ fun LoginScreen(onLoginClick: () -> Unit) {
                     visualTransformation = PasswordVisualTransformation(),
                     value = loginVm.loginState.value.password,
                     onValueChange = { newPassword ->
-                        loginVm.setPassword(newPassword)},
+                        loginVm.setPassword(newPassword)
+                    },
                     placeholder = { Text("Password") })
                 Spacer(modifier = Modifier.height((5.dp)))
                 Button(

@@ -1,4 +1,4 @@
-package com.example.coolbox_mobiiliprojekti_app
+package com.example.coolbox_mobiiliprojekti_app.view
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -13,6 +13,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowLeft
 import androidx.compose.material.icons.filled.ArrowLeft
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material3.Card
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -28,31 +30,46 @@ import com.example.coolbox_mobiiliprojekti_app.viewmodel.ConsumptionViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ConsumptionScreen(goBack: () -> Unit) {
+fun ConsumptionScreen(
+    onMenuClick: () -> Unit,
+    goBack: () -> Unit
+) {
     val consumptionVm: ConsumptionViewModel = viewModel()
 
-    Scaffold (
+    Scaffold(
         topBar =
-        { TopAppBar(
-            navigationIcon = {
-                IconButton(onClick = { goBack() }) {
-                    Icon(imageVector = Icons.AutoMirrored.Filled.ArrowLeft, contentDescription = "Back")
-                } },
-            title = { Text(text = "Consumption") })
+        {
+            CenterAlignedTopAppBar(
+                navigationIcon = {
+                    IconButton(onClick = { goBack() }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowLeft,
+                            contentDescription = "Back"
+                        )
+                    }
+                },
+                title = { Text(text = "Consumption") },
+                actions = {
+                    IconButton(onClick = { onMenuClick() }) {
+                        Icon(imageVector = Icons.Filled.Menu, contentDescription = "Menu")
+                    }
+                })
         }
     ) {
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .padding(it)
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(it)
         ) {
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
             ) {
-                item{
-                    Box(modifier = Modifier
-                        .fillMaxWidth()
-                        .height(200.dp)
-                        .background(Color.Blue)
+                item {
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(200.dp)
+                            .background(Color.Blue)
                     ) {
                         Text(text = "Kulutus")
                     }

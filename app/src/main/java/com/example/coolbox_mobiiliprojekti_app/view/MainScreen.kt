@@ -1,4 +1,4 @@
-package com.example.coolbox_mobiiliprojekti_app
+package com.example.coolbox_mobiiliprojekti_app.view
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -14,6 +14,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Equalizer
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material3.Card
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -33,46 +35,55 @@ import com.example.coolbox_mobiiliprojekti_app.viewmodel.MainScreenViewModel
 @Composable
 fun MainScreen(
     onMenuClick: () -> Unit,
-    gotoConsumption: () -> Unit
+    gotoConsumption: () -> Unit,
+    gotoProduction: () -> Unit
 ) {
     val mainScreenVm: MainScreenViewModel = viewModel()
-    Scaffold (
+    Scaffold(
         topBar =
-        { TopAppBar(
-            navigationIcon = {
-                IconButton(onClick = { onMenuClick() }) {
-                    Icon(imageVector = Icons.Default.Menu, contentDescription = "Menu")
-                } },
-            title = { Text(text = "Main") })
+        {
+            CenterAlignedTopAppBar(
+                title = { Text(text = "Main") },
+                actions = {
+                    IconButton(onClick = { onMenuClick() }) {
+                        Icon(imageVector = Icons.Filled.Menu, contentDescription = "Menu")
+                    }
+                })
         }
     ) {
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .padding(it)) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(it)
+        ) {
             when {
                 mainScreenVm.mainScreenState.value.loading -> CircularProgressIndicator(
                     modifier = Modifier.align(
-                        Alignment.Center)
+                        Alignment.Center
+                    )
                 )
                 else -> LazyColumn(
                     modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
-                    item{
-                        Box(modifier = Modifier
-                            .fillMaxWidth()
-                            .height(200.dp)
-                            .background(Color.Blue)
-                            .clickable(onClick = gotoConsumption)
+                    item {
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(200.dp)
+                                .background(Color.Blue)
+                                .clickable(onClick = gotoConsumption)
                         ) {
                             Text(text = "Graafi 1")
                         }
                     }
-                    item{
-                        Box(modifier = Modifier
-                            .fillMaxWidth()
-                            .height(200.dp)
-                            .background(Color.Green)
+                    item {
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(200.dp)
+                                .background(Color.Green)
+                                .clickable(onClick = gotoProduction)
                         ) {
                             Text(text = "Graafi 2")
                         }
