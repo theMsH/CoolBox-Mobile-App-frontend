@@ -52,6 +52,9 @@ android {
 
 dependencies {
 
+    // Vico charts
+    implementation("com.patrykandpatrick.vico:compose-m3:2.0.0-alpha.12")
+
     implementation("androidx.navigation:navigation-compose:2.7.7")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
