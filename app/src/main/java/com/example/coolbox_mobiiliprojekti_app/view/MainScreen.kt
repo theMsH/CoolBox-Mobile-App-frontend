@@ -28,6 +28,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.coolbox_mobiiliprojekti_app.model.ConsumptionStatsResponse
+import com.example.coolbox_mobiiliprojekti_app.viewmodel.ConsumptionChartViewModel
 import com.example.coolbox_mobiiliprojekti_app.viewmodel.MainScreenViewModel
 
 
@@ -40,6 +42,11 @@ fun MainScreen(
 ) {
     val mainScreenVm: MainScreenViewModel = viewModel()
 
+    val consumptionChartVm: ConsumptionChartViewModel = viewModel()
+
+    // Havaitaan kulutustilastot viewmodelista
+    var consumptionStatsData = consumptionChartVm.consumptionStatsData
+    var temperatureStatsData = consumptionChartVm.temperatureStatsData
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -102,7 +109,7 @@ fun MainScreen(
                                 fontSize = 20.sp,
                                 text = "Kulutus graafi"
                             )
-                            Spacer(modifier = Modifier.height(300.dp)) // Poista kun tulee oikea content
+                            consumptionChartVm.ConsumptionColumnChart(consumptionStatsData)
                         }
                     }
                     item {

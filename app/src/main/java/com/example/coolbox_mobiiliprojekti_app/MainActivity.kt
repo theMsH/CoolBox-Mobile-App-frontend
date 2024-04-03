@@ -36,12 +36,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.CoolBoxmobiiliprojektiAppTheme
-import com.example.coolbox_mobiiliprojekti_app.view.ConsumptionScreen
 import com.example.coolbox_mobiiliprojekti_app.view.LoginScreen
 import com.example.coolbox_mobiiliprojekti_app.view.MainScreen
 import com.example.coolbox_mobiiliprojekti_app.view.PanelsScreen
 import com.example.coolbox_mobiiliprojekti_app.view.ProductionScreen
 import com.example.coolbox_mobiiliprojekti_app.view.ThemesScreen
+import com.example.datachartexample2.model.test.ConsumptionScreen
 import kotlinx.coroutines.launch
 
 
