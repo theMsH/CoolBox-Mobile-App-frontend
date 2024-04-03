@@ -1,5 +1,6 @@
 package com.example.coolbox_mobiiliprojekti_app.view
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -34,7 +35,9 @@ fun PanelsScreen(
     goBack: () -> Unit
 ) {
     val panelsVm: PanelsViewModel = viewModel()
-    var checked by remember { mutableStateOf(true) }
+    var consumptionchecked by remember { mutableStateOf(true) }
+    var productionchecked by remember { mutableStateOf(true) }
+    var batterychecked by remember { mutableStateOf(true) }
 
     Scaffold(
         topBar =
@@ -69,11 +72,55 @@ fun PanelsScreen(
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text(text = "Panel 1")
+                    Text(text = "Consumption panel")
                     Switch(
-                        checked = checked,
+                        checked = consumptionchecked,
                         onCheckedChange = {
-                            checked = it
+                            consumptionchecked = it
+                            if (consumptionchecked) {
+                                Log.d("itekki", "PanelsScreen: consumption check on")
+                                // Aseta paneeli näkyväksi, kun switch on päällä
+                            }
+                            else {
+                                Log.d("itekki", "PanelsScreen: consumption check off")
+                                // Piilota paneeli, kun switch on pois päältä
+                            }
+                        })
+                }
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(text = "Production panel")
+                    Switch(
+                        checked = productionchecked,
+                        onCheckedChange = {
+                            productionchecked = it
+                            if (productionchecked) {
+                                // Aseta paneeli näkyväksi, kun switch on päällä
+                            }
+                            else {
+                                // Piilota paneeli, kun switch on pois päältä
+                            }
+                        })
+                }
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(text = "Battery panel")
+                    Switch(
+                        checked = batterychecked,
+                        onCheckedChange = {
+                            batterychecked = it
+                            if (batterychecked) {
+                                // Aseta paneeli näkyväksi, kun switch on päällä
+                            }
+                            else {
+                                // Piilota paneeli, kun switch on pois päältä
+                            }
                         })
                 }
             }

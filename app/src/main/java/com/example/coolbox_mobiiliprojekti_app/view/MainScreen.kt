@@ -84,6 +84,8 @@ fun MainScreen(
                     ,
                     // Miikan edit: Laitetaan padding mieluummin itemeille,
                     // niin scrollatessa näkee visuaalisesti milloin tulee "seinä vastaan"
+                    // Benkun vastaus: Kuulostaa hyvältä ja järkevältä, tuo verticalArrangement
+                    // olikin tuossa vaan niitä placeholdereita varten, ettei ne ollut kiinni toisissaan
                     //verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     item {
