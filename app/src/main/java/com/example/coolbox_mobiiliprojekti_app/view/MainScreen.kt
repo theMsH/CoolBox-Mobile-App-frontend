@@ -29,8 +29,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.coolbox_mobiiliprojekti_app.model.ConsumptionStatsResponse
-import com.example.coolbox_mobiiliprojekti_app.viewmodel.ConsumptionChartViewModel
+import com.example.coolbox_mobiiliprojekti_app.viewmodel.ConsumptionViewModel
 import com.example.coolbox_mobiiliprojekti_app.viewmodel.MainScreenViewModel
+import com.example.datachartexample2.model.test.ConsumptionColumnChart
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -42,7 +43,7 @@ fun MainScreen(
 ) {
     val mainScreenVm: MainScreenViewModel = viewModel()
 
-    val consumptionChartVm: ConsumptionChartViewModel = viewModel()
+    val consumptionChartVm: ConsumptionViewModel = viewModel()
 
     // Havaitaan kulutustilastot viewmodelista
     var consumptionStatsData = consumptionChartVm.consumptionStatsData
@@ -111,7 +112,7 @@ fun MainScreen(
                                 fontSize = 20.sp,
                                 text = "Kulutus graafi"
                             )
-                            consumptionChartVm.ConsumptionColumnChart(consumptionStatsData)
+                            ConsumptionColumnChart(consumptionStatsData)
                         }
                     }
                     item {
