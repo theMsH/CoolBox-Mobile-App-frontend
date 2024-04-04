@@ -3,6 +3,11 @@ package com.example.coolbox_mobiiliprojekti_app.model
 import com.google.gson.annotations.SerializedName
 
 
+data class ChartState(
+    val loading: Boolean = false,
+    val error: String? = null
+)
+
 // Tämä on ConsumptionStatsResponse-luokka, joka sisältää kulutustietoja.
 data class ConsumptionStatsResponse(
     val data: List<ConsumptionData> // Data sisältää kulutusdatan listana.

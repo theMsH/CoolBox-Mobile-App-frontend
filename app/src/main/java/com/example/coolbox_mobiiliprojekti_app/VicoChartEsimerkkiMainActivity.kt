@@ -27,13 +27,13 @@ import com.example.coolbox_mobiiliprojekti_app.ui.theme.CoolBoxmobiiliprojektiAp
 import com.patrykandpatrick.vico.compose.axis.horizontal.rememberBottomAxis
 import com.patrykandpatrick.vico.compose.axis.vertical.rememberStartAxis
 import com.patrykandpatrick.vico.compose.chart.CartesianChartHost
-import com.patrykandpatrick.vico.compose.chart.layer.rememberLineCartesianLayer
+import com.patrykandpatrick.vico.compose.chart.layer.rememberColumnCartesianLayer
 import com.patrykandpatrick.vico.compose.chart.rememberCartesianChart
 import com.patrykandpatrick.vico.core.axis.AxisPosition
 import com.patrykandpatrick.vico.core.axis.formatter.AxisValueFormatter
 import com.patrykandpatrick.vico.core.model.CartesianChartModelProducer
 import com.patrykandpatrick.vico.core.model.ExtraStore
-import com.patrykandpatrick.vico.core.model.lineSeries
+import com.patrykandpatrick.vico.core.model.columnSeries
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -115,7 +115,7 @@ class VicoChartEsimerkkiMainActivity : ComponentActivity() {
 
 
                     // JOS dateset STRINGS on käytössä:
-                    lineSeries { series(datasetStrings.values) }
+                    columnSeries { series(datasetStrings.values) }
                     updateExtras { it[labelListKey] = datasetStrings.keys.toList() }
 
                     // JOS dateset DATE on käytössä.
@@ -167,7 +167,7 @@ class VicoChartEsimerkkiMainActivity : ComponentActivity() {
                                         .padding(20.dp)
                                     ,
                                     chart = rememberCartesianChart(
-                                        rememberLineCartesianLayer(),
+                                        rememberColumnCartesianLayer(),
                                         startAxis = rememberStartAxis(),
                                         // Tässä pitää ottaa valueFormatter käyttöön x akselille.
                                         bottomAxis = rememberBottomAxis( valueFormatter = valueFormatterString )
