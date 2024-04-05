@@ -18,6 +18,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -30,12 +31,16 @@ import com.patrykandpatrick.vico.compose.axis.vertical.rememberStartAxis
 import com.patrykandpatrick.vico.compose.chart.CartesianChartHost
 import com.patrykandpatrick.vico.compose.chart.layer.rememberColumnCartesianLayer
 import com.patrykandpatrick.vico.compose.chart.layer.rememberLineCartesianLayer
+import com.patrykandpatrick.vico.compose.chart.layer.rememberLineSpec
 import com.patrykandpatrick.vico.compose.chart.layout.fullWidth
 import com.patrykandpatrick.vico.compose.chart.rememberCartesianChart
+import com.patrykandpatrick.vico.compose.component.rememberLineComponent
+import com.patrykandpatrick.vico.compose.component.shape.shader.color
 import com.patrykandpatrick.vico.core.axis.AxisItemPlacer
 import com.patrykandpatrick.vico.core.axis.AxisPosition
 import com.patrykandpatrick.vico.core.axis.formatter.AxisValueFormatter
 import com.patrykandpatrick.vico.core.chart.layout.HorizontalLayout
+import com.patrykandpatrick.vico.core.component.shape.shader.DynamicShaders
 import com.patrykandpatrick.vico.core.model.CartesianChartModelProducer
 import com.patrykandpatrick.vico.core.model.ExtraStore
 import com.patrykandpatrick.vico.core.model.columnSeries
@@ -141,8 +146,28 @@ fun ConsumptionColumnChart(
                         CartesianChartHost(
                             chart =
                             rememberCartesianChart(
-                                rememberColumnCartesianLayer(),
-                                rememberLineCartesianLayer(),
+                                rememberColumnCartesianLayer(
+                                    columns = listOf(
+                                        rememberLineComponent(
+                                            color = Color.Blue,
+                                            thickness = 8.dp, // Adjust as needed
+                                        ),
+                                        rememberLineComponent(
+                                            color = Color.Blue,
+                                            thickness = 8.dp, // Adjust as needed
+                                        )
+                                    ),
+                                ),
+                                rememberLineCartesianLayer(
+                                    lines = listOf(
+                                        rememberLineSpec(
+                                            shader = DynamicShaders.color(Color.Red)
+                                        ),
+                                        rememberLineSpec(
+                                            shader = DynamicShaders.color(Color.Red)
+                                        )
+                                    ),
+                                ),
                                 startAxis = rememberStartAxis(),
                                 bottomAxis =
                                 rememberBottomAxis(
