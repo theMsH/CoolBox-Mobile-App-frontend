@@ -1,4 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">CoolBox-mobiiliprojekti-App</string>
+    <string name="drawer_menu_title">CoolDev Projekti</string>
+
+    <string name="cancel">Peruuta</string>
+    <string name="create_account">Luo käyttäjä</string>
+    <string name="register">Registeröi</string>
+    <string name="register_here">Registeröi täällä</string>
+    <string name="login">Kirjaudu sisään</string>
+    <string name="logout">Kirjaudu ulos</string>
+    <string name="username_placeholder">Käyttäjätunnus</string>
+    <string name="password_placeholder">Salasana</string>
+    <string name="no_account">Ei käyttäjää?</string>
+    <string name="user_not_found">Käyttäjänimi tai salasana on väärin!</string>
+    <string name="user">Kirjautuneena käyttäjällä: </string>
+
+    <string name="code_500">500 Internal Server Error</string>
+    <string name="retry">Yritä uudelleen</string>
+    <string name="autologin_401">Käyttäjä on kirjattu ulos. Uusi kirjautuminen vaaditaan</string>
 </resources>
