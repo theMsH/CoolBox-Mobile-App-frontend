@@ -1,3 +1,20 @@
 <resources>
     <string name="app_name">CoolBox-mobiiliprojekti-App</string>
+    <string name="drawer_menu_title">Cooldev Project</string>
+
+    <string name="cancel">Cancel</string>
+    <string name="create_account">Create account</string>
+    <string name="register">Register</string>
+    <string name="register_here">Register here</string>
+    <string name="login">Login</string>
+    <string name="logout">Logout</string>
+    <string name="username_placeholder">Username</string>
+    <string name="password_placeholder">Password</string>
+    <string name="no_account">No account?</string>
+    <string name="user_not_found">Username or password is incorrect!</string>
+    <string name="user">Logged in as: </string>
+
+    <string name="code_500">500 Internal Server Error</string>
+    <string name="retry">Retry</string>
+    <string name="autologin_401">User is logged out. New login is required</string>
 </resources>
