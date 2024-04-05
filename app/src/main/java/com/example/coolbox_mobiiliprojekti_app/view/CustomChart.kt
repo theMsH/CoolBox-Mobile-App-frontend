@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.coolbox_mobiiliprojekti_app.model.rememberMarker
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.CoolBoxmobiiliprojektiAppTheme
 import com.example.datachartexample2.tests.test3.ConsumptionViewModel
 import com.example.datachartexample2.tests.test3.formatToDateToDayOfWeek
@@ -181,6 +182,7 @@ fun ConsumptionColumnChart(
                                     },
                                 ),
                             ),
+                            marker = rememberMarker(),
                             modelProducer = modelProducer,
                             horizontalLayout = HorizontalLayout.fullWidth(),
                         )
