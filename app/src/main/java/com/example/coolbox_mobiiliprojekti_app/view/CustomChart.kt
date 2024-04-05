@@ -1,139 +1,168 @@
 package com.example.coolbox_mobiiliprojekti_app.view
 
-import android.graphics.Paint
-import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.layout.fillMaxHeight
+import android.util.Log
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.drawscope.DrawScope
-import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
-import androidx.compose.ui.graphics.nativeCanvas
-import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.coolbox_mobiiliprojekti_app.ui.theme.CoolBoxmobiiliprojektiAppTheme
+import com.example.datachartexample2.tests.test3.ConsumptionViewModel
+import com.example.datachartexample2.tests.test3.formatToDateToDayOfWeek
+import com.patrykandpatrick.vico.compose.axis.horizontal.rememberBottomAxis
+import com.patrykandpatrick.vico.compose.axis.vertical.rememberStartAxis
+import com.patrykandpatrick.vico.compose.chart.CartesianChartHost
+import com.patrykandpatrick.vico.compose.chart.layer.rememberColumnCartesianLayer
+import com.patrykandpatrick.vico.compose.chart.layer.rememberLineCartesianLayer
+import com.patrykandpatrick.vico.compose.chart.layout.fullWidth
+import com.patrykandpatrick.vico.compose.chart.rememberCartesianChart
+import com.patrykandpatrick.vico.core.axis.AxisItemPlacer
+import com.patrykandpatrick.vico.core.axis.AxisPosition
+import com.patrykandpatrick.vico.core.axis.formatter.AxisValueFormatter
+import com.patrykandpatrick.vico.core.chart.layout.HorizontalLayout
+import com.patrykandpatrick.vico.core.model.CartesianChartModelProducer
+import com.patrykandpatrick.vico.core.model.ExtraStore
+import com.patrykandpatrick.vico.core.model.columnSeries
+import com.patrykandpatrick.vico.core.model.lineSeries
 
 
 @Composable
 fun ConsumptionColumnChart(
-    chartData: Map<String, Float?>?,
+    consumptionStatsData: Map<String, Float?>?,
+    temperatureStatsData: Map<String, Float?>?,
     maxValue: Float = 10f
 ) {
-    Canvas(
-        modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight(0.5f)
-            .padding(20.dp, 40.dp, 40.dp, 40.dp)
-    ) {
-        drawAxes(maxValue)
-        drawData(chartData, maxValue)
-    }
-}
 
-fun DrawScope.drawAxes(
-    maxValue: Float
-) {
-    // Piirrä pystyakseli (arvot)
-    drawLine(
-        color = Color.Black,
-        start = Offset(50f, size.height),
-        end = Offset(50f, 0f)
-    )
-    // Piirrä vaaka-akseli (päivämäärät)
-    drawLine(
-        color = Color.Black,
-        start = Offset(50f, size.height),
-        end = Offset(size.width, size.height)
-    )
-    // Piirrä arvomerkinnät
-    for (i in 0..10) {
-        val y = size.height - (i.toFloat() / 10f) * size.height
-        drawLine(
-            color = Color.Black,
-            start = Offset(45f, y),
-            end = Offset(50f, y)
-        )
-        drawIntoCanvas { canvas ->
-            val paint = Paint().apply {
-                color = Color.Black.toArgb()
-                textSize = 12.sp.toPx()
-                textAlign = Paint.Align.RIGHT
+    // Haetaan viewmodel
+    val viewModel: ConsumptionViewModel = viewModel()
+
+    // Luodaan modelProducer, joka vastaa chartin datan käsittelystä
+    val modelProducer = remember { CartesianChartModelProducer.build() }
+
+    // Avain labelien tallentamiseen extraStoreen
+    val labelListKey = remember { ExtraStore.Key<List<String>>() }
+
+    // Määritetään akselin arvojen muotoilu
+    val valueFormatterString = AxisValueFormatter<AxisPosition.Horizontal.Bottom> { x, chartValues, _ ->
+        chartValues.model.extraStore[labelListKey]?.get(x.toInt()) ?: ""
+    }
+
+    // Käynnistetään effect, joka reagoi consumptionStatsData:n ja temperatureStatsData:n muutoksiin
+    LaunchedEffect(key1 = consumptionStatsData, key2 = temperatureStatsData) {
+        viewModel.consumptionStatsData?.let { consumptionStatsData ->
+            viewModel.temperatureStatsData?.let { temperatureStatsData ->
+                // Yritetään suorittaa transaktio modelProducerilla
+                modelProducer.tryRunTransaction {
+                    // Haetaan datan avaimet ja arvot listoiksi
+                    val dates = consumptionStatsData.keys.toList()
+                    val consumptions = consumptionStatsData.values.toList()
+                    val temperatures = temperatureStatsData.values.toList()
+
+                    // Tulostetaan dataa debug-tarkoituksissa
+                    Log.d("Dorian", "dates $dates   consumptions $consumptions   temperatures $temperatures")
+
+                    // Muotoillaan päivämäärät päivän nimiksi
+                    val datesFormatted = formatToDateToDayOfWeek(dates)
+                    Log.d("Dorian", "dates $datesFormatted   consumptions $consumptions")
+
+                    // Luodaan sarakkeet kulutusdatalle
+                    columnSeries {
+                        series(consumptions)
+                    }
+                    // Luodaan viivat lämpötiladatalle
+                    lineSeries {
+                        series(temperatures)
+                    }
+                    // Päivitetään extras lisäämällä päivämäärät
+                    updateExtras {
+                        it[labelListKey] = datesFormatted
+                    }
+                }
             }
-            val text = (maxValue * (i.toFloat() / 10f)).toString()
-            canvas.nativeCanvas.drawText(
-                text,
-                40f, // Säädä tekstin X-asema
-                size.height - (i.toFloat() / 10f) * size.height + 6.dp.toPx(), // Säädä tekstin Y-asema
-                paint
-            )
         }
     }
-}
 
-fun DrawScope.drawData(
-    chartData: Map<String, Float?>?,
-    maxValue: Float
-) {
-    chartData?.let { data ->
-        val columnCount = data.size
-        val columnWidth = (size.width - 50f) / columnCount
-        val columnSpacing = 1.dp.toPx()
-        var currentX = 50f + columnSpacing
-        var drawDate = true // Lippu ilmaisemaan, pitäisikö päivämäärä piirtää
+    // Haetaan sarakkeiden määrä datalta
+    val columnCount = viewModel.consumptionStatsData?.size ?: 0
 
-        for ((index, entry) in data.entries.withIndex()) {
-            val (day, value) = entry
-            val columnHeight = (value?.div(maxValue))?.times(size.height)
-            val startY = size.height - columnHeight!!
-            drawRect(
-                color = Color.Blue,
-                topLeft = Offset(currentX, startY),
-                size = Size(columnWidth - columnSpacing * 2, columnHeight)
-            )
-            drawIntoCanvas { canvas ->
-                val paint = Paint().apply {
-                    color = Color.Black.toArgb()
-                    textSize =
-                        if (columnCount > 7) {
-                            14.sp.toPx()
-                        } else {
-                            12.sp.toPx()
-                        }
-                    textAlign = Paint.Align.CENTER
-                }
-                val textWidth = paint.measureText(day.toString())
-                val textX = currentX + (columnWidth - columnSpacing * 2) / 2
-                val textY =
-                    size.height + 20.dp.toPx() // Säädä pystysuuntainen asento palkkien alapuolelle
-
-                if (drawDate) {
-                    // Katkaise päivämäärämerkkijono, jos se on liian pitkä mahtuakseen sarakkeen leveyteen
-                    val truncatedDay = if (day.length == 10) {
-                        val monthOnly = day.substring(5, 7) // Poimi vain kuukausi
-                        val dayOnly = day.substring(8, 10) // Poimi vain päivä
-                        "$dayOnly/$monthOnly"
-                    } else {
-                        day
+    // Luodaan teema
+    CoolBoxmobiiliprojektiAppTheme {
+        // Pinta, joka kattaa koko näytön leveyden
+        Surface(
+            modifier = Modifier.fillMaxWidth(),
+            color = MaterialTheme.colorScheme.background
+        ) {
+            // Sarake, joka täyttää koko leveyden
+            Column(modifier = Modifier.fillMaxWidth()) {
+                // Tekstimuotoinen nappi
+                TextButton(
+                    contentPadding = PaddingValues(0.dp),
+                    shape = RectangleShape,
+                    onClick = { /* TODO Open Total Consumption */ }
+                ) {
+                    // Kortti, joka toimii paneelina
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(300.dp)
+                            .wrapContentSize(Alignment.Center),
+                        colors = CardColors(
+                            containerColor = MaterialTheme.colorScheme.primaryContainer,
+                            contentColor = MaterialTheme.colorScheme.primary,
+                            disabledContainerColor = MaterialTheme.colorScheme.secondaryContainer,
+                            disabledContentColor = MaterialTheme.colorScheme.secondary
+                        )
+                    ) {
+                        // Teksti paneelin keskelle
+                        Text(
+                            modifier = Modifier
+                                .align(Alignment.CenterHorizontally)
+                                .padding(top = 20.dp),
+                            fontSize = 20.sp,
+                            text = "Total Consumption"
+                        )
+                        // CartesianChartHost, joka sisältää chartin
+                        CartesianChartHost(
+                            chart =
+                            rememberCartesianChart(
+                                rememberColumnCartesianLayer(),
+                                rememberLineCartesianLayer(),
+                                startAxis = rememberStartAxis(),
+                                bottomAxis =
+                                rememberBottomAxis(
+                                    valueFormatter = valueFormatterString,
+                                    itemPlacer =
+                                    remember {
+                                        AxisItemPlacer.Horizontal.default(
+                                            spacing = 1,
+                                            addExtremeLabelPadding = true
+                                        )
+                                    },
+                                ),
+                            ),
+                            modelProducer = modelProducer,
+                            horizontalLayout = HorizontalLayout.fullWidth(),
+                        )
                     }
-                    canvas.nativeCanvas.drawText(
-                        truncatedDay,
-                        textX,
-                        textY,
-                        paint
-                    )
-                }
-            }
+                } // Paneeli loppuu
 
-            if (columnCount > 7) {
-                // Käännä drawDate-lippu seuraavaa iteraatiota varten, jos columnCount on suurempi kuin 7
-                drawDate = !drawDate
-            }
-
-            currentX += columnWidth + columnSpacing
+            } // Sarake loppuu
         }
     }
 }

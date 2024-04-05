@@ -3,33 +3,23 @@ package com.example.coolbox_mobiiliprojekti_app.model
 import com.google.gson.annotations.SerializedName
 
 
+// Tila, joka kuvaa kaavion tilaa, kuten latausta ja virhetilaa.
 data class ChartState(
-    val loading: Boolean = false,
-    val error: String? = null
+    val loading: Boolean = false, // Ilmaisee, onko kaavio lataamassa tietoja.
+    val error: String? = null // Virheteksti, jos kaavion tiedon lataaminen epäonnistuu.
 )
 
-// Tämä on ConsumptionStatsResponse-luokka, joka sisältää kulutustietoja.
+// Tämä luokka kuvaa kulutustietojen vastausta, joka sisältää kulutusdatan.
 data class ConsumptionStatsResponse(
-    val data: List<ConsumptionData> // Data sisältää kulutusdatan listana.
+    val data: List<ConsumptionData> // Kulutusdatan lista.
 )
 
-// Tämä on TemperatureStatsResponse-luokka, joka sisältää lämpötilatietoja.
-data class TemperatureStatsResponse(
-    val data: List<TemperatureStatsData> // Data sisältää lämpötiladatan listana.
-)
-
-// Tämä on ConsumptionData-luokka, joka sisältää yksittäisen kulutusdatan.
+// Tämä luokka edustaa yksittäistä kulutustietoa.
 data class ConsumptionData(
-    val date: String = "", // Päivämäärä
-    val day: String = "", // Päivä
-    val hour: String = "", // Tunti
+    val date: String = "", // Päivämäärä, jolloin kulutus on tapahtunut.
+    val day: String = "", // Kulutuksen päivä.
+    val hour: String = "", // Kulutuksen tunti.
+    val month: String = "", // Kulutuksen kuukausi.
     @SerializedName("total_kwh")
-    val totalKwh: Float, // Kokonaiskulutus kilowattitunteina
-)
-
-// Tämä on TemperatureStatsData-luokka, joka sisältää yksittäisen lämpötiladatan.
-data class TemperatureStatsData(
-    val hour: String = "", // Tunti
-    val temperature: Float, // Lämpötila
-    val error: String? = null, // Virheviesti (mahdollinen)
+    val totalKwh: Float, // Kokonaiskulutus kilowattitunteina.
 )

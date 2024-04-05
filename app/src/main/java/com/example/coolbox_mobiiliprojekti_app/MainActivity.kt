@@ -41,7 +41,7 @@ import com.example.coolbox_mobiiliprojekti_app.view.MainScreen
 import com.example.coolbox_mobiiliprojekti_app.view.PanelsScreen
 import com.example.coolbox_mobiiliprojekti_app.view.ProductionScreen
 import com.example.coolbox_mobiiliprojekti_app.view.ThemesScreen
-import com.example.coolbox_mobiiliprojekti_app.view.ConsumptionScreen
+import com.example.datachartexample2.tests.test3.ConsumptionScreen
 import kotlinx.coroutines.launch
 
 

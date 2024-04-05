@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.coolbox_mobiiliprojekti_app.viewmodel.MainScreenViewModel
+import com.example.datachartexample2.tests.test3.ConsumptionViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -39,6 +40,7 @@ fun MainScreen(
     gotoProduction: () -> Unit
 ) {
     val mainScreenVm: MainScreenViewModel = viewModel()
+    val consumptionVM: ConsumptionViewModel = viewModel()
 
     Scaffold(
         topBar = {
@@ -104,6 +106,7 @@ fun MainScreen(
                                 fontSize = 20.sp,
                                 text = "Kulutus graafi"
                             )
+                            Spacer(modifier = Modifier.height(300.dp)) // Poista kun tulee oikea content
                         }
                     }
                     item {
