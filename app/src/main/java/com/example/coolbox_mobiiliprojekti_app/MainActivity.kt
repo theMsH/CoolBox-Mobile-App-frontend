@@ -151,7 +151,9 @@ class MainActivity : ComponentActivity() {
                                     selected = navBackStackEntry?.destination?.route == "loginScreen",
                                     onClick = {
                                         vm.logout()
-                                        navController.navigate("loginScreen")
+                                        navController.navigate("loginScreen") {
+                                            popUpTo("loginScreen") { inclusive = true }
+                                        }
                                         scope.launch {
                                             drawerState.close()
                                         }
