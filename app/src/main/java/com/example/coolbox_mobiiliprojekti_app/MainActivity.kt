@@ -1,15 +1,20 @@
 package com.example.coolbox_mobiiliprojekti_app
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.ColorLens
 import androidx.compose.material.icons.filled.DashboardCustomize
 import androidx.compose.material.icons.filled.Home
@@ -25,12 +30,15 @@ import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -40,8 +48,10 @@ import com.example.coolbox_mobiiliprojekti_app.view.LoginScreen
 import com.example.coolbox_mobiiliprojekti_app.view.MainScreen
 import com.example.coolbox_mobiiliprojekti_app.view.PanelsScreen
 import com.example.coolbox_mobiiliprojekti_app.view.ProductionScreen
+import com.example.coolbox_mobiiliprojekti_app.view.RegisterScreen
 import com.example.coolbox_mobiiliprojekti_app.view.ThemesScreen
-import com.example.datachartexample2.model.test.ConsumptionScreen
+import com.example.coolbox_mobiiliprojekti_app.viewmodel.LoginViewModel
+import com.example.datachartexample2.tests.test3.ConsumptionScreen
 import kotlinx.coroutines.launch
 
 
@@ -59,6 +69,16 @@ class MainActivity : ComponentActivity() {
                     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
                     val scope = rememberCoroutineScope()
                     val navBackStackEntry by navController.currentBackStackEntryAsState()
+
+                    // Autologinin takia luodaan loginViewModel täällä.
+                    val loginVm: LoginViewModel = viewModel()
+
+                    LaunchedEffect(Unit) {
+                        if (!loginVm.loginState.value.initialized) {
+                            loginVm.setInitialized()
+                            loginVm.tryAutoLogin()
+                        }
+                    }
 
                     ModalNavigationDrawer(
                         gesturesEnabled = (
@@ -93,10 +113,60 @@ class MainActivity : ComponentActivity() {
                                             contentDescription = "Home"
                                         )
                                     }
-                                    HorizontalDivider(modifier = Modifier.padding(top = 10.dp))
+                                    HorizontalDivider(modifier = Modifier.padding(15.dp))
                                 }
 
-                                // Drawerlayoutin itemit
+
+                                // Käyttäjä
+
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(NavigationDrawerItemDefaults.ItemPadding)
+                                        .padding(bottom = 20.dp, start = 12.dp, end = 12.dp)
+                                    ,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Icon(
+                                        modifier = Modifier
+                                            .size(50.dp)
+                                        ,
+                                        imageVector = Icons.Filled.AccountCircle,
+                                        contentDescription = "User"
+                                    )
+                                    Spacer(Modifier.width(16.dp))
+                                    Text(
+                                        text = "${stringResource(R.string.user)}\n${loginVm.user.value.user.username}"
+                                    )
+                                }
+
+
+                                // Navigation itemit
+
+                                NavigationDrawerItem(
+                                    modifier = Modifier
+                                        .padding(NavigationDrawerItemDefaults.ItemPadding)
+                                    ,
+                                    label = { Text(text = "Logout") },
+                                    selected = navBackStackEntry?.destination?.route == "loginScreen",
+                                    onClick = {
+                                        loginVm.logout()
+                                        navController.navigate("loginScreen") {
+                                            popUpTo("mainScreen") { inclusive = true }
+                                        }
+                                        scope.launch {
+                                            drawerState.close()
+                                        }
+                                    },
+                                    icon = {
+                                        Icon(
+                                            imageVector = Icons.Filled.LockOpen,
+                                            contentDescription = "Logout"
+                                        )
+                                    }
+                                )
+
+                                HorizontalDivider(modifier = Modifier.padding(15.dp))
 
                                 NavigationDrawerItem(
                                     modifier = Modifier
@@ -161,37 +231,22 @@ class MainActivity : ComponentActivity() {
                                         )
                                     }
                                 )
-                                NavigationDrawerItem(
-                                    modifier = Modifier
-                                        .padding(NavigationDrawerItemDefaults.ItemPadding)
-                                    ,
-                                    label = { Text(text = "Logout") },
-                                    selected = navBackStackEntry?.destination?.route == "loginScreen",
-                                    onClick = {
-                                        navController.navigate("loginScreen")
-                                        scope.launch {
-                                            drawerState.close()
-                                        }
-                                    },
-                                    icon = {
-                                        Icon(
-                                            imageVector = Icons.Filled.LockOpen,
-                                            contentDescription = "Login"
-                                        )
-                                    }
-                                )
 
                             }
                         }
                     ) {
                         NavHost(
                             navController = navController,
-                            startDestination = "mainScreen"
+                            startDestination = "loginScreen"
                         ) {
-                            composable(route = "loginScreen") {
+                            composable("loginScreen") {
                                 LoginScreen(
-                                    onLoginClick = {
+                                    loginVm, // Välitetään täällä luotu loginVM LoginScreenin viewmodeliksi
+                                    onLoginSuccess = {
                                         navController.navigate("mainScreen")
+                                    },
+                                    gotoRegister = {
+                                        navController.navigate("registerScreen")
                                     }
                                 )
                             }
@@ -252,6 +307,21 @@ class MainActivity : ComponentActivity() {
                                     }
                                 )
                             }
+                            composable("registerScreen") {
+                                RegisterScreen(
+                                    onRegisterClick = {
+                                        navController.navigateUp()
+                                        Toast.makeText(
+                                            this@MainActivity,
+                                            "New account registered!",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    },
+                                    goBack = {
+                                        navController.navigateUp()
+                                    }
+                                )
+                            }
 
                         }
                     }
@@ -261,3 +331,4 @@ class MainActivity : ComponentActivity() {
     }
 
 }
+

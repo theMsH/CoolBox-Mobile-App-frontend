@@ -10,6 +10,7 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
@@ -22,26 +23,47 @@ private val DarkColorScheme = darkColorScheme(
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
-
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
-)
+    primary = PrimaryColor,                      // Ylin palkki, Päätekstin väri, Nappien tausta, loadingCircle
+    onPrimary = PrimaryContentsColor,            // Nappi tekstit
+    //primaryContainer = Color.Red,
+    //onPrimaryContainer = Color.Red,
+    //inversePrimary = Color.Red,
+    //secondary = SecondaryColor,
+    //onSecondary = SecondaryContentsColor,
+    //secondaryContainer = SecondaryColor,           // Selected menuitem
+    //onSecondaryContainer = SecondaryContentsColor, // Menuitemien sisällön väri
+    //tertiary =  TertiaryColor,
+    //onTertiary = TextsDarkColor,                       // No account? -text
+    //tertiaryContainer = Color.Red,
+    //onTertiaryContainer = Color.Red,
+    //background = BackgroundColor,                  // Tausta
+    //surface = DrawerLayoutColor,                 // TopAppBar, drawerlayout, BottomAppBar
+    //onSurface = TextsDarkColor,                      // Titlet / Disabled nappi tausta, Textfieldin text
+    //surfaceVariant = SecondaryColor,           // Paneelit (cards), disabled Toggle slider tausta.
+    //onSurfaceVariant = TextsDarkColor,               // Titlet Cardseissa, menuitemit, hamburgericon, textfield placeholder ja silmä
+    //surfaceTint = Color.Red,
+    //inverseSurface = Color.Red,
+    //inverseOnSurface = Color.Red,
+    //error = Color.Red,
+    //onError = Color.Red,
+    //onErrorContainer = Color.Red,
+    //outline = OutlineColor,                      // Textfieldien ja togglebuttoneiden outline
+    //outlineVariant = OutlineColor,               // Dividerviiva drawerlayoutissa
+    //scrim = Color.Black,                       // Drawerlayout taustan tummennus
+    //surfaceBright = Color.Red,
+    //surfaceContainer = Color.Red,
+    //surfaceContainerHigh = Color.Red,
+    //surfaceContainerHighest = Color.Red,
+    //surfaceContainerLow = Color.Red,
+    //surfaceContainerLowest = Color.Red,
+    //surfaceDim = Color.Red
+    )
 
 @Composable
 fun CoolBoxmobiiliprojektiAppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {

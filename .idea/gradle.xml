@@ -10,13 +10,6 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
-            <option value="$PROJECT_DIR$/sample" />
-            <option value="$PROJECT_DIR$/vico" />
-            <option value="$PROJECT_DIR$/vico/compose" />
-            <option value="$PROJECT_DIR$/vico/compose-m2" />
-            <option value="$PROJECT_DIR$/vico/compose-m3" />
-            <option value="$PROJECT_DIR$/vico/core" />
-            <option value="$PROJECT_DIR$/vico/views" />
           </set>
         </option>
         <option name="resolveExternalAnnotations" value="false" />
