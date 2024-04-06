@@ -25,6 +25,8 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.coolbox_mobiiliprojekti_app.model.rememberMarker
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.CoolBoxmobiiliprojektiAppTheme
+import com.example.coolbox_mobiiliprojekti_app.ui.theme.GraphKwhColor
+import com.example.coolbox_mobiiliprojekti_app.ui.theme.GraphTempColor
 import com.example.datachartexample2.tests.test3.ConsumptionViewModel
 import com.example.datachartexample2.tests.test3.formatToDateToDayOfWeek
 import com.patrykandpatrick.vico.compose.axis.horizontal.rememberBottomAxis
@@ -150,11 +152,11 @@ fun ConsumptionColumnChart(
                                 rememberColumnCartesianLayer(
                                     columns = listOf(
                                         rememberLineComponent(
-                                            color = Color.Blue,
+                                            color = GraphKwhColor,
                                             thickness = 8.dp, // Adjust as needed
                                         ),
                                         rememberLineComponent(
-                                            color = Color.Blue,
+                                            color = GraphKwhColor,
                                             thickness = 8.dp, // Adjust as needed
                                         )
                                     ),
@@ -162,10 +164,10 @@ fun ConsumptionColumnChart(
                                 rememberLineCartesianLayer(
                                     lines = listOf(
                                         rememberLineSpec(
-                                            shader = DynamicShaders.color(Color.Red)
+                                            shader = DynamicShaders.color(GraphTempColor)
                                         ),
                                         rememberLineSpec(
-                                            shader = DynamicShaders.color(Color.Red)
+                                            shader = DynamicShaders.color(GraphTempColor)
                                         )
                                     ),
                                 ),
