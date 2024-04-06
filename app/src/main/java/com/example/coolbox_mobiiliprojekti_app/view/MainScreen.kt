@@ -12,14 +12,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardColors
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -28,6 +28,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.coolbox_mobiiliprojekti_app.ui.theme.PanelColor
+import com.example.coolbox_mobiiliprojekti_app.ui.theme.TextsLightColor
+import com.example.coolbox_mobiiliprojekti_app.ui.theme.TopAppBarColor
 import com.example.coolbox_mobiiliprojekti_app.viewmodel.MainScreenViewModel
 import com.example.datachartexample2.tests.test3.ConsumptionViewModel
 
@@ -44,22 +47,24 @@ fun MainScreen(
 
     Scaffold(
         topBar = {
-            CenterAlignedTopAppBar(
-                title = { Text(text = "Main") },
-                actions = {
-                    IconButton(
-                        onClick = { onMenuClick() }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.Menu,
-                            contentDescription = "Menu"
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer
+            Surface(shadowElevation = 2.dp) {
+                CenterAlignedTopAppBar(
+                    title = { Text(text = "Main") },
+                    actions = {
+                        IconButton(
+                            onClick = { onMenuClick() }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.Menu,
+                                contentDescription = "Menu"
+                            )
+                        }
+                    },
+                    colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                        containerColor = TopAppBarColor
+                    )
                 )
-            )
+            }
         }
     ) {
         Box(
@@ -91,11 +96,9 @@ fun MainScreen(
                                 .padding(horizontal = 2.dp, vertical = 4.dp)
                                 .clickable(onClick = gotoConsumption)
                             ,
-                            colors = CardColors(
-                                containerColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                                contentColor = MaterialTheme.colorScheme.primary,
-                                disabledContainerColor = MaterialTheme.colorScheme.secondaryContainer,
-                                disabledContentColor = MaterialTheme.colorScheme.secondary
+                            colors = CardDefaults.cardColors(
+                                containerColor = PanelColor,
+                                contentColor = TextsLightColor
                             )
                         ) {
                             Text(
@@ -117,11 +120,9 @@ fun MainScreen(
                                 .padding(horizontal = 2.dp, vertical = 4.dp)
                                 .clickable(onClick = gotoProduction)
                             ,
-                            colors = CardColors(
-                                containerColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                                contentColor = MaterialTheme.colorScheme.primary,
-                                disabledContainerColor = MaterialTheme.colorScheme.secondaryContainer,
-                                disabledContentColor = MaterialTheme.colorScheme.secondary
+                            colors = CardDefaults.cardColors(
+                                containerColor = PanelColor,
+                                contentColor = TextsLightColor
                             )
                         ) {
                             Text(
@@ -143,11 +144,9 @@ fun MainScreen(
                                 .padding(horizontal = 2.dp, vertical = 4.dp)
                                 .clickable(onClick = {})
                             ,
-                            colors = CardColors(
-                                containerColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                                contentColor = MaterialTheme.colorScheme.primary,
-                                disabledContainerColor = MaterialTheme.colorScheme.secondaryContainer,
-                                disabledContentColor = MaterialTheme.colorScheme.secondary
+                            colors = CardDefaults.cardColors(
+                                containerColor = PanelColor,
+                                contentColor = TextsLightColor
                             )
                         ) {
                             Text(
@@ -169,11 +168,9 @@ fun MainScreen(
                                 .padding(horizontal = 2.dp, vertical = 4.dp)
                                 .clickable(onClick = {})
                             ,
-                            colors = CardColors(
-                                containerColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                                contentColor = MaterialTheme.colorScheme.primary,
-                                disabledContainerColor = MaterialTheme.colorScheme.secondaryContainer,
-                                disabledContentColor = MaterialTheme.colorScheme.secondary
+                            colors = CardDefaults.cardColors(
+                                containerColor = PanelColor,
+                                contentColor = TextsLightColor
                             )
                         ) {
                             Text(
@@ -182,35 +179,9 @@ fun MainScreen(
                                     .padding(top = 20.dp)
                                 ,
                                 fontSize = 20.sp,
-                                text = "Random graafi"
+                                text = "Lämpötiladataa"
                             )
                             Spacer(modifier = Modifier.height(300.dp)) // Poista kun tulee oikea content
-                        }
-                    }
-                    item {
-                        Card(
-                            modifier = Modifier
-                                .wrapContentSize(Alignment.Center)
-                                .fillMaxWidth()
-                                .padding(horizontal = 2.dp, vertical = 4.dp)
-                                .clickable(onClick = {})
-                            ,
-                            colors = CardColors(
-                                containerColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                                contentColor = MaterialTheme.colorScheme.primary,
-                                disabledContainerColor = MaterialTheme.colorScheme.secondaryContainer,
-                                disabledContentColor = MaterialTheme.colorScheme.secondary
-                            )
-                        ) {
-                            Text(
-                                modifier = Modifier
-                                    .align(Alignment.CenterHorizontally)
-                                    .padding(top = 20.dp)
-                                ,
-                                fontSize = 20.sp,
-                                text = "Biopolttoaine- ja harmaavesisäiliö %"
-                            )
-                            Spacer(modifier = Modifier.height(120.dp)) // Poista kun tulee oikea content
                         }
                     }
 
