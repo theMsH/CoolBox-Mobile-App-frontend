@@ -71,12 +71,12 @@ class MainActivity : ComponentActivity() {
                     val navBackStackEntry by navController.currentBackStackEntryAsState()
 
                     // Autologinin takia luodaan loginViewModel täällä.
-                    val vm: LoginViewModel = viewModel()
+                    val loginVm: LoginViewModel = viewModel()
 
                     LaunchedEffect(Unit) {
-                        if (!vm.loginState.value.initialized) {
-                            vm.setInitialized()
-                            vm.tryAutoLogin()
+                        if (!loginVm.loginState.value.initialized) {
+                            loginVm.setInitialized()
+                            loginVm.tryAutoLogin()
                         }
                     }
 
@@ -136,7 +136,7 @@ class MainActivity : ComponentActivity() {
                                     )
                                     Spacer(Modifier.width(16.dp))
                                     Text(
-                                        text = "${stringResource(R.string.user)}\n${vm.user.value.user.username}"
+                                        text = "${stringResource(R.string.user)}\n${loginVm.user.value.user.username}"
                                     )
                                 }
 
@@ -150,9 +150,9 @@ class MainActivity : ComponentActivity() {
                                     label = { Text(text = "Logout") },
                                     selected = navBackStackEntry?.destination?.route == "loginScreen",
                                     onClick = {
-                                        vm.logout()
+                                        loginVm.logout()
                                         navController.navigate("loginScreen") {
-                                            popUpTo("loginScreen") { inclusive = true }
+                                            popUpTo("mainScreen") { inclusive = true }
                                         }
                                         scope.launch {
                                             drawerState.close()
@@ -241,7 +241,7 @@ class MainActivity : ComponentActivity() {
                         ) {
                             composable("loginScreen") {
                                 LoginScreen(
-                                    vm, // Välitetään täällä luotu loginVM LoginScreenin viewmodeliksi
+                                    loginVm, // Välitetään täällä luotu loginVM LoginScreenin viewmodeliksi
                                     onLoginSuccess = {
                                         navController.navigate("mainScreen")
                                     },

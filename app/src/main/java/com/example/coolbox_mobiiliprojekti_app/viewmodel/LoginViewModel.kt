@@ -8,7 +8,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.coolbox_mobiiliprojekti_app.api.authInterceptor
 import com.example.coolbox_mobiiliprojekti_app.api.authService
 import com.example.coolbox_mobiiliprojekti_app.database.AccessToken
-import com.example.coolbox_mobiiliprojekti_app.database.DbProvider.db
+import com.example.coolbox_mobiiliprojekti_app.database.AccountDatabase
+import com.example.coolbox_mobiiliprojekti_app.database.DbProvider
 import com.example.coolbox_mobiiliprojekti_app.model.LoginDetails
 import com.example.coolbox_mobiiliprojekti_app.model.LoginRes
 import com.example.coolbox_mobiiliprojekti_app.model.LoginState
@@ -16,7 +17,7 @@ import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
 
-class LoginViewModel : ViewModel() {
+class LoginViewModel(private val db: AccountDatabase = DbProvider.db) : ViewModel() {
     private val _loginState = mutableStateOf(LoginState())
     val loginState: State<LoginState> = _loginState
 
