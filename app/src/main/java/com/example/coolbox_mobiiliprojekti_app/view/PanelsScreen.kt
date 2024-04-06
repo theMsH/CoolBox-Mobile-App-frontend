@@ -26,6 +26,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.coolbox_mobiiliprojekti_app.viewmodel.MainScreenViewModel
 import com.example.coolbox_mobiiliprojekti_app.viewmodel.PanelsViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -35,7 +36,8 @@ fun PanelsScreen(
     goBack: () -> Unit
 ) {
     val panelsVm: PanelsViewModel = viewModel()
-    var consumptionchecked by remember { mutableStateOf(true) }
+    val mainScreenVm: MainScreenViewModel = viewModel()
+    //var consumptionchecked by remember { mutableStateOf(true) }
     var productionchecked by remember { mutableStateOf(true) }
     var batterychecked by remember { mutableStateOf(true) }
 
@@ -74,16 +76,20 @@ fun PanelsScreen(
                 ) {
                     Text(text = "Consumption panel")
                     Switch(
-                        checked = consumptionchecked,
+                        checked = panelsVm.consumptionChecked.value,
                         onCheckedChange = {
-                            consumptionchecked = it
-                            if (consumptionchecked) {
+                            panelsVm.consumptionChecked.value = it
+                            if (panelsVm.consumptionChecked.value) {
                                 Log.d("itekki", "PanelsScreen: consumption check on")
-                                // Aseta paneeli näkyväksi, kun switch on päällä
+                                mainScreenVm.conPanelVisible = true
+                                // Tämä value ei vielä tällä hetkellä ymmärtääkseni pysy siinä arvossa
+                                // mihin se asetetaan kun tästä ruudusta poistutaan, tai
+                                // mainscreeniin palaaminen ei päivitä UI:ta,
+                                // ja switchi myös resetoituu aina kun tähän ruutuun mennään takaisin
                             }
                             else {
                                 Log.d("itekki", "PanelsScreen: consumption check off")
-                                // Piilota paneeli, kun switch on pois päältä
+                                mainScreenVm.conPanelVisible = false
                             }
                         })
                 }

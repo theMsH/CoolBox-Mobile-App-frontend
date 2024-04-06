@@ -23,6 +23,10 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -44,6 +48,10 @@ fun MainScreen(
 ) {
     val mainScreenVm: MainScreenViewModel = viewModel()
     val consumptionVM: ConsumptionViewModel = viewModel()
+    val conPanelVisible = mainScreenVm.conPanelVisible
+    val prodPanelVisible = mainScreenVm.prodPanelVisible
+    val batPanelVisible = mainScreenVm.batPanelVisible
+    val tempPanelVisible = mainScreenVm.tempPanelVisible
 
     Scaffold(
         topBar = {
@@ -88,104 +96,112 @@ fun MainScreen(
                     // olikin tuossa vaan niitä placeholdereita varten, ettei ne ollut kiinni toisissaan
                     //verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    item {
-                        Card(
-                            modifier = Modifier
-                                .wrapContentSize(Alignment.Center)
-                                .fillMaxWidth()
-                                .padding(horizontal = 2.dp, vertical = 4.dp)
-                                .clickable(onClick = gotoConsumption)
-                            ,
-                            colors = CardDefaults.cardColors(
-                                containerColor = PanelColor,
-                                contentColor = TextsLightColor
-                            )
-                        ) {
-                            Text(
+                    if (conPanelVisible) { // Jos boolean on tosi, näytetään paneeli
+                        item {
+                            Card(
                                 modifier = Modifier
-                                    .align(Alignment.CenterHorizontally)
-                                    .padding(top = 20.dp)
+                                    .wrapContentSize(Alignment.Center)
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 2.dp, vertical = 4.dp)
+                                    .clickable(onClick = gotoConsumption)
                                 ,
-                                fontSize = 20.sp,
-                                text = "Kulutus graafi"
-                            )
-                            Spacer(modifier = Modifier.height(300.dp)) // Poista kun tulee oikea content
+                                colors = CardDefaults.cardColors(
+                                    containerColor = PanelColor,
+                                    contentColor = TextsLightColor
+                                )
+                            ) {
+                                Text(
+                                    modifier = Modifier
+                                        .align(Alignment.CenterHorizontally)
+                                        .padding(top = 20.dp)
+                                    ,
+                                    fontSize = 20.sp,
+                                    text = "Kulutus graafi"
+                                )
+                                Spacer(modifier = Modifier.height(300.dp)) // Poista kun tulee oikea content
+                            }
                         }
                     }
-                    item {
-                        Card(
-                            modifier = Modifier
-                                .wrapContentSize(Alignment.Center)
-                                .fillMaxWidth()
-                                .padding(horizontal = 2.dp, vertical = 4.dp)
-                                .clickable(onClick = gotoProduction)
-                            ,
-                            colors = CardDefaults.cardColors(
-                                containerColor = PanelColor,
-                                contentColor = TextsLightColor
-                            )
-                        ) {
-                            Text(
+                    if (prodPanelVisible) {
+                        item {
+                            Card(
                                 modifier = Modifier
-                                    .align(Alignment.CenterHorizontally)
-                                    .padding(top = 20.dp)
+                                    .wrapContentSize(Alignment.Center)
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 2.dp, vertical = 4.dp)
+                                    .clickable(onClick = gotoProduction)
                                 ,
-                                fontSize = 20.sp,
-                                text = "Tuotto graafi"
-                            )
-                            Spacer(modifier = Modifier.height(300.dp)) // Poista kun tulee oikea content
+                                colors = CardDefaults.cardColors(
+                                    containerColor = PanelColor,
+                                    contentColor = TextsLightColor
+                                )
+                            ) {
+                                Text(
+                                    modifier = Modifier
+                                        .align(Alignment.CenterHorizontally)
+                                        .padding(top = 20.dp)
+                                    ,
+                                    fontSize = 20.sp,
+                                    text = "Tuotto graafi"
+                                )
+                                Spacer(modifier = Modifier.height(300.dp)) // Poista kun tulee oikea content
+                            }
                         }
                     }
-                    item {
-                        Card(
-                            modifier = Modifier
-                                .wrapContentSize(Alignment.Center)
-                                .fillMaxWidth()
-                                .padding(horizontal = 2.dp, vertical = 4.dp)
-                                .clickable(onClick = {})
-                            ,
-                            colors = CardDefaults.cardColors(
-                                containerColor = PanelColor,
-                                contentColor = TextsLightColor
-                            )
-                        ) {
-                            Text(
+                    if (batPanelVisible) {
+                        item {
+                            Card(
                                 modifier = Modifier
-                                    .align(Alignment.CenterHorizontally)
-                                    .padding(top = 20.dp)
+                                    .wrapContentSize(Alignment.Center)
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 2.dp, vertical = 4.dp)
+                                    .clickable(onClick = {})
                                 ,
-                                fontSize = 20.sp,
-                                text = "Akun dataa"
-                            )
-                            Spacer(modifier = Modifier.height(120.dp)) // Poista kun tulee oikea content
+                                colors = CardDefaults.cardColors(
+                                    containerColor = PanelColor,
+                                    contentColor = TextsLightColor
+                                )
+                            ) {
+                                Text(
+                                    modifier = Modifier
+                                        .align(Alignment.CenterHorizontally)
+                                        .padding(top = 20.dp)
+                                    ,
+                                    fontSize = 20.sp,
+                                    text = "Akun dataa"
+                                )
+                                Spacer(modifier = Modifier.height(120.dp)) // Poista kun tulee oikea content
+                            }
                         }
                     }
-                    item {
-                        Card(
-                            modifier = Modifier
-                                .wrapContentSize(Alignment.Center)
-                                .fillMaxWidth()
-                                .padding(horizontal = 2.dp, vertical = 4.dp)
-                                .clickable(onClick = {})
-                            ,
-                            colors = CardDefaults.cardColors(
-                                containerColor = PanelColor,
-                                contentColor = TextsLightColor
-                            )
-                        ) {
-                            Text(
+                    if (tempPanelVisible) {
+                        item {
+                            Card(
                                 modifier = Modifier
-                                    .align(Alignment.CenterHorizontally)
-                                    .padding(top = 20.dp)
+                                    .wrapContentSize(Alignment.Center)
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 2.dp, vertical = 4.dp)
+                                    .clickable(onClick = {})
                                 ,
-                                fontSize = 20.sp,
-                                text = "Lämpötiladataa"
-                            )
-                            Spacer(modifier = Modifier.height(300.dp)) // Poista kun tulee oikea content
+                                colors = CardDefaults.cardColors(
+                                    containerColor = PanelColor,
+                                    contentColor = TextsLightColor
+                                )
+                            ) {
+                                Text(
+                                    modifier = Modifier
+                                        .align(Alignment.CenterHorizontally)
+                                        .padding(top = 20.dp)
+                                    ,
+                                    fontSize = 20.sp,
+                                    text = "Lämpötiladataa"
+                                )
+                                Spacer(modifier = Modifier.height(300.dp)) // Poista kun tulee oikea content
+                            }
                         }
                     }
 
-                }
+                } // Column loppu
             }
         }
     }
