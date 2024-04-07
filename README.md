@@ -11,6 +11,6 @@
 - Paina Import Scheme...
 - Etsi CoolBox-mobiiliprojecti-app.xml paikallisen repositorion juuresta ja paina Ok.
 - Paina Apply ja Ok
-- testiPushi!
+- Testi-PUSH
 
 + Käytä formatteria CTRL + ALT + L
