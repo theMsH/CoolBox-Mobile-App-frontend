@@ -2,6 +2,7 @@ package com.example.coolbox_mobiiliprojekti_app.view
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,6 +24,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,7 +38,10 @@ import com.example.coolbox_mobiiliprojekti_app.ui.theme.PanelColor
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.TextsLightColor
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.TopAppBarColor
 import com.example.coolbox_mobiiliprojekti_app.viewmodel.MainScreenViewModel
+import com.example.coolbox_mobiiliprojekti_app.viewmodel.ProductionViewModel
 import com.example.datachartexample2.tests.test3.ConsumptionViewModel
+import com.example.datachartexample2.tests.test3.TimeInterval
+import java.time.LocalDate
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -88,8 +93,7 @@ fun MainScreen(
                 )
                 else -> LazyColumn(
                     modifier = Modifier
-                        .fillMaxSize()
-                    ,
+                        .fillMaxSize(),
                     // Miikan edit: Laitetaan padding mieluummin itemeille,
                     // niin scrollatessa näkee visuaalisesti milloin tulee "seinä vastaan"
                     // Benkun vastaus: Kuulostaa hyvältä ja järkevältä, tuo verticalArrangement
@@ -103,8 +107,7 @@ fun MainScreen(
                                     .wrapContentSize(Alignment.Center)
                                     .fillMaxWidth()
                                     .padding(horizontal = 2.dp, vertical = 4.dp)
-                                    .clickable(onClick = gotoConsumption)
-                                ,
+                                    .clickable(onClick = gotoConsumption),
                                 colors = CardDefaults.cardColors(
                                     containerColor = PanelColor,
                                     contentColor = TextsLightColor
@@ -113,8 +116,7 @@ fun MainScreen(
                                 Text(
                                     modifier = Modifier
                                         .align(Alignment.CenterHorizontally)
-                                        .padding(top = 20.dp)
-                                    ,
+                                        .padding(top = 20.dp),
                                     fontSize = 20.sp,
                                     text = "Kulutus graafi"
                                 )
@@ -128,23 +130,13 @@ fun MainScreen(
                                 modifier = Modifier
                                     .wrapContentSize(Alignment.Center)
                                     .fillMaxWidth()
-                                    .padding(horizontal = 2.dp, vertical = 4.dp)
-                                    .clickable(onClick = gotoProduction)
-                                ,
+                                    .padding(horizontal = 2.dp, vertical = 4.dp),
                                 colors = CardDefaults.cardColors(
                                     containerColor = PanelColor,
                                     contentColor = TextsLightColor
                                 )
                             ) {
-                                Text(
-                                    modifier = Modifier
-                                        .align(Alignment.CenterHorizontally)
-                                        .padding(top = 20.dp)
-                                    ,
-                                    fontSize = 20.sp,
-                                    text = "Tuotto graafi"
-                                )
-                                Spacer(modifier = Modifier.height(300.dp)) // Poista kun tulee oikea content
+                                ProductionPanel7Days(gotoProduction)
                             }
                         }
                     }
@@ -155,8 +147,7 @@ fun MainScreen(
                                     .wrapContentSize(Alignment.Center)
                                     .fillMaxWidth()
                                     .padding(horizontal = 2.dp, vertical = 4.dp)
-                                    .clickable(onClick = {})
-                                ,
+                                    .clickable(onClick = {}),
                                 colors = CardDefaults.cardColors(
                                     containerColor = PanelColor,
                                     contentColor = TextsLightColor
@@ -165,8 +156,7 @@ fun MainScreen(
                                 Text(
                                     modifier = Modifier
                                         .align(Alignment.CenterHorizontally)
-                                        .padding(top = 20.dp)
-                                    ,
+                                        .padding(top = 20.dp),
                                     fontSize = 20.sp,
                                     text = "Akun dataa"
                                 )
@@ -181,8 +171,7 @@ fun MainScreen(
                                     .wrapContentSize(Alignment.Center)
                                     .fillMaxWidth()
                                     .padding(horizontal = 2.dp, vertical = 4.dp)
-                                    .clickable(onClick = {})
-                                ,
+                                    .clickable(onClick = {}),
                                 colors = CardDefaults.cardColors(
                                     containerColor = PanelColor,
                                     contentColor = TextsLightColor
@@ -191,8 +180,7 @@ fun MainScreen(
                                 Text(
                                     modifier = Modifier
                                         .align(Alignment.CenterHorizontally)
-                                        .padding(top = 20.dp)
-                                    ,
+                                        .padding(top = 20.dp),
                                     fontSize = 20.sp,
                                     text = "Lämpötiladataa"
                                 )
@@ -206,4 +194,49 @@ fun MainScreen(
         }
     }
 
+}
+
+@Composable
+fun ProductionPanel7Days(
+    gotoProduction: () -> Unit
+) {
+    val viewModel: ProductionViewModel = viewModel()
+    // Alusta nykyinen aikaväli tilamuuttuja
+    var currentTimeInterval by remember { mutableStateOf(TimeInterval.DAYS) }
+
+    // Määritä nykyisen viikon ensimmäinen päivä
+    var currentWeekStartDate by remember { mutableStateOf(LocalDate.now()) }
+    println("LocalDate.now(): ${LocalDate.now()}")
+
+    // Päivitä kulutustilastot ja lämpötilatilastot haettaessa dataa
+    LaunchedEffect(key1 = currentWeekStartDate, key2 = Unit) {
+        // Päivitä datan haku sen mukaan, mikä aikaväli on valittu
+        if (currentTimeInterval == TimeInterval.DAYS) {
+            viewModel.fetchData(TimeInterval.DAYS, currentWeekStartDate)
+        }
+    }
+    // Näytön sisältö
+    Box(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        when {
+            // Latauspalkki
+            viewModel.productionChartState.value.loading -> CircularProgressIndicator(
+                modifier = Modifier.align(Alignment.Center)
+            )
+
+            // Näytä sisältö
+            else -> Column(
+                Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+
+                // Piirrä kaavio
+                ProductionCustomChart(
+                    viewModel.productionStatsData,
+                    gotoProduction
+                )
+            }
+        }
+    }
 }
