@@ -13,8 +13,8 @@ interface ConsumptionApiService {
     // Hae päivittäiset kulutustiedot seitsemältä viimeiseltä päivältä tunneittain annetun päivämäärän perusteella.
     // @param date: Päivämäärä merkkijonona muodossa "YYYY-MM-DD".
     // @return ConsumptionStatsResponse: Vastaus, joka sisältää kulutustiedot.
-    @GET("measurement/consumption/total/seven_days_before_date/{date}")
-    suspend fun getDailyConsumptionsDataFromLastSevenDaysByHours(@Path("date") date: String): ConsumptionStatsResponse
+    @GET("measurement/consumption/total/seven_day_period/{date}")
+    suspend fun getSevenDayConsumptionsData(@Path("date") date: String): ConsumptionStatsResponse
 
     // Hae tunneittaiset kulutustiedot annetun päivämäärän perusteella.
     // @param date: Päivämäärä merkkijonona muodossa "YYYY-MM-DD".
@@ -63,5 +63,7 @@ interface ConsumptionApiService {
     // @return TemperatureStatsResponse: Vastaus, joka sisältää sisälämpötilatiedot.
     @GET("measurement/temperature/avg/indoor/monthly/{date}")
     suspend fun getMonthlyTemperaturesData(@Path("date") date: String): TemperatureStatsResponse
+    @GET("measurement/temperature/avg/indoor/seven_day_period/{date}")
+    suspend fun getSevenDayTemperaturesData(@Path("date") date: String): TemperatureStatsResponse
 
 }

@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 
 // Tila, joka kuvaa kaavion tilaa, kuten latausta ja virhetilaa.
-data class ChartState(
+data class ConsumptionChartState(
     val loading: Boolean = false, // Ilmaisee, onko kaavio lataamassa tietoja.
     val error: String? = null // Virheteksti, jos kaavion tiedon lataaminen epäonnistuu.
 )

@@ -25,7 +25,6 @@ import com.example.coolbox_mobiiliprojekti_app.ui.theme.CoolBoxmobiiliprojektiAp
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.PanelColor
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.TextsLightColor
 import com.example.coolbox_mobiiliprojekti_app.viewmodel.ProductionViewModel
-import com.example.datachartexample2.tests.test3.formatToDateToDayOfWeek
 import com.patrykandpatrick.vico.compose.axis.horizontal.rememberBottomAxis
 import com.patrykandpatrick.vico.compose.axis.vertical.rememberStartAxis
 import com.patrykandpatrick.vico.compose.chart.CartesianChartHost
@@ -46,9 +45,9 @@ import com.patrykandpatrick.vico.core.model.lineSeries
 import com.patrykandpatrick.vico.core.axis.formatter.AxisValueFormatter
 
 @Composable
-fun ProductionCustomChart(
+fun ProductionChart(
     productionStatsData: Map<String, Float?>?,
-    gotoProduction: () -> Unit
+    goToProduction: () -> Unit = {}
 ) {
 
     // Haetaan viewmodel
@@ -105,7 +104,7 @@ fun ProductionCustomChart(
             // Sarake, joka täyttää koko leveyden
             Column(modifier = Modifier
                 .fillMaxWidth()
-                .clickable(onClick = { gotoProduction() })) {
+                .clickable(onClick = { goToProduction() })) {
                 // Kortti, joka toimii paneelina
                 Card(
                     modifier = Modifier

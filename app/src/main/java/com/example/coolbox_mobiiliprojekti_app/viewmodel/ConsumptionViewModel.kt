@@ -1,4 +1,4 @@
-package com.example.datachartexample2.tests.test3
+package com.example.coolbox_mobiiliprojekti_app.viewmodel
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
@@ -7,16 +7,17 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.coolbox_mobiiliprojekti_app.api.consumptionApiService
-import com.example.coolbox_mobiiliprojekti_app.model.ChartState
+import com.example.coolbox_mobiiliprojekti_app.model.ConsumptionChartState
 import com.example.coolbox_mobiiliprojekti_app.model.ConsumptionStatsResponse
 import com.example.coolbox_mobiiliprojekti_app.model.TemperatureStatsResponse
+import com.example.coolbox_mobiiliprojekti_app.view.TimeInterval
 import kotlinx.coroutines.launch
 
 class ConsumptionViewModel : ViewModel() {
 
     // Sisäinen muuttuja näkymän tilan seurantaan
-    private val _chartState = mutableStateOf(ChartState())
-    val chartState: State<ChartState> = _chartState
+    private val _consumptionChartState = mutableStateOf(ConsumptionChartState())
+    val consumptionChartState: State<ConsumptionChartState> = _consumptionChartState
 
     // Kulutusdataa seuraava tilamuuttuja
     var consumptionStatsData by mutableStateOf<Map<String, Float>?>(null)
@@ -27,10 +28,10 @@ class ConsumptionViewModel : ViewModel() {
         private set
 
     // Haetaan dataa valitun aikavälin perusteella
-    fun fetchData(interval: TimeInterval, date: Any) {
+    fun consumptionFetchData(interval: TimeInterval, date: Any) {
         viewModelScope.launch {
             try {
-                _chartState.value = _chartState.value.copy(loading = true)
+                _consumptionChartState.value = _consumptionChartState.value.copy(loading = true)
                 when (interval) {
                     TimeInterval.HOURS -> {
                         fetchHourlyConsumptionsData(date.toString())
@@ -48,11 +49,15 @@ class ConsumptionViewModel : ViewModel() {
                         fetchMonthlyConsumptionsData(date.toString())
                         fetchMonthlyTemperatureData(date.toString())
                     }
+                    TimeInterval.MAIN -> {
+                        fetch7DayConsumptionData(date.toString())
+                        fetch7DayTemperatureData(date.toString())
+                    }
                 }
             } catch (e: Exception) {
                 Log.d("Error", e.toString())
             } finally {
-                _chartState.value = _chartState.value.copy(loading = false)
+                _consumptionChartState.value = _consumptionChartState.value.copy(loading = false)
             }
         }
     }
@@ -102,6 +107,16 @@ class ConsumptionViewModel : ViewModel() {
     // Funktio kuukausittaisen lämpötiladatan hakemiseen
     private suspend fun fetchMonthlyTemperatureData(date: String) {
         val response = consumptionApiService.getMonthlyTemperaturesData(date)
+        handleTemperatureStatsResponse(response)
+    }
+    // Funktio 7 päivän kokonaiskulujen hakemiseen
+    private suspend fun fetch7DayConsumptionData(date: String) {
+        val response = consumptionApiService.getSevenDayConsumptionsData(date)
+        handleConsumptionStatsResponse(response)
+    }
+    // Funktio 7 päivän lämpötieto hakemiseen
+    private suspend fun fetch7DayTemperatureData(date: String) {
+        val response = consumptionApiService.getSevenDayTemperaturesData(date)
         handleTemperatureStatsResponse(response)
     }
 

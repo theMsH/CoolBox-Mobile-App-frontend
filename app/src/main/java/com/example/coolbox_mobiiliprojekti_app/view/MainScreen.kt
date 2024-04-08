@@ -28,7 +28,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -39,8 +38,7 @@ import com.example.coolbox_mobiiliprojekti_app.ui.theme.TextsLightColor
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.TopAppBarColor
 import com.example.coolbox_mobiiliprojekti_app.viewmodel.MainScreenViewModel
 import com.example.coolbox_mobiiliprojekti_app.viewmodel.ProductionViewModel
-import com.example.datachartexample2.tests.test3.ConsumptionViewModel
-import com.example.datachartexample2.tests.test3.TimeInterval
+import com.example.coolbox_mobiiliprojekti_app.viewmodel.ConsumptionViewModel
 import java.time.LocalDate
 
 
@@ -48,8 +46,8 @@ import java.time.LocalDate
 @Composable
 fun MainScreen(
     onMenuClick: () -> Unit,
-    gotoConsumption: () -> Unit,
-    gotoProduction: () -> Unit
+    goToConsumption: () -> Unit,
+    goToProduction: () -> Unit
 ) {
     val mainScreenVm: MainScreenViewModel = viewModel()
     val consumptionVM: ConsumptionViewModel = viewModel()
@@ -106,21 +104,13 @@ fun MainScreen(
                                 modifier = Modifier
                                     .wrapContentSize(Alignment.Center)
                                     .fillMaxWidth()
-                                    .padding(horizontal = 2.dp, vertical = 4.dp)
-                                    .clickable(onClick = gotoConsumption),
+                                    .padding(horizontal = 2.dp, vertical = 4.dp),
                                 colors = CardDefaults.cardColors(
                                     containerColor = PanelColor,
                                     contentColor = TextsLightColor
                                 )
                             ) {
-                                Text(
-                                    modifier = Modifier
-                                        .align(Alignment.CenterHorizontally)
-                                        .padding(top = 20.dp),
-                                    fontSize = 20.sp,
-                                    text = "Kulutus graafi"
-                                )
-                                Spacer(modifier = Modifier.height(300.dp)) // Poista kun tulee oikea content
+                                ConsumptionPanel7Days(goToConsumption)
                             }
                         }
                     }
@@ -136,7 +126,7 @@ fun MainScreen(
                                     contentColor = TextsLightColor
                                 )
                             ) {
-                                ProductionPanel7Days(gotoProduction)
+                                ProductionPanel7Days(goToProduction)
                             }
                         }
                     }
@@ -198,21 +188,21 @@ fun MainScreen(
 
 @Composable
 fun ProductionPanel7Days(
-    gotoProduction: () -> Unit
+    goToProduction: () -> Unit
 ) {
     val viewModel: ProductionViewModel = viewModel()
     // Alusta nykyinen aikaväli tilamuuttuja
-    var currentTimeInterval by remember { mutableStateOf(TimeInterval.DAYS) }
+    val currentTimeInterval by remember { mutableStateOf(TimeInterval.MAIN) }
 
     // Määritä nykyisen viikon ensimmäinen päivä
-    var currentWeekStartDate by remember { mutableStateOf(LocalDate.now()) }
+    val currentWeekStartDate by remember { mutableStateOf(LocalDate.now()) }
     println("LocalDate.now(): ${LocalDate.now()}")
 
     // Päivitä kulutustilastot ja lämpötilatilastot haettaessa dataa
     LaunchedEffect(key1 = currentWeekStartDate, key2 = Unit) {
         // Päivitä datan haku sen mukaan, mikä aikaväli on valittu
-        if (currentTimeInterval == TimeInterval.DAYS) {
-            viewModel.fetchData(TimeInterval.DAYS, currentWeekStartDate)
+        if (currentTimeInterval == TimeInterval.MAIN) {
+            viewModel.productionFetchData(TimeInterval.MAIN, currentWeekStartDate)
         }
     }
     // Näytön sisältö
@@ -232,9 +222,55 @@ fun ProductionPanel7Days(
             ) {
 
                 // Piirrä kaavio
-                ProductionCustomChart(
+                ProductionChart(
                     viewModel.productionStatsData,
-                    gotoProduction
+                    goToProduction
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun ConsumptionPanel7Days(
+    goToConsumption: () -> Unit
+) {
+    val viewModel: ConsumptionViewModel = viewModel()
+    // Alusta nykyinen aikaväli tilamuuttuja
+    val currentTimeInterval by remember { mutableStateOf(TimeInterval.MAIN) }
+
+    // Määritä nykyisen viikon ensimmäinen päivä
+    val currentWeekStartDate by remember { mutableStateOf(LocalDate.now()) }
+    println("LocalDate.now(): ${LocalDate.now()}")
+
+    // Päivitä kulutustilastot ja lämpötilatilastot haettaessa dataa
+    LaunchedEffect(key1 = currentWeekStartDate, key2 = Unit) {
+        // Päivitä datan haku sen mukaan, mikä aikaväli on valittu
+        if (currentTimeInterval == TimeInterval.MAIN) {
+            viewModel.consumptionFetchData(TimeInterval.MAIN, currentWeekStartDate)
+        }
+    }
+    // Näytön sisältö
+    Box(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        when {
+            // Latauspalkki
+            viewModel.consumptionChartState.value.loading -> CircularProgressIndicator(
+                modifier = Modifier.align(Alignment.Center)
+            )
+
+            // Näytä sisältö
+            else -> Column(
+                Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+
+                // Piirrä kaavio
+                ConsumptionChart(
+                    viewModel.consumptionStatsData,
+                    viewModel.temperatureStatsData,
+                    goToConsumption
                 )
             }
         }

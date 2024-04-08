@@ -1,10 +1,8 @@
 package com.example.coolbox_mobiiliprojekti_app.view
 
-import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Card
@@ -18,7 +16,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -27,8 +24,9 @@ import com.example.coolbox_mobiiliprojekti_app.model.rememberMarker
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.CoolBoxmobiiliprojektiAppTheme
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.GraphKwhColor
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.GraphTempColor
-import com.example.datachartexample2.tests.test3.ConsumptionViewModel
-import com.example.datachartexample2.tests.test3.formatToDateToDayOfWeek
+import com.example.coolbox_mobiiliprojekti_app.ui.theme.PanelColor
+import com.example.coolbox_mobiiliprojekti_app.ui.theme.TextsLightColor
+import com.example.coolbox_mobiiliprojekti_app.viewmodel.ConsumptionViewModel
 import com.patrykandpatrick.vico.compose.axis.horizontal.rememberBottomAxis
 import com.patrykandpatrick.vico.compose.axis.vertical.rememberStartAxis
 import com.patrykandpatrick.vico.compose.chart.CartesianChartHost
@@ -51,10 +49,10 @@ import com.patrykandpatrick.vico.core.model.lineSeries
 
 
 @Composable
-fun ConsumptionColumnChart(
+fun ConsumptionChart(
     consumptionStatsData: Map<String, Float?>?,
     temperatureStatsData: Map<String, Float?>?,
-    maxValue: Float = 10f
+    goToConsumption: () -> Unit = {}
 ) {
 
     // Haetaan viewmodel
@@ -67,7 +65,8 @@ fun ConsumptionColumnChart(
     val labelListKey = remember { ExtraStore.Key<List<String>>() }
 
     // Määritetään akselin arvojen muotoilu
-    val valueFormatterString = AxisValueFormatter<AxisPosition.Horizontal.Bottom> { x, chartValues, _ ->
+    val valueFormatterString =
+            AxisValueFormatter<AxisPosition.Horizontal.Bottom> { x, chartValues, _ ->
         chartValues.model.extraStore[labelListKey]?.get(x.toInt()) ?: ""
     }
 
@@ -82,12 +81,8 @@ fun ConsumptionColumnChart(
                     val consumptions = consumptionStatsData.values.toList()
                     val temperatures = temperatureStatsData.values.toList()
 
-                    // Tulostetaan dataa debug-tarkoituksissa
-                    Log.d("Dorian", "dates $dates   consumptions $consumptions   temperatures $temperatures")
-
                     // Muotoillaan päivämäärät päivän nimiksi
                     val datesFormatted = formatToDateToDayOfWeek(dates)
-                    Log.d("Dorian", "dates $datesFormatted   consumptions $consumptions")
 
                     // Luodaan sarakkeet kulutusdatalle
                     columnSeries {
@@ -106,9 +101,6 @@ fun ConsumptionColumnChart(
         }
     }
 
-    // Haetaan sarakkeiden määrä datalta
-    val columnCount = viewModel.consumptionStatsData?.size ?: 0
-
     // Luodaan teema
     CoolBoxmobiiliprojektiAppTheme {
         // Pinta, joka kattaa koko näytön leveyden
@@ -122,17 +114,16 @@ fun ConsumptionColumnChart(
                 TextButton(
                     contentPadding = PaddingValues(0.dp),
                     shape = RectangleShape,
-                    onClick = { /* TODO Open Total Consumption */ }
+                    onClick = { goToConsumption() }
                 ) {
                     // Kortti, joka toimii paneelina
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(300.dp)
                             .wrapContentSize(Alignment.Center),
                         colors = CardColors(
-                            containerColor = MaterialTheme.colorScheme.primaryContainer,
-                            contentColor = MaterialTheme.colorScheme.primary,
+                            containerColor = PanelColor,
+                            contentColor = TextsLightColor,
                             disabledContainerColor = MaterialTheme.colorScheme.secondaryContainer,
                             disabledContentColor = MaterialTheme.colorScheme.secondary
                         )

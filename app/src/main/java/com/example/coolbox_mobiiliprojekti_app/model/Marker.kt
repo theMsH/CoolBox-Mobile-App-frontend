@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.datachartexample2.tests.test3.ConsumptionViewModel
+import com.example.coolbox_mobiiliprojekti_app.viewmodel.ConsumptionViewModel
 import com.patrykandpatrick.vico.compose.component.fixed
 import com.patrykandpatrick.vico.compose.component.rememberLayeredComponent
 import com.patrykandpatrick.vico.compose.component.rememberLineComponent

@@ -51,7 +51,7 @@ import com.example.coolbox_mobiiliprojekti_app.view.ProductionScreen
 import com.example.coolbox_mobiiliprojekti_app.view.RegisterScreen
 import com.example.coolbox_mobiiliprojekti_app.view.ThemesScreen
 import com.example.coolbox_mobiiliprojekti_app.viewmodel.LoginViewModel
-import com.example.datachartexample2.tests.test3.ConsumptionScreen
+import com.example.coolbox_mobiiliprojekti_app.view.ConsumptionScreen
 import kotlinx.coroutines.launch
 
 
@@ -255,12 +255,12 @@ class MainActivity : ComponentActivity() {
                                     onMenuClick = {
                                         scope.launch { drawerState.open() }
                                     },
-                                    gotoConsumption = {
+                                    goToConsumption = {
                                         navController.navigate("consumptionScreen") {
                                             launchSingleTop = true
                                         }
                                     },
-                                    gotoProduction = {
+                                    goToProduction = {
                                         navController.navigate("productionScreen") {
                                             launchSingleTop = true
                                         }

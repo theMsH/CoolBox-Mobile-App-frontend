@@ -10,42 +10,81 @@ import androidx.lifecycle.viewModelScope
 import com.example.coolbox_mobiiliprojekti_app.api.productionApiService
 import com.example.coolbox_mobiiliprojekti_app.model.ProductionChartState
 import com.example.coolbox_mobiiliprojekti_app.model.ProductionStatsResponse
-import com.example.datachartexample2.tests.test3.TimeInterval
+import com.example.coolbox_mobiiliprojekti_app.view.TimeInterval
 import kotlinx.coroutines.launch
 
 class ProductionViewModel : ViewModel() {
-    // Privaatti muuttuja näkymän tilan seurantaan
+
+    // Sisäinen muuttuja näkymän tilan seurantaan
     private val _productionChartState = mutableStateOf(ProductionChartState())
     val productionChartState: State<ProductionChartState> = _productionChartState
 
-    // Kokonaistuottodataa seuraava tilamuuttuja
+    // Kulutusdataa seuraava tilamuuttuja
     var productionStatsData by mutableStateOf<Map<String, Float>?>(null)
+        private set
 
     // Haetaan dataa valitun aikavälin perusteella
-    fun fetchData(interval: TimeInterval, date: Any) {
+    fun productionFetchData(interval: TimeInterval, date: Any) {
         viewModelScope.launch {
             try {
                 _productionChartState.value = _productionChartState.value.copy(loading = true)
-                if (interval == TimeInterval.DAYS) {
-                    fetch7DayProductionData(date.toString())
+                when (interval) {
+                    TimeInterval.HOURS -> {
+                        fetchHourlyProductionsData(date.toString())
+                    }
+                    TimeInterval.DAYS -> {
+                        fetchDailyProductionsData(date.toString())
+                    }
+                    TimeInterval.WEEKS -> {
+                        fetchWeeklyProductionsData(date.toString())
+                    }
+                    TimeInterval.MONTHS -> {
+                        fetchMonthlyProductionsData(date.toString())
+                    }
+                    TimeInterval.MAIN -> {
+                        fetch7DayProductionData(date.toString())
+                    }
                 }
-            }
-            catch (e: Exception) {
+            } catch (e: Exception) {
                 Log.d("Error", e.toString())
-            }
-            finally {
+            } finally {
                 _productionChartState.value = _productionChartState.value.copy(loading = false)
             }
         }
     }
 
-    // Funktio 7 päivän kokonaistuottodatan hakemiseen
-    private suspend fun fetch7DayProductionData(date: String) {
-        val response = productionApiService.getSevenDayProductionsData(date)
+    // Funktiot päivittäisen kulutusdatan hakemiseen
+    private suspend fun fetchDailyProductionsData(date: String) {
+        val response = productionApiService.getDailyProductionsData(date)
         handleProductionStatsResponse(response)
     }
 
-    // Käsittelee tuottotilastojen vastauksen ja päivittää kulutusdatan
+    // Funktiot viikoittaisen kulutusdatan hakemiseen
+    private suspend fun fetchWeeklyProductionsData(date: String) {
+        val response = productionApiService.getWeeklyProductionsData(date)
+        handleProductionStatsResponse(response)
+    }
+
+    // Funktiot tunneittaisen kulutusdatan hakemiseen
+    private suspend fun fetchHourlyProductionsData(date: String) {
+        val response = productionApiService.getHourlyProductionsData(date)
+        handleProductionStatsResponse(response)
+    }
+
+    // Funktio kuukausittaisen kulutusdatan hakemiseen
+    private suspend fun fetchMonthlyProductionsData(date: String) {
+        val response = productionApiService.getMonthlyProductionsData(date)
+        handleProductionStatsResponse(response)
+    }
+
+    // Funktio 7 päivän kokonaistuottodatan hakemiseen
+    private suspend fun fetch7DayProductionData(date: String) {
+        val response = productionApiService.getSevenDayProductionsData(date)
+        Log.d("Dorian", "fetch7DayProductionData response $response")
+        handleProductionStatsResponse(response)
+    }
+
+    // Käsittelee kulutustilastojen vastauksen ja päivittää kulutusdatan
     private fun handleProductionStatsResponse(response: ProductionStatsResponse) {
         if (response.data.all { it.date != null }) {
             productionStatsData = response.data.associate { it.date.toString() to it.totalKwh }
