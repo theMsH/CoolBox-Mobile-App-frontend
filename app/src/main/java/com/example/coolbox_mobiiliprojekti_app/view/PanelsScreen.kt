@@ -23,11 +23,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.coolbox_mobiiliprojekti_app.datastore.UserPreferences
+import com.example.coolbox_mobiiliprojekti_app.model.PanelPreferences
 import com.example.coolbox_mobiiliprojekti_app.viewmodel.MainScreenViewModel
 import com.example.coolbox_mobiiliprojekti_app.viewmodel.PanelsViewModel
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -37,9 +42,10 @@ fun PanelsScreen(
 ) {
     val panelsVm: PanelsViewModel = viewModel()
     val mainScreenVm: MainScreenViewModel = viewModel()
-    //var consumptionchecked by remember { mutableStateOf(true) }
-    var productionchecked by remember { mutableStateOf(true) }
-    var batterychecked by remember { mutableStateOf(true) }
+
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    var preferenceDataStore = UserPreferences(context)
 
     Scaffold(
         topBar =
@@ -81,6 +87,13 @@ fun PanelsScreen(
                             panelsVm.consumptionChecked.value = it
                             if (panelsVm.consumptionChecked.value) {
                                 Log.d("itekki", "PanelsScreen: consumption check on")
+                                var panelPreferences = PanelPreferences(
+                                        it,
+                                        panelsVm.productionChecked.value,
+                                        panelsVm.batteryChecked.value)
+                                scope.launch {
+                                    preferenceDataStore.setPreferences(panelPreferences)
+                                }
                                 mainScreenVm.conPanelVisible = true
                                 // Tämä value ei vielä tällä hetkellä ymmärtääkseni pysy siinä arvossa
                                 // mihin se asetetaan kun tästä ruudusta poistutaan, tai
@@ -100,10 +113,10 @@ fun PanelsScreen(
                 ) {
                     Text(text = "Production panel")
                     Switch(
-                        checked = productionchecked,
+                        checked = panelsVm.productionChecked.value,
                         onCheckedChange = {
-                            productionchecked = it
-                            if (productionchecked) {
+                            panelsVm.productionChecked.value = it
+                            if (panelsVm.productionChecked.value) {
                                 // Aseta paneeli näkyväksi, kun switch on päällä
                             }
                             else {
@@ -118,10 +131,10 @@ fun PanelsScreen(
                 ) {
                     Text(text = "Battery panel")
                     Switch(
-                        checked = batterychecked,
+                        checked = panelsVm.batteryChecked.value,
                         onCheckedChange = {
-                            batterychecked = it
-                            if (batterychecked) {
+                            panelsVm.batteryChecked.value = it
+                            if (panelsVm.batteryChecked.value) {
                                 // Aseta paneeli näkyväksi, kun switch on päällä
                             }
                             else {

@@ -28,11 +28,14 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.coolbox_mobiiliprojekti_app.datastore.UserPreferences
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.PanelColor
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.TextsLightColor
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.TopAppBarColor
@@ -51,10 +54,16 @@ fun MainScreen(
 ) {
     val mainScreenVm: MainScreenViewModel = viewModel()
     val consumptionVM: ConsumptionViewModel = viewModel()
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    var preferenceDataStore = UserPreferences(context)
+
     val conPanelVisible = mainScreenVm.conPanelVisible
     val prodPanelVisible = mainScreenVm.prodPanelVisible
     val batPanelVisible = mainScreenVm.batPanelVisible
     val tempPanelVisible = mainScreenVm.tempPanelVisible
+
+
 
     Scaffold(
         topBar = {

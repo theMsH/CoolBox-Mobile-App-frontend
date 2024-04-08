@@ -52,6 +52,8 @@ android {
 
 dependencies {
 
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
+
     // Vico charts
     implementation("com.patrykandpatrick.vico:compose-m3:2.0.0-alpha.12")
 
