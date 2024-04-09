@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.coolbox_mobiiliprojekti_app.datastore.UserPreferences
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.PanelColor
+import com.example.coolbox_mobiiliprojekti_app.ui.theme.PanelTextColor
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.TextsLightColor
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.TopAppBarColor
 import com.example.coolbox_mobiiliprojekti_app.viewmodel.MainScreenViewModel
@@ -114,7 +115,8 @@ fun MainScreen(
                                 modifier = Modifier
                                     .wrapContentSize(Alignment.Center)
                                     .fillMaxWidth()
-                                    .padding(horizontal = 2.dp, vertical = 4.dp),
+                                    .padding(horizontal = 2.dp, vertical = 4.dp)
+                                    .clickable(onClick = {goToConsumption()}),
                                 colors = CardDefaults.cardColors(
                                     containerColor = PanelColor,
                                     contentColor = TextsLightColor
@@ -130,7 +132,8 @@ fun MainScreen(
                                 modifier = Modifier
                                     .wrapContentSize(Alignment.Center)
                                     .fillMaxWidth()
-                                    .padding(horizontal = 2.dp, vertical = 4.dp),
+                                    .padding(horizontal = 2.dp, vertical = 4.dp)
+                                    .clickable(onClick = {goToProduction()}),
                                 colors = CardDefaults.cardColors(
                                     containerColor = PanelColor,
                                     contentColor = TextsLightColor
@@ -150,7 +153,7 @@ fun MainScreen(
                                     .clickable(onClick = {}),
                                 colors = CardDefaults.cardColors(
                                     containerColor = PanelColor,
-                                    contentColor = TextsLightColor
+                                    contentColor = PanelTextColor
                                 )
                             ) {
                                 Text(
@@ -174,7 +177,7 @@ fun MainScreen(
                                     .clickable(onClick = {}),
                                 colors = CardDefaults.cardColors(
                                     containerColor = PanelColor,
-                                    contentColor = TextsLightColor
+                                    contentColor = PanelTextColor
                                 )
                             ) {
                                 Text(
@@ -232,7 +235,7 @@ fun ProductionPanel7Days(
             ) {
 
                 // Piirrä kaavio
-                ProductionChart(
+                ProductionChart7Days(
                     viewModel.productionStatsData,
                     goToProduction
                 )
@@ -277,7 +280,7 @@ fun ConsumptionPanel7Days(
             ) {
 
                 // Piirrä kaavio
-                ConsumptionChart(
+                ConsumptionChart7Days(
                     viewModel.consumptionStatsData,
                     viewModel.temperatureStatsData,
                     goToConsumption

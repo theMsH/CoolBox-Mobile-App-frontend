@@ -17,7 +17,10 @@ val Pink40 = Color(0xFF7D5260)
 
 val TextsDarkColor = Color(0xFF363C55)
 val TextsLightColor = Color(0xFFCAD6DF)
-val PanelColor = Color(0xFFF0F0F0)
+val PanelColor = Color(0xff001849)
+val ScreenPanelColor = Color(0xFFF0F0F0)
+val PanelTextColor = Color(0xff495d92)
+val PanelTextButtonColor = Color.White
 val DrawerLayoutColor = Color(0xFFECF5FC)
 val TopAppBarColor = Color(0xFFE6EAFF)
 val PrimaryColor = Color(0xFF03396C)
@@ -30,3 +33,4 @@ val BackgroundColor = Color(0xFFE4ECF1)
 
 val GraphKwhColor = Color(0xFF0D3E9E)
 val GraphTempColor = Color(0xFFE04646)
+val ProductionLineColor = Color.Green

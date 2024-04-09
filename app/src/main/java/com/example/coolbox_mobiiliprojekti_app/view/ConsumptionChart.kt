@@ -24,7 +24,7 @@ import com.example.coolbox_mobiiliprojekti_app.model.rememberMarker
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.CoolBoxmobiiliprojektiAppTheme
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.GraphKwhColor
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.GraphTempColor
-import com.example.coolbox_mobiiliprojekti_app.ui.theme.PanelColor
+import com.example.coolbox_mobiiliprojekti_app.ui.theme.ScreenPanelColor
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.TextsLightColor
 import com.example.coolbox_mobiiliprojekti_app.viewmodel.ConsumptionViewModel
 import com.patrykandpatrick.vico.compose.axis.horizontal.rememberBottomAxis
@@ -122,7 +122,7 @@ fun ConsumptionChart(
                             .fillMaxWidth()
                             .wrapContentSize(Alignment.Center),
                         colors = CardColors(
-                            containerColor = PanelColor,
+                            containerColor = ScreenPanelColor,
                             contentColor = TextsLightColor,
                             disabledContainerColor = MaterialTheme.colorScheme.secondaryContainer,
                             disabledContentColor = MaterialTheme.colorScheme.secondary
