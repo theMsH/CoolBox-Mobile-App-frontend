@@ -5,7 +5,4 @@ import androidx.lifecycle.ViewModel
 
 class PanelsViewModel: ViewModel() {
 
-    var consumptionChecked = mutableStateOf(true)
-    var productionChecked = mutableStateOf(true)
-    var batteryChecked = mutableStateOf(true)
 }

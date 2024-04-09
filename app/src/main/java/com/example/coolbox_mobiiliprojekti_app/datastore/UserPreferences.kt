@@ -6,33 +6,61 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.preferencesDataStore
-import com.example.coolbox_mobiiliprojekti_app.model.PanelPreferences
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 
-class UserPreferences( private val context: Context) {
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "preferences")
 
-    val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "preferences")
+class UserPreferences(context: Context) {
+
+
     var pref = context.dataStore
 
-    companion object {
-        var consumptionActive = booleanPreferencesKey("CONSUMPTION_CHECKED")
-        var productionActive = booleanPreferencesKey("PRODUCTION_ACTIVE")
-        var batteryActive = booleanPreferencesKey("BATTERY_ACTIVE")
+    var consumptionActive = booleanPreferencesKey("CONSUMPTION_CHECKED")
+    var productionActive = booleanPreferencesKey("PRODUCTION_ACTIVE")
+    var batteryActive = booleanPreferencesKey("BATTERY_ACTIVE")
+
+    // Haetaan booleanit dataStoresta
+    var getConsumptionActive = flow<Boolean> {
+        pref.data.map {
+            it[consumptionActive]?:true
+        }.collect(collector = {
+            emit(it)
+        })
     }
 
-    suspend fun setPreferences(panelPreferences : PanelPreferences) {
+    var getProductionActive = flow<Boolean> {
+        pref.data.map {
+            it[productionActive]?:true
+        }.collect(collector = {
+            emit(it)
+        })
+    }
+
+    var getBatteryActive = flow<Boolean> {
+        pref.data.map {
+            it[batteryActive]?:true
+        }.collect(collector = {
+            emit(it)
+        })
+    }
+
+    // Asetetaan booleanit annettuun arvoon
+    suspend fun setConsumptionActive(state : Boolean) {
         pref.edit {
-            it[consumptionActive] = panelPreferences.consumptionActive
-            it[productionActive] = panelPreferences.productionActive
-            it[batteryActive] = panelPreferences.batteryActive
+            it[consumptionActive] = state
         }
     }
 
-    fun getPreferences() = pref.data.map {
-        PanelPreferences(
-            consumptionActive = it[consumptionActive]?:true,
-            productionActive = it[productionActive]?:true,
-            batteryActive = it[batteryActive]?:true
-        )
+    suspend fun setProductionActive(state : Boolean) {
+        pref.edit {
+            it[productionActive] = state
+        }
+    }
+
+    suspend fun setBatteryActive(state : Boolean) {
+        pref.edit {
+            it[batteryActive] = state
+        }
     }
 }

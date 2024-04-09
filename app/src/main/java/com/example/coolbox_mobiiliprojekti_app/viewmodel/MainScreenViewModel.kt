@@ -12,8 +12,5 @@ class MainScreenViewModel : ViewModel() {
     private val _mainScreenState = mutableStateOf(MainScreenState())
     val mainScreenState: State<MainScreenState> = _mainScreenState
 
-    var conPanelVisible = true
-    var prodPanelVisible = true
-    var batPanelVisible = true
     var tempPanelVisible = true
 }

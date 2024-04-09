@@ -25,6 +25,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -54,13 +55,13 @@ fun MainScreen(
 ) {
     val mainScreenVm: MainScreenViewModel = viewModel()
     val consumptionVM: ConsumptionViewModel = viewModel()
+    // DataStoren käyttöönotto
     val context = LocalContext.current
-    val scope = rememberCoroutineScope()
-    var preferenceDataStore = UserPreferences(context)
-
-    val conPanelVisible = mainScreenVm.conPanelVisible
-    val prodPanelVisible = mainScreenVm.prodPanelVisible
-    val batPanelVisible = mainScreenVm.batPanelVisible
+    val preferenceDataStore = UserPreferences(context)
+    // Haetaan DataStoresta booleanit, joiden avulla laitetaan paneelit näkyviin/pois näkyvistä
+    val conPanelVisible = preferenceDataStore.getConsumptionActive.collectAsState(initial = true)
+    val prodPanelVisible = preferenceDataStore.getProductionActive.collectAsState(initial = true)
+    val batPanelVisible = preferenceDataStore.getBatteryActive.collectAsState(initial = true)
     val tempPanelVisible = mainScreenVm.tempPanelVisible
 
 
@@ -107,7 +108,7 @@ fun MainScreen(
                     // olikin tuossa vaan niitä placeholdereita varten, ettei ne ollut kiinni toisissaan
                     //verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    if (conPanelVisible) { // Jos boolean on tosi, näytetään paneeli
+                    if (conPanelVisible.value) { // Jos boolean on tosi, näytetään paneeli
                         item {
                             Card(
                                 modifier = Modifier
@@ -123,7 +124,7 @@ fun MainScreen(
                             }
                         }
                     }
-                    if (prodPanelVisible) {
+                    if (prodPanelVisible.value) {
                         item {
                             Card(
                                 modifier = Modifier
@@ -139,7 +140,7 @@ fun MainScreen(
                             }
                         }
                     }
-                    if (batPanelVisible) {
+                    if (batPanelVisible.value) {
                         item {
                             Card(
                                 modifier = Modifier

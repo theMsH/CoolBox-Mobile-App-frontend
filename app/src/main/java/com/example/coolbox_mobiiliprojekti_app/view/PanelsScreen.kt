@@ -20,6 +20,7 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -29,7 +30,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.coolbox_mobiiliprojekti_app.datastore.UserPreferences
-import com.example.coolbox_mobiiliprojekti_app.model.PanelPreferences
 import com.example.coolbox_mobiiliprojekti_app.viewmodel.MainScreenViewModel
 import com.example.coolbox_mobiiliprojekti_app.viewmodel.PanelsViewModel
 import kotlinx.coroutines.launch
@@ -45,7 +45,11 @@ fun PanelsScreen(
 
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    var preferenceDataStore = UserPreferences(context)
+    val preferenceDataStore = UserPreferences(context)
+
+    val consumptionChecked = preferenceDataStore.getConsumptionActive.collectAsState(initial = true)
+    val productionChecked = preferenceDataStore.getProductionActive.collectAsState(initial = true)
+    val batteryChecked = preferenceDataStore.getBatteryActive.collectAsState(initial = true)
 
     Scaffold(
         topBar =
@@ -82,27 +86,10 @@ fun PanelsScreen(
                 ) {
                     Text(text = "Consumption panel")
                     Switch(
-                        checked = panelsVm.consumptionChecked.value,
+                        checked = consumptionChecked.value,
                         onCheckedChange = {
-                            panelsVm.consumptionChecked.value = it
-                            if (panelsVm.consumptionChecked.value) {
-                                Log.d("itekki", "PanelsScreen: consumption check on")
-                                var panelPreferences = PanelPreferences(
-                                        it,
-                                        panelsVm.productionChecked.value,
-                                        panelsVm.batteryChecked.value)
-                                scope.launch {
-                                    preferenceDataStore.setPreferences(panelPreferences)
-                                }
-                                mainScreenVm.conPanelVisible = true
-                                // Tämä value ei vielä tällä hetkellä ymmärtääkseni pysy siinä arvossa
-                                // mihin se asetetaan kun tästä ruudusta poistutaan, tai
-                                // mainscreeniin palaaminen ei päivitä UI:ta,
-                                // ja switchi myös resetoituu aina kun tähän ruutuun mennään takaisin
-                            }
-                            else {
-                                Log.d("itekki", "PanelsScreen: consumption check off")
-                                mainScreenVm.conPanelVisible = false
+                            scope.launch {
+                                preferenceDataStore.setConsumptionActive(it)
                             }
                         })
                 }
@@ -113,14 +100,10 @@ fun PanelsScreen(
                 ) {
                     Text(text = "Production panel")
                     Switch(
-                        checked = panelsVm.productionChecked.value,
+                        checked = productionChecked.value,
                         onCheckedChange = {
-                            panelsVm.productionChecked.value = it
-                            if (panelsVm.productionChecked.value) {
-                                // Aseta paneeli näkyväksi, kun switch on päällä
-                            }
-                            else {
-                                // Piilota paneeli, kun switch on pois päältä
+                            scope.launch {
+                                preferenceDataStore.setProductionActive(it)
                             }
                         })
                 }
@@ -131,14 +114,10 @@ fun PanelsScreen(
                 ) {
                     Text(text = "Battery panel")
                     Switch(
-                        checked = panelsVm.batteryChecked.value,
+                        checked = batteryChecked.value,
                         onCheckedChange = {
-                            panelsVm.batteryChecked.value = it
-                            if (panelsVm.batteryChecked.value) {
-                                // Aseta paneeli näkyväksi, kun switch on päällä
-                            }
-                            else {
-                                // Piilota paneeli, kun switch on pois päältä
+                            scope.launch {
+                                preferenceDataStore.setBatteryActive(it)
                             }
                         })
                 }
