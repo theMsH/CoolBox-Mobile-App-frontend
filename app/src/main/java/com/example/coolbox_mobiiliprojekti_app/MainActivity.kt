@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -35,6 +36,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -43,7 +47,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.coolbox_mobiiliprojekti_app.ui.theme.CoolAppText
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.CoolBoxmobiiliprojektiAppTheme
+import com.example.coolbox_mobiiliprojekti_app.ui.theme.TertiaryColor
 import com.example.coolbox_mobiiliprojekti_app.view.LoginScreen
 import com.example.coolbox_mobiiliprojekti_app.view.MainScreen
 import com.example.coolbox_mobiiliprojekti_app.view.PanelsScreen
@@ -99,21 +105,21 @@ class MainActivity : ComponentActivity() {
                                     horizontalAlignment = Alignment.CenterHorizontally,
                                     verticalArrangement = Arrangement.Top
                                 ) {
-                                    Text(
-                                        fontSize = 20.sp,
-                                        text = "Meidän hieno logo tms"
-                                    )
-                                    Row {
-                                        Icon(
-                                            imageVector = Icons.Filled.Home,
-                                            contentDescription = "Home"
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Icon(painter = painterResource(id = R.drawable.coolapp_icon),
+                                             contentDescription = "CoolAppIcon",
+                                             Modifier.size(50.dp),
+                                             tint = CoolAppText
                                         )
-                                        Icon(
-                                            imageVector = Icons.Filled.Home,
-                                            contentDescription = "Home"
+                                        Text(
+                                            fontSize = 20.sp,
+                                            text = "oolApp",
+                                            color = CoolAppText
                                         )
                                     }
-                                    HorizontalDivider(modifier = Modifier.padding(15.dp))
+                                    Spacer(Modifier.height(20.dp))
                                 }
 
 
@@ -135,9 +141,15 @@ class MainActivity : ComponentActivity() {
                                         contentDescription = "User"
                                     )
                                     Spacer(Modifier.width(16.dp))
-                                    Text(
-                                        text = "${stringResource(R.string.user)}\n${loginVm.user.value.user.username}"
-                                    )
+                                    Column {
+                                        Text(
+                                            text = stringResource(R.string.user)
+                                        )
+                                        Text(
+                                            color = TertiaryColor,
+                                            text = loginVm.user.value.user.username
+                                        )
+                                    }
                                 }
 
 
