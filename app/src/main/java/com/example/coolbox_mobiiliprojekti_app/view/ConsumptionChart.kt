@@ -1,5 +1,6 @@
 package com.example.coolbox_mobiiliprojekti_app.view
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth

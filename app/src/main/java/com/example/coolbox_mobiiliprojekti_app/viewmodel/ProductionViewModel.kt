@@ -10,21 +10,26 @@ import androidx.lifecycle.viewModelScope
 import com.example.coolbox_mobiiliprojekti_app.api.productionApiService
 import com.example.coolbox_mobiiliprojekti_app.model.ProductionChartState
 import com.example.coolbox_mobiiliprojekti_app.model.ProductionStatsResponse
+import com.example.coolbox_mobiiliprojekti_app.model.WindChartState
+import com.example.coolbox_mobiiliprojekti_app.model.WindStatsResponse
+import com.example.coolbox_mobiiliprojekti_app.view.ProductionTypeInterval
 import com.example.coolbox_mobiiliprojekti_app.view.TimeInterval
 import kotlinx.coroutines.launch
 
-class ProductionViewModel : ViewModel() {
+class ProductionViewModel(
+
+) : ViewModel() {
 
     // Sisäinen muuttuja näkymän tilan seurantaan
     private val _productionChartState = mutableStateOf(ProductionChartState())
     val productionChartState: State<ProductionChartState> = _productionChartState
 
-    // Kulutusdataa seuraava tilamuuttuja
+    // Tuottodataa seuraava tilamuuttuja
     var productionStatsData by mutableStateOf<Map<String, Float>?>(null)
         private set
 
     // Haetaan dataa valitun aikavälin perusteella
-    fun productionFetchData(interval: TimeInterval, date: Any) {
+    fun fetchTotalProductionData(interval: TimeInterval, date: Any) {
         viewModelScope.launch {
             try {
                 _productionChartState.value = _productionChartState.value.copy(loading = true)
@@ -53,25 +58,25 @@ class ProductionViewModel : ViewModel() {
         }
     }
 
-    // Funktiot päivittäisen kulutusdatan hakemiseen
+    // Funktiot päivittäisen Tuottodatan hakemiseen
     private suspend fun fetchDailyProductionsData(date: String) {
         val response = productionApiService.getDailyProductionsData(date)
         handleProductionStatsResponse(response)
     }
 
-    // Funktiot viikoittaisen kulutusdatan hakemiseen
+    // Funktiot viikoittaisen Tuottodatan hakemiseen
     private suspend fun fetchWeeklyProductionsData(date: String) {
         val response = productionApiService.getWeeklyProductionsData(date)
         handleProductionStatsResponse(response)
     }
 
-    // Funktiot tunneittaisen kulutusdatan hakemiseen
+    // Funktiot tunneittaisen Tuottodatan hakemiseen
     private suspend fun fetchHourlyProductionsData(date: String) {
         val response = productionApiService.getHourlyProductionsData(date)
         handleProductionStatsResponse(response)
     }
 
-    // Funktio kuukausittaisen kulutusdatan hakemiseen
+    // Funktio kuukausittaisen Tuottodatan hakemiseen
     private suspend fun fetchMonthlyProductionsData(date: String) {
         val response = productionApiService.getMonthlyProductionsData(date)
         handleProductionStatsResponse(response)
@@ -80,11 +85,10 @@ class ProductionViewModel : ViewModel() {
     // Funktio 7 päivän kokonaistuottodatan hakemiseen
     private suspend fun fetch7DayProductionData(date: String) {
         val response = productionApiService.getSevenDayProductionsData(date)
-        Log.d("Dorian", "fetch7DayProductionData response $response")
         handleProductionStatsResponse(response)
     }
 
-    // Käsittelee kulutustilastojen vastauksen ja päivittää kulutusdatan
+    // Käsittelee Tuottotilastojen vastauksen ja päivittää Tuottodatan
     private fun handleProductionStatsResponse(response: ProductionStatsResponse) {
         if (response.data.all { it.date != null }) {
             productionStatsData = response.data.associate { it.date.toString() to it.totalKwh }
@@ -103,6 +107,113 @@ class ProductionViewModel : ViewModel() {
                 "Error",
                 "handleProductionStatsResponse didn't receive the right data, suspicious of a name change :("
             )
+        }
+    }
+
+    // Tuulidataa seuraava tilamuuttuja
+    var windStatsData by mutableStateOf<Map<String, Float>?>(null)
+        private set
+    
+    // Haetaan dataa valitun aikavälin perusteella
+    fun fetchWindData(interval: TimeInterval, date: Any) {
+        viewModelScope.launch {
+            try {
+                _productionChartState.value = _productionChartState.value.copy(loading = true)
+                when (interval) {
+                    TimeInterval.HOURS -> {
+                        fetchHourlyWindsData(date.toString())
+                    }
+                    TimeInterval.DAYS -> {
+                        fetchDailyWindData(date.toString())
+                    }
+                    TimeInterval.WEEKS -> {
+                        fetchWeeklyWindsData(date.toString())
+                    }
+                    TimeInterval.MONTHS -> {
+                        fetchMonthlyWindsData(date.toString())
+                    }
+                    TimeInterval.MAIN -> {
+                        fetch7DayWindData(date.toString())
+                    }
+                }
+            } catch (e: Exception) {
+                Log.d("Error", e.toString())
+            } finally {
+                _productionChartState.value = _productionChartState.value.copy(loading = false)
+            }
+        }
+    }
+
+    // Funktiot päivittäisen Tuulidatan hakemiseen
+    private suspend fun fetchDailyWindData(date: String) {
+        Log.d("Dorian", "fetchDailyWindData is called")
+        val response = productionApiService.getDailyWindProductionsData(date)
+        Log.d("Dorian", "fetchDailyWindData response $response")
+        handleWindStatsResponse(response)
+    }
+
+    // Funktiot viikoittaisen Tuulidatan hakemiseen
+    private suspend fun fetchWeeklyWindsData(date: String) {
+        val response = productionApiService.getWeeklyWindProductionsData(date)
+        handleWindStatsResponse(response)
+    }
+
+    // Funktiot tunneittaisen Tuulidatan hakemiseen
+    private suspend fun fetchHourlyWindsData(date: String) {
+        val response = productionApiService.getHourlyWindProductionsData(date)
+        handleWindStatsResponse(response)
+    }
+
+    // Funktio kuukausittaisen Tuulidatan hakemiseen
+    private suspend fun fetchMonthlyWindsData(date: String) {
+        val response = productionApiService.getMonthlyWindProductionsData(date)
+        handleWindStatsResponse(response)
+    }
+
+    // Funktio 7 päivän kokonaisTuulidatan hakemiseen
+    private suspend fun fetch7DayWindData(date: String) {
+        val response = productionApiService.getMonthlyWindProductionsData(date)
+        Log.d("Dorian", "fetch7Day WindData response $response")
+        handleWindStatsResponse(response)
+    }
+
+    // Käsittelee Tuulitilastojen vastauksen ja päivittää Tuulidatan
+    private fun handleWindStatsResponse(response: WindStatsResponse) {
+        if (response.data.all { it.date != null }) {
+            windStatsData = response.data.associate { it.date.toString() to it.totalKwh }
+        }
+        else if (response.data.all { it.hour != null }) {
+            windStatsData = response.data.associate { it.hour.toString() to it.totalKwh }
+        }
+        else if (response.data.all { it.day != null }) {
+            windStatsData = response.data.associate { it.day.toString() to it.totalKwh }
+        }
+        else if (response.data.all { it.month != null }) {
+            windStatsData = response.data.associate { it.month.toString() to it.totalKwh }
+        }
+        else {
+            Log.d(
+                "Error",
+                "handleWindStatsResponse didn't receive the right data, suspicious of a name change :("
+            )
+        }
+    }
+    val currentProductionType: ProductionTypeInterval = ProductionTypeInterval.Total
+
+    fun fetchData(interval: TimeInterval, date: Any) {
+        viewModelScope.launch {
+            _productionChartState.value = _productionChartState.value.copy(loading = true)
+            try {
+                when (currentProductionType) {
+                    ProductionTypeInterval.Wind -> fetchWindData(interval, date.toString())
+                    ProductionTypeInterval.Total -> fetchTotalProductionData(interval, date.toString()) // Assume this function exists
+                    ProductionTypeInterval.Solar -> TODO()
+                }
+            } catch (e: Exception) {
+                Log.d("Error", "Fetching data failed: ${e.message}")
+            } finally {
+                _productionChartState.value = _productionChartState.value.copy(loading = false)
+            }
         }
     }
 }

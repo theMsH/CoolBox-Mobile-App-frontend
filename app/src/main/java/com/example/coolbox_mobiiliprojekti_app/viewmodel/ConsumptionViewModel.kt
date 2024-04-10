@@ -112,11 +112,13 @@ class ConsumptionViewModel : ViewModel() {
     // Funktio 7 päivän kokonaiskulujen hakemiseen
     private suspend fun fetch7DayConsumptionData(date: String) {
         val response = consumptionApiService.getSevenDayConsumptionsData(date)
+        Log.d("Dorian", "response of fetch7Day ConsumptionData $response")
         handleConsumptionStatsResponse(response)
     }
     // Funktio 7 päivän lämpötieto hakemiseen
     private suspend fun fetch7DayTemperatureData(date: String) {
         val response = consumptionApiService.getSevenDayTemperaturesData(date)
+        Log.d("Dorian", "response of fetch7Day TemperatureData $response")
         handleTemperatureStatsResponse(response)
     }
 

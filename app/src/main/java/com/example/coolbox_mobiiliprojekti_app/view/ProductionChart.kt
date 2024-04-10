@@ -13,7 +13,10 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -47,7 +50,8 @@ import com.patrykandpatrick.vico.core.axis.formatter.AxisValueFormatter
 @Composable
 fun ProductionChart(
     productionStatsData: Map<String, Float?>?,
-    goToProduction: () -> Unit = {}
+    goToProduction: () -> Unit = {},
+    currentProductionType: ProductionTypeInterval
 ) {
 
     // Haetaan viewmodel
@@ -65,32 +69,62 @@ fun ProductionChart(
             chartValues.model.extraStore[labelListKey]?.get(x.toInt()) ?: ""
         }
 
+    // TODO Korjaa aloitus näkymän chartin katoamisen, joka kuitenkin palaa ennalleen,
+    //  jos painaa nappeja tai navigoi nuoli näppäimillä edes tai takaisin.
+
     // Käynnistetään effect, joka reagoi productionStatsDatan muutoksiin
-    LaunchedEffect(key1 = productionStatsData) {
-        viewModel.productionStatsData?.let { productionStatsData ->
-            // Yritetään suorittaa transaktio modelProducerilla
-            modelProducer.tryRunTransaction {
-                // Haetaan datan avaimet ja arvot listoiksi
-                val dates = productionStatsData.keys.toList()
-                val productions = productionStatsData.values.toList()
+    LaunchedEffect(key1 = currentProductionType) {
+        when(currentProductionType) {
+            ProductionTypeInterval.Total -> {
+                viewModel.productionStatsData?.let { productionStatsData ->
+                    // Yritetään suorittaa transaktio modelProducerilla
+                    modelProducer.tryRunTransaction {
+                        // Haetaan datan avaimet ja arvot listoiksi
+                        val dates = productionStatsData.keys.toList()
+                        Log.d("Dorian", "productionStatsData.keys.toList() dates $dates")
+                        val productions = productionStatsData.values.toList()
 
-                // Tulostetaan dataa debug-tarkoituksissa
-                Log.d("Dorian", "TUOTTOPÄIVÄT: dates $dates   productions $productions")
+                        // Muotoillaan päivämäärät päivän nimiksi
+                        val datesFormatted = formatToDateToDayOfWeek(dates)
 
-                // Muotoillaan päivämäärät päivän nimiksi
-                val datesFormatted = formatToDateToDayOfWeek(dates)
-                Log.d("Dorian", "dates $datesFormatted  productions $productions")
+                        // Luodaan sarakkeet tuottodatalle
+                        lineSeries {
+                            series(productions)
+                        }
 
-                // Luodaan sarakkeet tuottodatalle
-                lineSeries {
-                    series(productions)
-                }
-
-                // Päivitetään extras lisäämällä päivämäärät
-                updateExtras {
-                    it[labelListKey] = datesFormatted
+                        // Päivitetään extras lisäämällä päivämäärät
+                        updateExtras {
+                            it[labelListKey] = datesFormatted
+                        }
+                    }
                 }
             }
+            ProductionTypeInterval.Wind -> {
+                viewModel.windStatsData?.let { windStatsData ->
+                    // Yritetään suorittaa transaktio modelProducerilla
+                    modelProducer.tryRunTransaction {
+                        // Haetaan datan avaimet ja arvot listoiksi
+                        val dates = windStatsData.keys.toList()
+                        Log.d("Dorian", "windStatsData.keys.toList() dates $dates")
+                        val productions = windStatsData.values.toList()
+
+                        // Muotoillaan päivämäärät päivän nimiksi
+                        val datesFormatted = formatToDateToDayOfWeek(dates)
+
+                        // Luodaan sarakkeet tuottodatalle
+                        lineSeries {
+                            series(productions)
+                        }
+
+                        // Päivitetään extras lisäämällä päivämäärät
+                        updateExtras {
+                            it[labelListKey] = datesFormatted
+                        }
+                    }
+                }
+            }
+            ProductionTypeInterval.Solar -> TODO()
+
         }
     }
 
@@ -123,8 +157,14 @@ fun ProductionChart(
                             .align(Alignment.CenterHorizontally)
                             .padding(top = 20.dp),
                         fontSize = 20.sp,
-                        text = "Total Production"
+                        text = when (currentProductionType) {
+                            ProductionTypeInterval.Wind -> "Wind Production"
+                            ProductionTypeInterval.Solar -> "Solar Production"
+                            ProductionTypeInterval.Total -> "Total Production"
+                        },
+                        color = Color.Black
                     )
+
                     // CartesianChartHost, joka sisältää chartin
                     CartesianChartHost(
                         chart =

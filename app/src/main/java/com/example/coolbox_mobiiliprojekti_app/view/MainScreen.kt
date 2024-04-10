@@ -215,7 +215,7 @@ fun ProductionPanel7Days(
     LaunchedEffect(key1 = currentWeekStartDate, key2 = Unit) {
         // Päivitä datan haku sen mukaan, mikä aikaväli on valittu
         if (currentTimeInterval == TimeInterval.MAIN) {
-            viewModel.productionFetchData(TimeInterval.MAIN, currentWeekStartDate)
+            viewModel.fetchData(TimeInterval.MAIN, currentWeekStartDate.toString())
         }
     }
     // Näytön sisältö

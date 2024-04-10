@@ -1,16 +1,22 @@
 package com.example.coolbox_mobiiliprojekti_app.view
 
+import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material.icons.filled.Air
+import androidx.compose.material.icons.filled.BatteryChargingFull
+import androidx.compose.material.icons.filled.Brightness5
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.BottomAppBar
@@ -38,9 +44,11 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.coolbox_mobiiliprojekti_app.viewmodel.ProductionViewModel
+import com.patrykandpatrick.vico.core.model.lineSeries
 import kotlinx.coroutines.Job
 import java.time.DayOfWeek
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
 import java.time.temporal.WeekFields
 import java.util.Locale
@@ -49,6 +57,10 @@ import java.util.Locale
 // Aikavälin luetelman määrittely
 enum class TimeInterval {
     DAYS, HOURS, WEEKS, MONTHS, MAIN
+}
+
+enum class ProductionTypeInterval {
+    Solar, Wind, Total
 }
 
 fun LocalDate.startOfWeek(): LocalDate {
@@ -86,6 +98,7 @@ fun ProductionScreen(
 ) {
     val viewModel: ProductionViewModel = viewModel()
     // Alusta nykyinen aikaväli tilamuuttuja
+    var currentProductionType by remember { mutableStateOf(ProductionTypeInterval.Total) }
     var currentTimeInterval by remember { mutableStateOf(TimeInterval.DAYS) }
 
     // Määritä nykyisen viikon ensimmäinen päivä
@@ -93,25 +106,23 @@ fun ProductionScreen(
     var currentWeekEndDate = currentWeekStartDate.plusDays(6)
 
     // Päivitä kulutustilastot ja lämpötilatilastot haettaessa dataa
-    LaunchedEffect(key1 = currentWeekStartDate, key2 = Unit) {
-        // Päivitä datan haku sen mukaan, mikä aikaväli on valittu
-        when (currentTimeInterval) {
-            TimeInterval.HOURS -> {
-                viewModel.productionFetchData(TimeInterval.HOURS, currentWeekStartDate)
-            }
-            TimeInterval.DAYS -> {
-                viewModel.productionFetchData(TimeInterval.DAYS, currentWeekStartDate)
-            }
-            TimeInterval.WEEKS -> {
-                viewModel.productionFetchData(TimeInterval.WEEKS, currentWeekStartDate)
-            }
-            TimeInterval.MONTHS -> {
-                viewModel.productionFetchData(TimeInterval.MONTHS, currentWeekStartDate)
+    // Reagoi tuotantotyypin tai aikavälin muutoksiin ja nouta tiedot vastaavasti
+    LaunchedEffect(key1 = currentProductionType, key2 = currentTimeInterval, key3 = currentWeekStartDate) {
+        // Määritä haluamasi päivämäärämuoto
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        // Muotoile currentWeekStartDate merkkijonoksi määritetyssä muodossa
+        val formattedDate = currentWeekStartDate.format(formatter)
+
+        when(currentProductionType) {
+            ProductionTypeInterval.Total -> {
+                viewModel.fetchTotalProductionData(currentTimeInterval, formattedDate)
             }
 
-            TimeInterval.MAIN -> {
-                viewModel.productionFetchData(TimeInterval.MAIN, currentWeekStartDate)
+            ProductionTypeInterval.Wind -> {
+                viewModel.fetchWindData(currentTimeInterval, formattedDate)
             }
+
+            ProductionTypeInterval.Solar -> TODO()
         }
     }
 
@@ -160,7 +171,22 @@ fun ProductionScreen(
                         onClick = {
                             // Lisää logiikka kuukausidataan siirtymiseen
                             val currentMonthStartDate = LocalDate.now().withDayOfMonth(1)
-                            viewModel.productionFetchData(TimeInterval.MONTHS, currentMonthStartDate)
+
+                            when(currentProductionType) {
+                                ProductionTypeInterval.Wind -> {
+
+                                    viewModel.fetchWindData(TimeInterval.MONTHS,
+                                        currentMonthStartDate
+                                    )
+                                }
+                                ProductionTypeInterval.Total -> {
+                                    viewModel.fetchTotalProductionData(TimeInterval.MONTHS,
+                                        currentMonthStartDate
+                                    )
+                                }
+                                ProductionTypeInterval.Solar -> TODO()
+                            }
+
                             currentTimeInterval = TimeInterval.MONTHS
                         }
                     ) {
@@ -184,7 +210,15 @@ fun ProductionScreen(
                             currentWeekStartDate = firstDayOfWeek
                             currentWeekEndDate = firstDayOfWeek.plusDays(6)
 
-                            viewModel.productionFetchData(TimeInterval.WEEKS, currentWeekStartDate)
+                            when(currentProductionType) {
+                                ProductionTypeInterval.Wind -> {
+                                    viewModel.fetchWindData(TimeInterval.WEEKS, currentWeekStartDate)
+                                }
+                                ProductionTypeInterval.Total -> {
+                                    viewModel.fetchTotalProductionData(TimeInterval.WEEKS, currentWeekStartDate)
+                                }
+                                ProductionTypeInterval.Solar -> TODO()
+                            }
 
                             currentTimeInterval = TimeInterval.WEEKS
 
@@ -198,7 +232,17 @@ fun ProductionScreen(
                         onClick = {
                             // Hae päivädata
                             currentWeekStartDate = LocalDate.now().startOfWeek()
-                            viewModel.productionFetchData(TimeInterval.DAYS, currentWeekStartDate)
+
+                            when(currentProductionType) {
+                                ProductionTypeInterval.Wind -> {
+                                    viewModel.fetchWindData(TimeInterval.DAYS, currentWeekStartDate)
+                                }
+                                ProductionTypeInterval.Total -> {
+                                    viewModel.fetchTotalProductionData(TimeInterval.DAYS, currentWeekStartDate)
+                                }
+                                ProductionTypeInterval.Solar -> TODO()
+                            }
+
                             currentTimeInterval = TimeInterval.DAYS
                         }
                     ) {
@@ -210,7 +254,17 @@ fun ProductionScreen(
                         onClick = {
                             // Hae tuntidata
                             currentWeekStartDate = LocalDate.now()
-                            viewModel.productionFetchData(TimeInterval.HOURS, currentWeekStartDate)
+
+                            when(currentProductionType) {
+                                ProductionTypeInterval.Wind -> {
+                                    viewModel.fetchWindData(TimeInterval.HOURS, currentWeekStartDate)
+                                }
+                                ProductionTypeInterval.Total -> {
+                                    viewModel.fetchTotalProductionData(TimeInterval.HOURS, currentWeekStartDate)
+                                }
+                                ProductionTypeInterval.Solar -> TODO()
+                            }
+
                             currentTimeInterval = TimeInterval.HOURS
                         }
                     ) {
@@ -239,7 +293,8 @@ fun ProductionScreen(
                 ) {
 
                     ProductionChart(
-                        viewModel.productionStatsData
+                        viewModel.productionStatsData,
+                        currentProductionType = currentProductionType
                     )
 
                     // Piirrä nuolinapit ja niiden välissä oleva aikaväli
@@ -354,7 +409,15 @@ fun ProductionScreen(
                             String.format(
                                 Locale.US,
                                 "%.2f",
-                                viewModel.productionStatsData?.values?.sum() ?: 0f
+                                when(currentProductionType) {
+                                    ProductionTypeInterval.Wind -> {
+                                        viewModel.windStatsData?.values?.sum() ?: 0f
+                                    }
+                                    ProductionTypeInterval.Total -> {
+                                        viewModel.productionStatsData?.values?.sum() ?: 0f
+                                    }
+                                    ProductionTypeInterval.Solar -> TODO()
+                                }
                             )
                         } kwh",
                         fontSize = 30.sp
@@ -368,12 +431,77 @@ fun ProductionScreen(
                             String.format(
                                 Locale.US,
                                 "%.2f",
-                                viewModel.productionStatsData?.values?.average() ?: 0f
+                                when(currentProductionType) {
+                                    ProductionTypeInterval.Wind -> {
+                                        viewModel.windStatsData?.values?.average() ?: 0f
+                                    }
+                                    ProductionTypeInterval.Total -> {
+                                        viewModel.productionStatsData?.values?.average() ?: 0f
+                                    }
+                                    ProductionTypeInterval.Solar -> TODO()
+                                }
                             )
                         } kwh",
                         fontSize = 30.sp
                     )
+                    Spacer(Modifier.weight(1f))
 
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(Color.Cyan),
+                        horizontalArrangement = Arrangement.SpaceEvenly,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        // Solar-nappi
+                        Button(
+                            onClick = {
+                                // Lisää logiikka aurinko dataan siirtymiseen
+                                currentProductionType = ProductionTypeInterval.Solar
+                            },
+                            // Apply a padding modifier to the button for better UI experience
+                            modifier = Modifier.padding(8.dp) // Adjust the padding as needed
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.Brightness5,
+                                contentDescription = "Solar"
+                            )
+                            Text(text = "Solar")
+                        }
+
+                        // Wind-nappi
+                        Button(
+                            onClick = {
+                                // Lisää logiikka tuuli dataan siirtymiseen
+                                currentProductionType = ProductionTypeInterval.Wind
+                                viewModel.fetchData(TimeInterval.DAYS, currentWeekStartDate)
+
+                            },
+                            // Apply a padding modifier to the button for better UI experience
+                            modifier = Modifier.padding(8.dp) // Adjust the padding as needed
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.Air,
+                                contentDescription = "Wind"
+                            )
+                            Text(text = "Wind")
+                        }
+                        // Total Production-nappi
+                        Button(
+                            onClick = {
+                                // Lisää logiikka total production dataan siirtymiseen
+                                currentProductionType = ProductionTypeInterval.Total
+                            },
+                            // Apply a padding modifier to the button for better UI experience
+                            modifier = Modifier.padding(8.dp) // Adjust the padding as needed
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.BatteryChargingFull,
+                                contentDescription = "Total Production"
+                            )
+                            Text(text = "Total Production")
+                        }
+                    }
                 }
             }
         }
