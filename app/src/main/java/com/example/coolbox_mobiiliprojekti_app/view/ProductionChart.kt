@@ -69,11 +69,10 @@ fun ProductionChart(
             chartValues.model.extraStore[labelListKey]?.get(x.toInt()) ?: ""
         }
 
-    // TODO Korjaa aloitus näkymän chartin katoamisen, joka kuitenkin palaa ennalleen,
-    //  jos painaa nappeja tai navigoi nuoli näppäimillä edes tai takaisin.
+    //
 
     // Käynnistetään effect, joka reagoi productionStatsDatan muutoksiin
-    LaunchedEffect(key1 = currentProductionType) {
+    LaunchedEffect(key1 = currentProductionType, key2 = viewModel.windStatsData, key3 = viewModel.productionStatsData) {
         when(currentProductionType) {
             ProductionTypeInterval.Total -> {
                 viewModel.productionStatsData?.let { productionStatsData ->
@@ -81,7 +80,7 @@ fun ProductionChart(
                     modelProducer.tryRunTransaction {
                         // Haetaan datan avaimet ja arvot listoiksi
                         val dates = productionStatsData.keys.toList()
-                        Log.d("Dorian", "productionStatsData.keys.toList() dates $dates")
+
                         val productions = productionStatsData.values.toList()
 
                         // Muotoillaan päivämäärät päivän nimiksi
@@ -105,7 +104,7 @@ fun ProductionChart(
                     modelProducer.tryRunTransaction {
                         // Haetaan datan avaimet ja arvot listoiksi
                         val dates = windStatsData.keys.toList()
-                        Log.d("Dorian", "windStatsData.keys.toList() dates $dates")
+
                         val productions = windStatsData.values.toList()
 
                         // Muotoillaan päivämäärät päivän nimiksi

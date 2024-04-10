@@ -60,6 +60,8 @@ class ProductionViewModel(
 
     // Funktiot päivittäisen Tuottodatan hakemiseen
     private suspend fun fetchDailyProductionsData(date: String) {
+        Log.d("Dorian", "fetchDailyProductionsData is called")
+
         val response = productionApiService.getDailyProductionsData(date)
         handleProductionStatsResponse(response)
     }
@@ -148,7 +150,7 @@ class ProductionViewModel(
     private suspend fun fetchDailyWindData(date: String) {
         Log.d("Dorian", "fetchDailyWindData is called")
         val response = productionApiService.getDailyWindProductionsData(date)
-        Log.d("Dorian", "fetchDailyWindData response $response")
+
         handleWindStatsResponse(response)
     }
 
@@ -173,7 +175,7 @@ class ProductionViewModel(
     // Funktio 7 päivän kokonaisTuulidatan hakemiseen
     private suspend fun fetch7DayWindData(date: String) {
         val response = productionApiService.getMonthlyWindProductionsData(date)
-        Log.d("Dorian", "fetch7Day WindData response $response")
+
         handleWindStatsResponse(response)
     }
 
