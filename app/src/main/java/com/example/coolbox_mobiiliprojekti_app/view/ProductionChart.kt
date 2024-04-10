@@ -1,5 +1,6 @@
 package com.example.coolbox_mobiiliprojekti_app.view
 
+import android.content.res.Configuration
 import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -51,7 +52,8 @@ import com.patrykandpatrick.vico.core.axis.formatter.AxisValueFormatter
 fun ProductionChart(
     productionStatsData: Map<String, Float?>?,
     goToProduction: () -> Unit = {},
-    currentProductionType: ProductionTypeInterval
+    currentProductionType: ProductionTypeInterval,
+    isLandscape: Boolean
 ) {
 
     // Haetaan viewmodel
@@ -72,8 +74,12 @@ fun ProductionChart(
     //
 
     // Käynnistetään effect, joka reagoi productionStatsDatan muutoksiin
-    LaunchedEffect(key1 = currentProductionType, key2 = viewModel.windStatsData, key3 = viewModel.productionStatsData) {
-        when(currentProductionType) {
+    LaunchedEffect(
+        key1 = currentProductionType,
+        key2 = viewModel.windStatsData,
+        key3 = viewModel.productionStatsData
+    ) {
+        when (currentProductionType) {
             ProductionTypeInterval.Total -> {
                 viewModel.productionStatsData?.let { productionStatsData ->
                     // Yritetään suorittaa transaktio modelProducerilla
@@ -98,6 +104,7 @@ fun ProductionChart(
                     }
                 }
             }
+
             ProductionTypeInterval.Wind -> {
                 viewModel.windStatsData?.let { windStatsData ->
                     // Yritetään suorittaa transaktio modelProducerilla
@@ -122,6 +129,7 @@ fun ProductionChart(
                     }
                 }
             }
+
             ProductionTypeInterval.Solar -> TODO()
 
         }
@@ -131,13 +139,22 @@ fun ProductionChart(
     CoolBoxmobiiliprojektiAppTheme {
         // Pinta, joka kattaa koko näytön leveyden
         Surface(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth(
+                    if (isLandscape) {
+                        0.5f
+                    } else {
+                        1f
+                    }
+                ),
             color = MaterialTheme.colorScheme.background
         ) {
             // Sarake, joka täyttää koko leveyden
-            Column(modifier = Modifier
-                .fillMaxWidth()
-                .clickable(onClick = { goToProduction() })) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable(onClick = { goToProduction() })
+            ) {
                 // Kortti, joka toimii paneelina
                 Card(
                     modifier = Modifier
@@ -150,6 +167,7 @@ fun ProductionChart(
                         disabledContentColor = MaterialTheme.colorScheme.secondary
                     )
                 ) {
+
                     // Teksti paneelin keskelle
                     Text(
                         modifier = Modifier

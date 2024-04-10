@@ -1,11 +1,14 @@
 package com.example.coolbox_mobiiliprojekti_app.view
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -32,6 +35,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -50,6 +54,12 @@ fun ConsumptionScreen(
     onMenuClick: () -> Job,
     goBack: () -> Unit
 ) {
+    val configuration = LocalConfiguration.current
+    val orientation = configuration.orientation
+
+    // Determine if the current orientation is landscape
+    val isLandscape = orientation == Configuration.ORIENTATION_LANDSCAPE
+
     val viewModel: ConsumptionViewModel = viewModel()
     // Alusta nykyinen aikaväli tilamuuttuja
     var currentTimeInterval by remember { mutableStateOf(TimeInterval.DAYS) }
@@ -65,12 +75,15 @@ fun ConsumptionScreen(
             TimeInterval.HOURS -> {
                 viewModel.consumptionFetchData(TimeInterval.HOURS, currentWeekStartDate)
             }
+
             TimeInterval.DAYS -> {
                 viewModel.consumptionFetchData(TimeInterval.DAYS, currentWeekStartDate)
             }
+
             TimeInterval.WEEKS -> {
                 viewModel.consumptionFetchData(TimeInterval.WEEKS, currentWeekStartDate)
             }
+
             TimeInterval.MONTHS -> {
                 viewModel.consumptionFetchData(TimeInterval.MONTHS, currentWeekStartDate)
             }
@@ -126,11 +139,14 @@ fun ConsumptionScreen(
                         onClick = {
                             // Lisää logiikka kuukausidataan siirtymiseen
                             val currentMonthStartDate = LocalDate.now().withDayOfMonth(1)
-                            viewModel.consumptionFetchData(TimeInterval.MONTHS, currentMonthStartDate)
+                            viewModel.consumptionFetchData(
+                                TimeInterval.MONTHS,
+                                currentMonthStartDate
+                            )
                             currentTimeInterval = TimeInterval.MONTHS
                         }
                     ) {
-                        Text(text = "Month")
+                        Text(text = "Months")
                     }
                     // Viikko-nappi
                     Button(
@@ -156,7 +172,7 @@ fun ConsumptionScreen(
 
                         }
                     ) {
-                        Text(text = "Week")
+                        Text(text = "Weeks")
                     }
 
                     // Päivä-nappi
@@ -192,175 +208,386 @@ fun ConsumptionScreen(
                 .padding(innerPaddings)
                 .fillMaxSize()
         ) {
-            when {
-                // Latauspalkki
-                viewModel.consumptionChartState.value.loading -> CircularProgressIndicator(
-                    modifier = Modifier.align(Alignment.Center)
-                )
-
-                // Näytä sisältö
-                else -> Column(
-                    Modifier.fillMaxSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-
-                    // Piirrä kaavio
-                    ConsumptionChart(
-                        viewModel.consumptionStatsData,
-                        viewModel.temperatureStatsData
+            if (isLandscape) {
+                when {
+                    // Latauspalkki
+                    viewModel.consumptionChartState.value.loading -> CircularProgressIndicator(
+                        modifier = Modifier.align(Alignment.Center)
                     )
 
-                    // Piirrä nuolinapit ja niiden välissä oleva aikaväli
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
+                    // Näytä sisältö
+                    else -> Row(
+                        modifier = Modifier.fillMaxSize()
                     ) {
-                        // Nuoli vasemmalle
-                        IconButton(
-                            onClick = {
-                                when (currentTimeInterval) {
-                                    TimeInterval.DAYS -> {
-                                        // Siirry edellisen viikon alkuun
-                                        currentWeekStartDate =
-                                            currentWeekStartDate.minusWeeks(1).startOfWeek()
-
-                                    }
-
-                                    TimeInterval.HOURS -> {
-                                        // Siirry edellisen päivän alkuun
-                                        currentWeekStartDate = currentWeekStartDate.minusDays(1)
-
-                                    }
-
-                                    TimeInterval.WEEKS -> {
-                                        // Siirry edellisen kuukauden alkuun
-                                        currentWeekStartDate =
-                                            currentWeekStartDate.minusMonths(1).startOfWeek()
-
-                                    }
-                                    TimeInterval.MONTHS -> {
-                                        // Siirry edellisen vuoden alkuun
-                                        currentWeekStartDate = currentWeekStartDate.minusYears(1)
-                                    }
-
-                                    TimeInterval.MAIN -> TODO()
-                                }
-                            }
+                        Column(
+                            modifier = Modifier
+                                .fillMaxHeight()
                         ) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = null
+                            // Piirrä kaavio
+                            ConsumptionChart(
+                                viewModel.consumptionStatsData,
+                                viewModel.temperatureStatsData,
+                                isLandscape = isLandscape
                             )
                         }
-                        Spacer(modifier = Modifier.weight(0.5f))
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxHeight()
+                            ) {
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    // Nuoli vasemmalle
+                                    IconButton(
+                                        onClick = {
+                                            when (currentTimeInterval) {
+                                                TimeInterval.DAYS -> {
+                                                    // Siirry edellisen viikon alkuun
+                                                    currentWeekStartDate =
+                                                        currentWeekStartDate.minusWeeks(1)
+                                                            .startOfWeek()
 
-                        // Näytä päivämäärä
-                        Text(
-                            text = when (currentTimeInterval) {
-                                TimeInterval.DAYS -> {
-                                    "${currentWeekStartDate.dayOfMonth}/${currentWeekStartDate.monthValue} " +
-                                            "- ${currentWeekEndDate.dayOfMonth}/${currentWeekEndDate.monthValue}"
-                                }
+                                                }
 
-                                TimeInterval.HOURS -> {
-                                    currentWeekStartDate.dayOfWeek.getDisplayName(
-                                        TextStyle.FULL, Locale.US
-                                    ) + " (${currentWeekStartDate.dayOfMonth}/${currentWeekStartDate.monthValue})"
-                                }
+                                                TimeInterval.HOURS -> {
+                                                    // Siirry edellisen päivän alkuun
+                                                    currentWeekStartDate =
+                                                        currentWeekStartDate.minusDays(1)
 
-                                TimeInterval.WEEKS -> {
-                                    "${currentWeekStartDate.month.name.toLowerCase().capitalize()} ${currentWeekStartDate.year}"
-                                }
-                                TimeInterval.MONTHS -> {
-                                    "${currentWeekStartDate.year}"
-                                }
+                                                }
 
-                                TimeInterval.MAIN -> TODO()
-                            },
-                            fontSize = 30.sp
-                        )
-                        Spacer(modifier = Modifier.weight(0.5f))
+                                                TimeInterval.WEEKS -> {
+                                                    // Siirry edellisen kuukauden alkuun
+                                                    currentWeekStartDate =
+                                                        currentWeekStartDate.minusMonths(1)
+                                                            .startOfWeek()
 
-                        // Nuoli oikealle
-                        IconButton(
-                            onClick = {
-                                // Siirry seuraavan aikavälin alkuun
-                                when (currentTimeInterval) {
-                                    TimeInterval.DAYS -> {
-                                        currentWeekStartDate =
-                                            currentWeekStartDate.plusWeeks(1).startOfWeek()
+                                                }
+
+                                                TimeInterval.MONTHS -> {
+                                                    // Siirry edellisen vuoden alkuun
+                                                    currentWeekStartDate =
+                                                        currentWeekStartDate.minusYears(1)
+                                                }
+
+                                                TimeInterval.MAIN -> TODO()
+                                            }
+                                        }
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                            contentDescription = null
+                                        )
                                     }
 
-                                    TimeInterval.HOURS -> {
-                                        currentWeekStartDate = currentWeekStartDate.plusDays(1)
-                                    }
+                                    // Näytä päivämäärä
+                                    Text(
+                                        text = when (currentTimeInterval) {
+                                            TimeInterval.DAYS -> {
+                                                "${currentWeekStartDate.dayOfMonth}/${currentWeekStartDate.monthValue} " +
+                                                        "- ${currentWeekEndDate.dayOfMonth}/${currentWeekEndDate.monthValue}"
+                                            }
 
-                                    TimeInterval.WEEKS -> {
-                                        currentWeekStartDate =
-                                            currentWeekStartDate.plusMonths(1).startOfWeek()
-                                    }
-                                    TimeInterval.MONTHS -> {
-                                        currentWeekStartDate = currentWeekStartDate.plusYears(1)
-                                    }
+                                            TimeInterval.HOURS -> {
+                                                currentWeekStartDate.dayOfWeek.getDisplayName(
+                                                    TextStyle.FULL, Locale.US
+                                                ) + " (${currentWeekStartDate.dayOfMonth}/${currentWeekStartDate.monthValue})"
+                                            }
 
-                                    TimeInterval.MAIN -> TODO()
+                                            TimeInterval.WEEKS -> {
+                                                "${
+                                                    currentWeekStartDate.month.name.toLowerCase()
+                                                        .capitalize()
+                                                } ${currentWeekStartDate.year}"
+                                            }
+
+                                            TimeInterval.MONTHS -> {
+                                                "${currentWeekStartDate.year}"
+                                            }
+
+                                            TimeInterval.MAIN -> TODO()
+                                        },
+                                        fontSize = 30.sp
+                                    )
+
+                                    // Nuoli oikealle
+                                    IconButton(
+                                        onClick = {
+                                            // Siirry seuraavan aikavälin alkuun
+                                            when (currentTimeInterval) {
+                                                TimeInterval.DAYS -> {
+                                                    currentWeekStartDate =
+                                                        currentWeekStartDate.plusWeeks(1)
+                                                            .startOfWeek()
+                                                }
+
+                                                TimeInterval.HOURS -> {
+                                                    currentWeekStartDate =
+                                                        currentWeekStartDate.plusDays(1)
+                                                }
+
+                                                TimeInterval.WEEKS -> {
+                                                    currentWeekStartDate =
+                                                        currentWeekStartDate.plusMonths(1)
+                                                            .startOfWeek()
+                                                }
+
+                                                TimeInterval.MONTHS -> {
+                                                    currentWeekStartDate =
+                                                        currentWeekStartDate.plusYears(1)
+                                                }
+
+                                                TimeInterval.MAIN -> TODO()
+                                            }
+                                        }
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                                            contentDescription = null
+                                        )
+                                    }
                                 }
+
+                                Spacer(Modifier.height(16.dp))
+
+                                    // Näytä yhteenveto
+                                    Text(
+                                        modifier = Modifier
+                                            .padding(vertical = 10.dp)
+                                            .align(Alignment.CenterHorizontally),
+                                        text = "Total consumption:  ${
+                                            String.format(
+                                                Locale.US,
+                                                "%.2f",
+                                                viewModel.consumptionStatsData?.values?.sum() ?: 0f
+                                            )
+                                        } kwh",
+                                        fontSize = 20.sp
+                                    )
+
+                                    // Näytä keskiarvo
+                                    Text(
+                                        modifier = Modifier
+                                            .padding(vertical = 10.dp)
+                                            .align(Alignment.CenterHorizontally),
+                                        text = "Avg consumption:  ${
+                                            String.format(
+                                                Locale.US,
+                                                "%.2f",
+                                                viewModel.consumptionStatsData?.values?.average() ?: 0f
+                                            )
+                                        } kwh",
+                                        fontSize = 20.sp
+                                    )
+
+                                    // Näytä keskimääräinen lämpötila
+                                    Text(
+                                        modifier = Modifier
+                                            .padding(vertical = 10.dp)
+                                            .align(Alignment.CenterHorizontally),
+                                        text =
+                                        "Avg temperature:  ${
+                                            String.format(
+                                                Locale.US,
+                                                "%.1f",
+                                                viewModel.temperatureStatsData?.values?.average() ?: 0f
+                                            )
+                                        } °C",
+                                        fontSize = 20.sp, // Aseta tekstin koko 16 sp (scaled pixels)
+                                    )
                             }
-                        ) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                                contentDescription = null
-                            )
                         }
                     }
-                    Spacer(Modifier.height(16.dp))
-
-                    // Näytä yhteenveto
-                    Text(
-                        modifier = Modifier
-                            .padding(vertical = 16.dp),
-                        text = "Total:  ${
-                            String.format(
-                                Locale.US,
-                                "%.2f",
-                                viewModel.consumptionStatsData?.values?.sum() ?: 0f
-                            )
-                        } kwh",
-                        fontSize = 30.sp
+            } else {
+                when {
+                    // Latauspalkki
+                    viewModel.consumptionChartState.value.loading -> CircularProgressIndicator(
+                        modifier = Modifier.align(Alignment.Center)
                     )
 
-                    // Näytä keskiarvo
-                    Text(
-                        modifier = Modifier
-                            .padding(vertical = 16.dp),
-                        text = "Avg:  ${
-                            String.format(
-                                Locale.US,
-                                "%.2f",
-                                viewModel.consumptionStatsData?.values?.average() ?: 0f
-                            )
-                        } kwh",
-                        fontSize = 30.sp
-                    )
+                    // Näytä sisältö
+                    else -> Column(
+                        Modifier.fillMaxSize(),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
 
-                    // Näytä keskimääräinen lämpötila
-                    Text(
-                        modifier = Modifier
-                            .padding(vertical = 16.dp),
-                        text =
-                        "Avg temperature:  ${
-                            String.format(
-                                Locale.US,
-                                "%.1f",
-                                viewModel.temperatureStatsData?.values?.average() ?: 0f
-                            )
-                        } °C",
-                        fontSize = 30.sp, // Aseta tekstin koko 16 sp (scaled pixels)
-                    )
+                        // Piirrä kaavio
+                        ConsumptionChart(
+                            viewModel.consumptionStatsData,
+                            viewModel.temperatureStatsData,
+                            isLandscape = isLandscape
+                        )
+                        Spacer(Modifier.height(30.dp))
 
+
+                        // Piirrä nuolinapit ja niiden välissä oleva aikaväli
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            // Nuoli vasemmalle
+                            IconButton(
+                                onClick = {
+                                    when (currentTimeInterval) {
+                                        TimeInterval.DAYS -> {
+                                            // Siirry edellisen viikon alkuun
+                                            currentWeekStartDate =
+                                                currentWeekStartDate.minusWeeks(1).startOfWeek()
+
+                                        }
+
+                                        TimeInterval.HOURS -> {
+                                            // Siirry edellisen päivän alkuun
+                                            currentWeekStartDate = currentWeekStartDate.minusDays(1)
+
+                                        }
+
+                                        TimeInterval.WEEKS -> {
+                                            // Siirry edellisen kuukauden alkuun
+                                            currentWeekStartDate =
+                                                currentWeekStartDate.minusMonths(1).startOfWeek()
+
+                                        }
+
+                                        TimeInterval.MONTHS -> {
+                                            // Siirry edellisen vuoden alkuun
+                                            currentWeekStartDate =
+                                                currentWeekStartDate.minusYears(1)
+                                        }
+
+                                        TimeInterval.MAIN -> TODO()
+                                    }
+                                }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                    contentDescription = null
+                                )
+                            }
+                            Spacer(modifier = Modifier.weight(0.5f))
+
+                            // Näytä päivämäärä
+                            Text(
+                                text = when (currentTimeInterval) {
+                                    TimeInterval.DAYS -> {
+                                        "${currentWeekStartDate.dayOfMonth}/${currentWeekStartDate.monthValue} " +
+                                                "- ${currentWeekEndDate.dayOfMonth}/${currentWeekEndDate.monthValue}"
+                                    }
+
+                                    TimeInterval.HOURS -> {
+                                        currentWeekStartDate.dayOfWeek.getDisplayName(
+                                            TextStyle.FULL, Locale.US
+                                        ) + " (${currentWeekStartDate.dayOfMonth}/${currentWeekStartDate.monthValue})"
+                                    }
+
+                                    TimeInterval.WEEKS -> {
+                                        "${
+                                            currentWeekStartDate.month.name.toLowerCase()
+                                                .capitalize()
+                                        } ${currentWeekStartDate.year}"
+                                    }
+
+                                    TimeInterval.MONTHS -> {
+                                        "${currentWeekStartDate.year}"
+                                    }
+
+                                    TimeInterval.MAIN -> TODO()
+                                },
+                                fontSize = 30.sp
+                            )
+                            Spacer(modifier = Modifier.weight(0.5f))
+
+                            // Nuoli oikealle
+                            IconButton(
+                                onClick = {
+                                    // Siirry seuraavan aikavälin alkuun
+                                    when (currentTimeInterval) {
+                                        TimeInterval.DAYS -> {
+                                            currentWeekStartDate =
+                                                currentWeekStartDate.plusWeeks(1).startOfWeek()
+                                        }
+
+                                        TimeInterval.HOURS -> {
+                                            currentWeekStartDate = currentWeekStartDate.plusDays(1)
+                                        }
+
+                                        TimeInterval.WEEKS -> {
+                                            currentWeekStartDate =
+                                                currentWeekStartDate.plusMonths(1).startOfWeek()
+                                        }
+
+                                        TimeInterval.MONTHS -> {
+                                            currentWeekStartDate = currentWeekStartDate.plusYears(1)
+                                        }
+
+                                        TimeInterval.MAIN -> TODO()
+                                    }
+                                }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                                    contentDescription = null
+                                )
+                            }
+                        }
+                        Spacer(Modifier.height(60.dp))
+
+                        // Näytä yhteenveto
+                        Text(
+                            modifier = Modifier
+                                .padding(vertical = 16.dp),
+                            text = "Total:  ${
+                                String.format(
+                                    Locale.US,
+                                    "%.2f",
+                                    viewModel.consumptionStatsData?.values?.sum() ?: 0f
+                                )
+                            } kwh",
+                            fontSize = 30.sp
+                        )
+
+                        // Näytä keskiarvo
+                        Text(
+                            modifier = Modifier
+                                .padding(vertical = 16.dp),
+                            text = "Avg:  ${
+                                String.format(
+                                    Locale.US,
+                                    "%.2f",
+                                    viewModel.consumptionStatsData?.values?.average() ?: 0f
+                                )
+                            } kwh",
+                            fontSize = 30.sp
+                        )
+
+                        // Näytä keskimääräinen lämpötila
+                        Text(
+                            modifier = Modifier
+                                .padding(vertical = 16.dp),
+                            text =
+                            "Avg temperature:  ${
+                                String.format(
+                                    Locale.US,
+                                    "%.1f",
+                                    viewModel.temperatureStatsData?.values?.average() ?: 0f
+                                )
+                            } °C",
+                            fontSize = 30.sp, // Aseta tekstin koko 16 sp (scaled pixels)
+                        )
+                    }
                 }
             }
         }
     }
-
 }
+
+
+
+
+
+
+
+
 

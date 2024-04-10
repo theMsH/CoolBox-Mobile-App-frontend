@@ -1,6 +1,8 @@
 package com.example.coolbox_mobiiliprojekti_app.view
 
+import android.content.res.Configuration
 import android.util.Log
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,6 +19,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -53,7 +56,8 @@ import com.patrykandpatrick.vico.core.model.lineSeries
 fun ConsumptionChart(
     consumptionStatsData: Map<String, Float?>?,
     temperatureStatsData: Map<String, Float?>?,
-    goToConsumption: () -> Unit = {}
+    goToConsumption: () -> Unit = {},
+    isLandscape: Boolean
 ) {
 
     // Haetaan viewmodel
@@ -104,18 +108,20 @@ fun ConsumptionChart(
 
     // Luodaan teema
     CoolBoxmobiiliprojektiAppTheme {
-        // Pinta, joka kattaa koko näytön leveyden
-        Surface(
-            modifier = Modifier.fillMaxWidth(),
-            color = MaterialTheme.colorScheme.background
-        ) {
-            // Sarake, joka täyttää koko leveyden
-            Column(modifier = Modifier.fillMaxWidth()) {
-                // Tekstimuotoinen nappi
-                TextButton(
-                    contentPadding = PaddingValues(0.dp),
-                    shape = RectangleShape,
-                    onClick = { goToConsumption() }
+            // Pinta, joka kattaa koko näytön leveyden
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth(if (isLandscape) {
+                        0.5f
+                    } else {
+                        1f
+                    }),
+                color = MaterialTheme.colorScheme.background
+            ) {
+                // Sarake, joka täyttää koko leveyden
+                Column(modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable(onClick = { goToConsumption() })
                 ) {
                     // Kortti, joka toimii paneelina
                     Card(
@@ -129,61 +135,63 @@ fun ConsumptionChart(
                             disabledContentColor = MaterialTheme.colorScheme.secondary
                         )
                     ) {
+
                         // Teksti paneelin keskelle
                         Text(
                             modifier = Modifier
                                 .align(Alignment.CenterHorizontally)
                                 .padding(top = 20.dp),
                             fontSize = 20.sp,
-                            text = "Total Consumption"
+                            text = "Total Consumption",
+                            color = Color.Black
                         )
-                        // CartesianChartHost, joka sisältää chartin
-                        CartesianChartHost(
-                            chart =
-                            rememberCartesianChart(
-                                rememberColumnCartesianLayer(
-                                    columns = listOf(
-                                        rememberLineComponent(
-                                            color = GraphKwhColor,
-                                            thickness = 8.dp, // Adjust as needed
+                            // CartesianChartHost, joka sisältää chartin
+                            CartesianChartHost(
+                                chart =
+                                rememberCartesianChart(
+                                    rememberColumnCartesianLayer(
+                                        columns = listOf(
+                                            rememberLineComponent(
+                                                color = GraphKwhColor,
+                                                thickness = 8.dp, // Adjust as needed
+                                            ),
+                                            rememberLineComponent(
+                                                color = GraphKwhColor,
+                                                thickness = 8.dp, // Adjust as needed
+                                            )
                                         ),
-                                        rememberLineComponent(
-                                            color = GraphKwhColor,
-                                            thickness = 8.dp, // Adjust as needed
-                                        )
+                                    ),
+                                    rememberLineCartesianLayer(
+                                        lines = listOf(
+                                            rememberLineSpec(
+                                                shader = DynamicShaders.color(GraphTempColor)
+                                            ),
+                                            rememberLineSpec(
+                                                shader = DynamicShaders.color(GraphTempColor)
+                                            )
+                                        ),
+                                    ),
+                                    startAxis = rememberStartAxis(),
+                                    bottomAxis =
+                                    rememberBottomAxis(
+                                        valueFormatter = valueFormatterString,
+                                        itemPlacer =
+                                        remember {
+                                            AxisItemPlacer.Horizontal.default(
+                                                spacing = 1,
+                                                addExtremeLabelPadding = true
+                                            )
+                                        },
                                     ),
                                 ),
-                                rememberLineCartesianLayer(
-                                    lines = listOf(
-                                        rememberLineSpec(
-                                            shader = DynamicShaders.color(GraphTempColor)
-                                        ),
-                                        rememberLineSpec(
-                                            shader = DynamicShaders.color(GraphTempColor)
-                                        )
-                                    ),
-                                ),
-                                startAxis = rememberStartAxis(),
-                                bottomAxis =
-                                rememberBottomAxis(
-                                    valueFormatter = valueFormatterString,
-                                    itemPlacer =
-                                    remember {
-                                        AxisItemPlacer.Horizontal.default(
-                                            spacing = 1,
-                                            addExtremeLabelPadding = true
-                                        )
-                                    },
-                                ),
-                            ),
-                            marker = rememberMarker(),
-                            modelProducer = modelProducer,
-                            horizontalLayout = HorizontalLayout.fullWidth(),
-                        )
-                    }
-                } // Paneeli loppuu
+                                marker = rememberMarker(),
+                                modelProducer = modelProducer,
+                                horizontalLayout = HorizontalLayout.fullWidth(),
+                            )
+                        }
+                    } // Paneeli loppuu
 
-            } // Sarake loppuu
+                } // Sarake loppuu
+            }
         }
-    }
-}
+
