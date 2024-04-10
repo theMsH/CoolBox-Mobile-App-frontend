@@ -1,7 +1,5 @@
 package com.example.coolbox_mobiiliprojekti_app.view
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
@@ -16,6 +14,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -118,106 +117,105 @@ fun ConsumptionChart7Days(
                 .padding(bottom = 5.dp, start = 15.dp, end = 15.dp),
             color = PanelColor
         ) {
-            // Sarake, joka täyttää koko leveyden
-            Column(modifier = Modifier.fillMaxWidth()) {
-                // Kortti, joka toimii paneelina
-                Card(
+            // Kortti, joka toimii paneelina
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentSize(Alignment.Center),
+                colors = CardColors(
+                    containerColor = PanelColor,
+                    contentColor = PanelTextColor,
+                    disabledContainerColor = MaterialTheme.colorScheme.secondaryContainer,
+                    disabledContentColor = MaterialTheme.colorScheme.secondary
+                )
+            ) {
+                // Teksti paneelin keskelle
+                Text(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .wrapContentSize(Alignment.Center),
-                    colors = CardColors(
-                        containerColor = PanelColor,
-                        contentColor = PanelTextColor,
-                        disabledContainerColor = MaterialTheme.colorScheme.secondaryContainer,
-                        disabledContentColor = MaterialTheme.colorScheme.secondary
-                    )
-                ) {
-                    // Teksti paneelin keskelle
-                    Text(
-                        modifier = Modifier
-                            .align(Alignment.CenterHorizontally)
-                            .padding(top = 20.dp),
-                        fontSize = 20.sp,
-                        text = "Total Consumption for 7 Days",
-                    )
-                    // CartesianChartHost, joka sisältää chartin
-                    CartesianChartHost(
-                        chart =
-                        rememberCartesianChart(
-                            rememberColumnCartesianLayer(
-                                columns = listOf(
-                                    rememberLineComponent(
-                                        color = GraphKwhColor,
-                                        thickness = 8.dp, // Adjust as needed
-                                    ),
-                                    rememberLineComponent(
-                                        color = GraphKwhColor,
-                                        thickness = 8.dp, // Adjust as needed
-                                    )
+                        .align(Alignment.CenterHorizontally)
+                        .padding(top = 20.dp),
+                    fontSize = 20.sp,
+                    text = "Total Consumption (kWh) and Temperature (°C) for 7 Days",
+                    textAlign = TextAlign.Center
+                )
+                // CartesianChartHost, joka sisältää chartin
+                CartesianChartHost(
+                    chart =
+                    rememberCartesianChart(
+                        rememberColumnCartesianLayer(
+                            columns = listOf(
+                                rememberLineComponent(
+                                    color = GraphKwhColor,
+                                    thickness = 8.dp, // Adjust as needed
                                 ),
-                            ),
-                            rememberLineCartesianLayer(
-                                lines = listOf(
-                                    rememberLineSpec(
-                                        shader = DynamicShaders.color(GraphTempColor)
-                                    ),
-                                    rememberLineSpec(
-                                        shader = DynamicShaders.color(GraphTempColor)
-                                    )
-                                ),
-                            ),
-                            startAxis = rememberStartAxis(
-                                label = rememberAxisLabelComponent(
-                                    color = PanelTextColor
-                                ),
-                                axis = rememberLineComponent(
-                                    color = PanelTextColor
-                                ),
-                                guideline = rememberLineComponent(
-                                    color = PanelTextColor,
-                                    shape =
-                                    remember {
-                                        Shapes.dashedShape(
-                                            shape = Shapes.rectShape,
-                                            dashLength = 3.dp,
-                                            gapLength = 3.dp,
-                                        )
-                                    },
+                                rememberLineComponent(
+                                    color = GraphKwhColor,
+                                    thickness = 8.dp, // Adjust as needed
                                 )
                             ),
-                            bottomAxis =
-                            rememberBottomAxis(
-                                label = rememberAxisLabelComponent(
-                                    color = PanelTextColor
+                        ),
+                        rememberLineCartesianLayer(
+                            lines = listOf(
+                                rememberLineSpec(
+                                    shader = DynamicShaders.color(GraphTempColor)
                                 ),
-                                axis = rememberLineComponent(
-                                    color = PanelTextColor
-                                ),
-                                guideline = null,
-                                valueFormatter = valueFormatterString,
-                                itemPlacer =
-                                remember {
-                                    AxisItemPlacer.Horizontal.default(
-                                        spacing = 1,
-                                        addExtremeLabelPadding = true
-                                    )
-                                },
+                                rememberLineSpec(
+                                    shader = DynamicShaders.color(GraphTempColor)
+                                )
                             ),
                         ),
-                        marker = rememberMarker(),
-                        modelProducer = modelProducer,
-                        horizontalLayout = HorizontalLayout.fullWidth(),
-                    )
-                    TextButton(onClick = { goToConsumption() },
-                               modifier = Modifier
-                                   .align(Alignment.CenterHorizontally)
-                    ) {
-                        Text(text = "More", color = PanelTextButtonColor)
-                    }
+                        startAxis = rememberStartAxis(
+                            label = rememberAxisLabelComponent(
+                                color = PanelTextColor
+                            ),
+                            axis = rememberLineComponent(
+                                color = PanelTextColor
+                            ),
+                            guideline = rememberLineComponent(
+                                color = PanelTextColor,
+                                shape =
+                                remember {
+                                    Shapes.dashedShape(
+                                        shape = Shapes.rectShape,
+                                        dashLength = 3.dp,
+                                        gapLength = 3.dp,
+                                    )
+                                },
+                            )
+                        ),
+                        bottomAxis =
+                        rememberBottomAxis(
+                            label = rememberAxisLabelComponent(
+                                color = PanelTextColor
+                            ),
+                            axis = rememberLineComponent(
+                                color = PanelTextColor
+                            ),
+                            guideline = null,
+                            valueFormatter = valueFormatterString,
+                            itemPlacer =
+                            remember {
+                                AxisItemPlacer.Horizontal.default(
+                                    spacing = 1,
+                                    addExtremeLabelPadding = true
+                                )
+                            },
+                        ),
+                    ),
+                    marker = rememberMarker(),
+                    modelProducer = modelProducer,
+                    horizontalLayout = HorizontalLayout.fullWidth(),
+                )
+                TextButton(
+                    onClick = { goToConsumption() },
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                ) {
+                    Text(text = "More", color = PanelTextButtonColor)
+                }
 
-                } // Paneeli loppuu
+            } // Paneeli loppuu
 
-            } // Sarake loppuu
         }
     }
 }
