@@ -121,7 +121,6 @@ fun ProductionChart7Days(
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clickable(onClick = { gotoProduction() })
                     .wrapContentSize(Alignment.Center),
                 colors = CardColors(
                     containerColor = PanelColor,

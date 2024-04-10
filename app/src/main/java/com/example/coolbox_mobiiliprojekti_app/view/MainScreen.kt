@@ -115,8 +115,7 @@ fun MainScreen(
                                 modifier = Modifier
                                     .wrapContentSize(Alignment.Center)
                                     .fillMaxWidth()
-                                    .padding(horizontal = 2.dp, vertical = 4.dp)
-                                    .clickable(onClick = {goToConsumption()}),
+                                    .padding(horizontal = 2.dp, vertical = 4.dp),
                                 colors = CardDefaults.cardColors(
                                     containerColor = PanelColor,
                                     contentColor = TextsLightColor
@@ -132,8 +131,7 @@ fun MainScreen(
                                 modifier = Modifier
                                     .wrapContentSize(Alignment.Center)
                                     .fillMaxWidth()
-                                    .padding(horizontal = 2.dp, vertical = 4.dp)
-                                    .clickable(onClick = {goToProduction()}),
+                                    .padding(horizontal = 2.dp, vertical = 4.dp),
                                 colors = CardDefaults.cardColors(
                                     containerColor = PanelColor,
                                     contentColor = TextsLightColor
@@ -149,8 +147,7 @@ fun MainScreen(
                                 modifier = Modifier
                                     .wrapContentSize(Alignment.Center)
                                     .fillMaxWidth()
-                                    .padding(horizontal = 2.dp, vertical = 4.dp)
-                                    .clickable(onClick = {}),
+                                    .padding(horizontal = 2.dp, vertical = 4.dp),
                                 colors = CardDefaults.cardColors(
                                     containerColor = PanelColor,
                                     contentColor = PanelTextColor
@@ -173,8 +170,7 @@ fun MainScreen(
                                 modifier = Modifier
                                     .wrapContentSize(Alignment.Center)
                                     .fillMaxWidth()
-                                    .padding(horizontal = 2.dp, vertical = 4.dp)
-                                    .clickable(onClick = {}),
+                                    .padding(horizontal = 2.dp, vertical = 4.dp),
                                 colors = CardDefaults.cardColors(
                                     containerColor = PanelColor,
                                     contentColor = PanelTextColor

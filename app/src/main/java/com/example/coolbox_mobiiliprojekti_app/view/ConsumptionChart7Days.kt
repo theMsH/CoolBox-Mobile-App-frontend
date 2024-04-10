@@ -124,7 +124,6 @@ fun ConsumptionChart7Days(
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clickable(onClick = { goToConsumption() })
                         .wrapContentSize(Alignment.Center),
                     colors = CardColors(
                         containerColor = PanelColor,
