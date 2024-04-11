@@ -1,10 +1,7 @@
 package com.example.coolbox_mobiiliprojekti_app.view
 
-import android.content.res.Configuration
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
@@ -13,14 +10,13 @@ import androidx.compose.material3.CardColors
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -142,7 +138,8 @@ fun ConsumptionChart(
                                 .align(Alignment.CenterHorizontally)
                                 .padding(top = 20.dp),
                             fontSize = 20.sp,
-                            text = "Total Consumption",
+                            text = "Total Consumption and Indoor Temperature",
+                            textAlign = TextAlign.Center,
                             color = Color.Black
                         )
                             // CartesianChartHost, joka sisältää chartin
