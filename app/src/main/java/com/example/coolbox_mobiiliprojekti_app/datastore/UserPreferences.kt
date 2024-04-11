@@ -9,27 +9,29 @@ import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 
+// DataStoresta saa olla olemassa kerralla vain yksi instanssi,
+// joten se luodaan kotlin-tiedoston ylimmässä osassa
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "preferences")
 
 class UserPreferences(context: Context) {
 
-
+    // lyhyt muuttuja usein käytetylle parametrille, jolla kutsutaan DataStorea
     var pref = context.dataStore
-
-    var consumptionActive = booleanPreferencesKey("CONSUMPTION_CHECKED")
+    // Muuttujat, jotka pitävät sisällään boolean-arvoja
+    var consumptionActive = booleanPreferencesKey("CONSUMPTION_ACTIVE")
     var productionActive = booleanPreferencesKey("PRODUCTION_ACTIVE")
     var batteryActive = booleanPreferencesKey("BATTERY_ACTIVE")
 
     // Haetaan booleanit dataStoresta
-    var getConsumptionActive = flow<Boolean> {
+    var getConsumptionActive = flow {
         pref.data.map {
-            it[consumptionActive]?:true
+            it[consumptionActive]?:true // jos arvo on null, aseta arvoksi true
         }.collect(collector = {
-            emit(it)
+            emit(it) //flow nappaa avaimen sisältämän arvon ja lähettää sen var:in arvona
         })
     }
 
-    var getProductionActive = flow<Boolean> {
+    var getProductionActive = flow {
         pref.data.map {
             it[productionActive]?:true
         }.collect(collector = {
@@ -37,7 +39,7 @@ class UserPreferences(context: Context) {
         })
     }
 
-    var getBatteryActive = flow<Boolean> {
+    var getBatteryActive = flow {
         pref.data.map {
             it[batteryActive]?:true
         }.collect(collector = {
