@@ -1,5 +1,6 @@
 package com.example.coolbox_mobiiliprojekti_app.view
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -30,6 +31,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -45,6 +47,7 @@ import com.example.coolbox_mobiiliprojekti_app.viewmodel.BatteryViewModel
 import com.example.coolbox_mobiiliprojekti_app.viewmodel.MainScreenViewModel
 import com.example.coolbox_mobiiliprojekti_app.viewmodel.ProductionViewModel
 import com.example.coolbox_mobiiliprojekti_app.viewmodel.ConsumptionViewModel
+import com.example.coolbox_mobiiliprojekti_app.viewmodel.TemperaturesViewModel
 import java.time.LocalDate
 
 
@@ -169,15 +172,8 @@ fun MainScreen(
                                     containerColor = PanelColor,
                                     contentColor = PanelTextColor
                                 )
-                            ) {
-                                Text(
-                                    modifier = Modifier
-                                        .align(Alignment.CenterHorizontally)
-                                        .padding(top = 20.dp),
-                                    fontSize = 20.sp,
-                                    text = "Lämpötiladataa"
-                                )
-                                Spacer(modifier = Modifier.height(300.dp)) // Poista kun tulee oikea content
+                            ){
+                                TemperatureDatas()
                             }
                         }
                     }
@@ -223,6 +219,57 @@ fun BatteryCharge() {
         }
     }
 
+}
+
+@Composable
+fun TemperatureDatas() {
+    val viewModel: TemperaturesViewModel = viewModel()
+
+    Box(modifier = Modifier
+        .fillMaxWidth()
+        .padding(20.dp)) {
+        // Tarkistetaan ViewModelin tilaa ja valitaan näytettävä sisältö sen mukaan.
+        when {
+            // Jos data on latautumassa, näytetään latausindikaattori keskellä.
+            viewModel.temperaturesChartState.value.loading -> CircularProgressIndicator(
+                modifier = Modifier.align(Alignment.Center)
+            )
+
+            // Jos lämpötiladatat ovat tyhjiä tai null, näytetään virheviesti.
+            viewModel.temperaturesStatsData.isNullOrEmpty() -> Text(
+                text = "Lämpötilatietoja ei ole saatavilla",
+                modifier = Modifier.align(Alignment.Center),
+                fontSize = 20.sp,
+                color = Color.Red // Virhetekstin väri asetettu punaiseksi.
+            )
+
+            // Jos datat ovat saatavilla, näytetään ne sarakkeessa.
+            else -> Column(
+                modifier = Modifier.fillMaxWidth(), // Sarake täyttää leveyssuunnassa koko tilan.
+                verticalArrangement = Arrangement.spacedBy(10.dp), // Elementtien välinen pystysuuntainen etäisyys.
+                horizontalAlignment = Alignment.CenterHorizontally // Vaakasuora keskitys.
+            ) {
+                // Otsikkoteksti lämpötiladatalle.
+                Text(
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally),
+                    fontSize = 20.sp,
+                    text = "Lämpötila datat",
+                    textAlign = TextAlign.Center
+                )
+
+                // Iteroidaan läpi lämpötiladatat ja luodaan jokaiselle sensorille oma tekstielementti.
+                viewModel.temperaturesStatsData!!.forEach { (sensor, temperature) ->
+                    Text(
+                        text = "$sensor: $temperature °C", // Sensorin nimi ja lämpötila Celsius-asteina.
+                        fontSize = 30.sp,
+                        color = PanelTextButtonColor, // Tekstin väri, joka on määritetty sovelluksen teemassa.
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
+        }
+    }
 }
 
 @Composable
