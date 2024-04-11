@@ -254,7 +254,7 @@ fun TemperatureDatas() {
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally),
                     fontSize = 20.sp,
-                    text = "Lämpötila datat",
+                    text = "Lämpötila datat - Last updated: ${viewModel.lastFetchTime ?: "Not available"}",
                     textAlign = TextAlign.Center
                 )
 

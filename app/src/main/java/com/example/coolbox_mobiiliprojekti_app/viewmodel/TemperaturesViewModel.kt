@@ -17,6 +17,8 @@ import com.example.coolbox_mobiiliprojekti_app.model.TemperatureStatsResponse
 import com.example.coolbox_mobiiliprojekti_app.model.TemperaturesChartState
 import com.example.coolbox_mobiiliprojekti_app.model.TemperaturesStatsData
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class TemperaturesViewModel : ViewModel() {
 
@@ -26,6 +28,8 @@ class TemperaturesViewModel : ViewModel() {
     var temperaturesStatsData by mutableStateOf<Map<String, Float>?>(null)
         private set
 
+    var lastFetchTime by mutableStateOf<String?>(null)
+        private set
 
     init {
         // Luokan alustaja, joka kutsuu lämpötilatietojen noutamista palvelimelta.
@@ -40,8 +44,10 @@ class TemperaturesViewModel : ViewModel() {
                 _temperaturesChartState.value = _temperaturesChartState.value.copy(loading = true)
                 // Tekee pyynnön palvelimelle ja odottaa vastausta.
                 val response = temperaturesApiService.getMostRecentValuesFrom4DifferentTemperatures()
-                // Lokitetaan raakavaste logiin.
-                Log.d("Dorian", "Raw API response: $response")
+
+                // Saadaan "Last Updated" arvo, eli milloin data on haettu viimeksi
+                lastFetchTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+
 
                 // Tarkistaa, että vastaus sisältää tarvittavan datan.
                 if (response.data.size >= 2 && response.data[1] is List<*>) {
