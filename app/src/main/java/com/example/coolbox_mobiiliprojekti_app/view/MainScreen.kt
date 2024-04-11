@@ -1,6 +1,5 @@
 package com.example.coolbox_mobiiliprojekti_app.view
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -29,18 +28,20 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.coolbox_mobiiliprojekti_app.datastore.UserPreferences
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.PanelColor
+import com.example.coolbox_mobiiliprojekti_app.ui.theme.PanelTextButtonColor
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.PanelTextColor
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.TextsLightColor
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.TopAppBarColor
+import com.example.coolbox_mobiiliprojekti_app.viewmodel.BatteryViewModel
 import com.example.coolbox_mobiiliprojekti_app.viewmodel.MainScreenViewModel
 import com.example.coolbox_mobiiliprojekti_app.viewmodel.ProductionViewModel
 import com.example.coolbox_mobiiliprojekti_app.viewmodel.ConsumptionViewModel
@@ -153,14 +154,7 @@ fun MainScreen(
                                     contentColor = PanelTextColor
                                 )
                             ) {
-                                Text(
-                                    modifier = Modifier
-                                        .align(Alignment.CenterHorizontally)
-                                        .padding(top = 20.dp),
-                                    fontSize = 20.sp,
-                                    text = "Akun dataa"
-                                )
-                                Spacer(modifier = Modifier.height(120.dp)) // Poista kun tulee oikea content
+                                BatteryCharge()
                             }
                         }
                     }
@@ -196,6 +190,42 @@ fun MainScreen(
 }
 
 @Composable
+fun BatteryCharge() {
+    val viewModel: BatteryViewModel = viewModel()
+
+    Box(modifier = Modifier
+        .fillMaxWidth()
+        .padding(20.dp)) {
+        when {
+            viewModel.batteryChartState.value.loading -> CircularProgressIndicator(
+                modifier = Modifier.align(Alignment.Center)
+            )
+
+            else -> Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally),
+                    fontSize = 20.sp,
+                    text = "Akun varaus",
+                    textAlign = TextAlign.Center
+                )
+                Text(
+                    text = viewModel.batteryChartState.value.soc.toString() + " %",
+                    modifier = Modifier.padding(top = 20.dp),
+                    color = PanelTextButtonColor,
+                    fontSize = 30.sp,
+                    textAlign = TextAlign.Center
+                )
+            }
+        }
+    }
+
+}
+
+@Composable
 fun ProductionPanel7Days(
     goToProduction: () -> Unit
 ) {
@@ -205,7 +235,6 @@ fun ProductionPanel7Days(
 
     // Määritä nykyisen viikon ensimmäinen päivä
     val currentWeekStartDate by remember { mutableStateOf(LocalDate.now()) }
-    println("LocalDate.now(): ${LocalDate.now()}")
 
     // Päivitä kulutustilastot ja lämpötilatilastot haettaessa dataa
     LaunchedEffect(key1 = currentWeekStartDate, key2 = Unit) {
@@ -226,7 +255,7 @@ fun ProductionPanel7Days(
 
             // Näytä sisältö
             else -> Column(
-                Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
@@ -250,8 +279,6 @@ fun ConsumptionPanel7Days(
 
     // Määritä nykyisen viikon ensimmäinen päivä
     val currentWeekStartDate by remember { mutableStateOf(LocalDate.now()) }
-    println("LocalDate.now(): ${LocalDate.now()}")
-
     // Päivitä kulutustilastot ja lämpötilatilastot haettaessa dataa
     LaunchedEffect(key1 = currentWeekStartDate, key2 = Unit) {
         // Päivitä datan haku sen mukaan, mikä aikaväli on valittu

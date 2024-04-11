@@ -2,13 +2,23 @@ package com.example.coolbox_mobiiliprojekti_app.model
 
 import com.google.gson.annotations.SerializedName
 
-// Tämä luokka kuvaa kulutustietojen vastausta, joka sisältää kulutusdatan.
-data class BatteryStatsResponse(
-    @SerializedName("current_battery_stats")
-    val currentBatteryStats: List<BatteryData> // Lista akkudatan alkioista.
+data class BatteryChartState(
+    // arvo ilmaisee, ovatko graafin tiedot latautumassa
+    val loading: Boolean = false,
+    // indikoi graafin latautumisen onnistumista
+    val error: String? = null,
+    // arvo indikoi akun varaust:
+    val soc: Float = 0f
 )
 
-// Tämä luokka edustaa yksittäistä kulutustietoa.
+// Akkudatan responsen rakenne:
+data class BatteryStatsResponse(
+    // Lista akkudatan alkioista:
+    @SerializedName("current_battery_stats")
+    val currentBatteryStats: List<BatteryData>
+)
+
+// Akku-responsen yksittäinen alkio:
 data class BatteryData(
     val sensor: String, // Akun sensorin nimi
     val value: Float // Sensorin tuottama arvo
