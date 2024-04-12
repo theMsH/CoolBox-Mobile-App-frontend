@@ -22,7 +22,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -34,12 +33,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.coolbox_mobiiliprojekti_app.ui.theme.BottomAppBarColor
+import com.example.coolbox_mobiiliprojekti_app.ui.theme.TopAppBarColor
 import com.example.coolbox_mobiiliprojekti_app.viewmodel.ConsumptionViewModel
 import kotlinx.coroutines.Job
 import java.time.DayOfWeek
@@ -101,7 +101,7 @@ fun ConsumptionScreen(
             // Yläpalkki
             CenterAlignedTopAppBar(
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer
+                    containerColor = TopAppBarColor
                 ),
                 // Navigointinappi (takaisin)
                 navigationIcon = {
@@ -128,7 +128,7 @@ fun ConsumptionScreen(
         bottomBar = {
             // Alapalkki
             BottomAppBar(
-                containerColor = Color.Blue
+                containerColor = BottomAppBarColor
             ) {
                 Row(
                     modifier = Modifier.fillMaxSize(),
@@ -137,6 +137,7 @@ fun ConsumptionScreen(
                 ) {
                     // Kuukausi-nappi
                     Button(
+                        enabled = currentTimeInterval != TimeInterval.MONTHS,
                         onClick = {
                             // Lisää logiikka kuukausidataan siirtymiseen
                             val currentMonthStartDate = LocalDate.now().withDayOfMonth(1)
@@ -147,10 +148,11 @@ fun ConsumptionScreen(
                             currentTimeInterval = TimeInterval.MONTHS
                         }
                     ) {
-                        Text(text = "Months")
+                        Text(text = "Year")
                     }
                     // Viikko-nappi
                     Button(
+                        enabled = currentTimeInterval != TimeInterval.WEEKS,
                         onClick = {
                             // Hae viikkodata
                             val currentWeekNumber = LocalDate.now()
@@ -173,11 +175,12 @@ fun ConsumptionScreen(
 
                         }
                     ) {
-                        Text(text = "Weeks")
+                        Text(text = "Month")
                     }
 
                     // Päivä-nappi
                     Button(
+                        enabled = currentTimeInterval != TimeInterval.DAYS,
                         onClick = {
                             // Hae päivädata
                             currentWeekStartDate = LocalDate.now().startOfWeek()
@@ -185,11 +188,12 @@ fun ConsumptionScreen(
                             currentTimeInterval = TimeInterval.DAYS
                         }
                     ) {
-                        Text(text = "Days")
+                        Text(text = "Week")
                     }
 
                     // Tunti-nappi
                     Button(
+                        enabled = currentTimeInterval != TimeInterval.HOURS,
                         onClick = {
                             // Hae tuntidata
                             currentWeekStartDate = LocalDate.now()
@@ -197,7 +201,7 @@ fun ConsumptionScreen(
                             currentTimeInterval = TimeInterval.HOURS
                         }
                     ) {
-                        Text(text = "Hours")
+                        Text(text = "Day")
                     }
                 }
             }
