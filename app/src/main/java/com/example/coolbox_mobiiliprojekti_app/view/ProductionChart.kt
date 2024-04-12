@@ -130,7 +130,30 @@ fun ProductionChart(
                 }
             }
 
-            ProductionTypeInterval.Solar -> TODO()
+            ProductionTypeInterval.Solar -> {
+                viewModel.solarStatsData?.let { solarStatsData ->
+                    // Yritetään suorittaa transaktio modelProducerilla
+                    modelProducer.tryRunTransaction {
+                        // Haetaan datan avaimet ja arvot listoiksi
+                        val dates = solarStatsData.keys.toList()
+
+                        val productions = solarStatsData.values.toList()
+
+                        // Muotoillaan päivämäärät päivän nimiksi
+                        val datesFormatted = formatToDateToDayOfWeek(dates)
+
+                        // Luodaan sarakkeet tuottodatalle
+                        lineSeries {
+                            series(productions)
+                        }
+
+                        // Päivitetään extras lisäämällä päivämäärät
+                        updateExtras {
+                            it[labelListKey] = datesFormatted
+                        }
+                    }
+                }
+            }
 
         }
     }

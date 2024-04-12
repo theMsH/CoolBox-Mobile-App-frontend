@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.coolbox_mobiiliprojekti_app.api.productionApiService
 import com.example.coolbox_mobiiliprojekti_app.model.ProductionChartState
 import com.example.coolbox_mobiiliprojekti_app.model.ProductionStatsResponse
+import com.example.coolbox_mobiiliprojekti_app.model.SolarStatsResponse
 import com.example.coolbox_mobiiliprojekti_app.model.WindChartState
 import com.example.coolbox_mobiiliprojekti_app.model.WindStatsResponse
 import com.example.coolbox_mobiiliprojekti_app.view.ProductionTypeInterval
@@ -200,6 +201,87 @@ class ProductionViewModel(
             )
         }
     }
+
+    // Muuttuja solar datalle
+    var solarStatsData by mutableStateOf<Map<String, Float>?>(null)
+        private set
+
+    // Haetaan dataa valitun aikavälin perusteella
+    fun fetchSolarData(interval: TimeInterval, date: Any) {
+        viewModelScope.launch {
+            try {
+                _productionChartState.value = _productionChartState.value.copy(loading = true)
+                when (interval) {
+                    TimeInterval.HOURS -> {
+                        fetchHourlySolarData(date.toString())
+                    }
+                    TimeInterval.DAYS -> {
+                        fetchDailyByWeekSolarData(date.toString())
+                    }
+                    TimeInterval.WEEKS -> {
+                        fetchDailyByMonthSolarData(date.toString())
+                    }
+                    TimeInterval.MONTHS -> {
+                        fetchMonthlySolarData(date.toString())
+                    }
+                    TimeInterval.MAIN -> {
+                        fetchSevenDaySolarData(date.toString())
+                    }
+                }
+            } catch (e: Exception) {
+                Log.d("Error", e.toString())
+            } finally {
+                _productionChartState.value = _productionChartState.value.copy(loading = false)
+            }
+        }
+    }
+
+    private suspend fun fetchSevenDaySolarData(date: String) {
+        val response = productionApiService.getSevenDaySolarProductionData(date)
+        handleSolarStatsResponse(response)
+    }
+
+    private suspend fun fetchHourlySolarData(date: String) {
+        val response = productionApiService.getHourlySolarProductionData(date)
+        handleSolarStatsResponse(response)
+    }
+
+    private suspend fun fetchDailyByWeekSolarData(date: String) {
+        val response = productionApiService.getDailyByWeekSolarProductionData(date)
+        handleSolarStatsResponse(response)
+    }
+
+    private suspend fun fetchDailyByMonthSolarData(date: String) {
+        val response = productionApiService.getDailyByMonthSolarProductionData(date)
+        handleSolarStatsResponse(response)
+    }
+
+    private suspend fun fetchMonthlySolarData(date: String) {
+        val response = productionApiService.getMonthlySolarProductionData(date)
+        handleSolarStatsResponse(response)
+    }
+
+    private fun handleSolarStatsResponse(response: SolarStatsResponse) {
+        if (response.data.all { it.date != null }) {
+            solarStatsData = response.data.associate { it.date to it.totalKwh }
+        }
+        else if (response.data.all { it.hour != null }) {
+            solarStatsData = response.data.associate { it.hour to it.totalKwh }
+        }
+        else if (response.data.all { it.day != null }) {
+            solarStatsData = response.data.associate { it.day to it.totalKwh }
+        }
+        else if (response.data.all { it.month != null }) {
+            solarStatsData = response.data.associate { it.month to it.totalKwh }
+        }
+        else {
+            Log.d(
+                "Error",
+                "handleSolarStatsResponse didn't receive the right data, suspicious of a name change :("
+            )
+        }
+    }
+
     val currentProductionType: ProductionTypeInterval = ProductionTypeInterval.Total
 
     fun fetchData(interval: TimeInterval, date: Any) {
@@ -209,7 +291,7 @@ class ProductionViewModel(
                 when (currentProductionType) {
                     ProductionTypeInterval.Wind -> fetchWindData(interval, date.toString())
                     ProductionTypeInterval.Total -> fetchTotalProductionData(interval, date.toString()) // Assume this function exists
-                    ProductionTypeInterval.Solar -> TODO()
+                    ProductionTypeInterval.Solar -> fetchSolarData(interval, date.toString())
                 }
             } catch (e: Exception) {
                 Log.d("Error", "Fetching data failed: ${e.message}")

@@ -95,7 +95,6 @@ fun formatToDateToDayOfWeek(dateList: List<String>): List<String> {
     }
 }
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductionScreen(
@@ -119,13 +118,17 @@ fun ProductionScreen(
 
     // Päivitä kulutustilastot ja lämpötilatilastot haettaessa dataa
     // Reagoi tuotantotyypin tai aikavälin muutoksiin ja nouta tiedot vastaavasti
-    LaunchedEffect(key1 = currentProductionType, key2 = currentTimeInterval, key3 = currentWeekStartDate) {
+    LaunchedEffect(
+        key1 = currentProductionType,
+        key2 = currentTimeInterval,
+        key3 = currentWeekStartDate
+    ) {
         // Määritä haluamasi päivämäärämuoto
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
         // Muotoile currentWeekStartDate merkkijonoksi määritetyssä muodossa
         val formattedDate = currentWeekStartDate.format(formatter)
 
-        when(currentProductionType) {
+        when (currentProductionType) {
             ProductionTypeInterval.Total -> {
                 viewModel.fetchTotalProductionData(currentTimeInterval, formattedDate)
             }
@@ -134,7 +137,9 @@ fun ProductionScreen(
                 viewModel.fetchWindData(currentTimeInterval, formattedDate)
             }
 
-            ProductionTypeInterval.Solar -> TODO()
+            ProductionTypeInterval.Solar -> {
+                viewModel.fetchSolarData(currentTimeInterval, formattedDate)
+            }
         }
     }
 
@@ -184,19 +189,28 @@ fun ProductionScreen(
                             // Lisää logiikka kuukausidataan siirtymiseen
                             val currentMonthStartDate = LocalDate.now().withDayOfMonth(1)
 
-                            when(currentProductionType) {
+                            when (currentProductionType) {
                                 ProductionTypeInterval.Wind -> {
 
-                                    viewModel.fetchWindData(TimeInterval.MONTHS,
+                                    viewModel.fetchWindData(
+                                        TimeInterval.MONTHS,
                                         currentMonthStartDate
                                     )
                                 }
+
                                 ProductionTypeInterval.Total -> {
-                                    viewModel.fetchTotalProductionData(TimeInterval.MONTHS,
+                                    viewModel.fetchTotalProductionData(
+                                        TimeInterval.MONTHS,
                                         currentMonthStartDate
                                     )
                                 }
-                                ProductionTypeInterval.Solar -> TODO()
+
+                                ProductionTypeInterval.Solar -> {
+                                    viewModel.fetchSolarData(
+                                        TimeInterval.MONTHS,
+                                        currentMonthStartDate
+                                    )
+                                }
                             }
 
                             currentTimeInterval = TimeInterval.MONTHS
@@ -222,14 +236,27 @@ fun ProductionScreen(
                             currentWeekStartDate = firstDayOfWeek
                             currentWeekEndDate = firstDayOfWeek.plusDays(6)
 
-                            when(currentProductionType) {
+                            when (currentProductionType) {
                                 ProductionTypeInterval.Wind -> {
-                                    viewModel.fetchWindData(TimeInterval.WEEKS, currentWeekStartDate)
+                                    viewModel.fetchWindData(
+                                        TimeInterval.WEEKS,
+                                        currentWeekStartDate
+                                    )
                                 }
+
                                 ProductionTypeInterval.Total -> {
-                                    viewModel.fetchTotalProductionData(TimeInterval.WEEKS, currentWeekStartDate)
+                                    viewModel.fetchTotalProductionData(
+                                        TimeInterval.WEEKS,
+                                        currentWeekStartDate
+                                    )
                                 }
-                                ProductionTypeInterval.Solar -> TODO()
+
+                                ProductionTypeInterval.Solar -> {
+                                    viewModel.fetchSolarData(
+                                        TimeInterval.WEEKS,
+                                        currentWeekStartDate
+                                    )
+                                }
                             }
 
                             currentTimeInterval = TimeInterval.WEEKS
@@ -245,14 +272,24 @@ fun ProductionScreen(
                             // Hae päivädata
                             currentWeekStartDate = LocalDate.now().startOfWeek()
 
-                            when(currentProductionType) {
+                            when (currentProductionType) {
                                 ProductionTypeInterval.Wind -> {
                                     viewModel.fetchWindData(TimeInterval.DAYS, currentWeekStartDate)
                                 }
+
                                 ProductionTypeInterval.Total -> {
-                                    viewModel.fetchTotalProductionData(TimeInterval.DAYS, currentWeekStartDate)
+                                    viewModel.fetchTotalProductionData(
+                                        TimeInterval.DAYS,
+                                        currentWeekStartDate
+                                    )
                                 }
-                                ProductionTypeInterval.Solar -> TODO()
+
+                                ProductionTypeInterval.Solar -> {
+                                    viewModel.fetchSolarData(
+                                        TimeInterval.DAYS,
+                                        currentWeekStartDate
+                                    )
+                                }
                             }
 
                             currentTimeInterval = TimeInterval.DAYS
@@ -267,14 +304,27 @@ fun ProductionScreen(
                             // Hae tuntidata
                             currentWeekStartDate = LocalDate.now()
 
-                            when(currentProductionType) {
+                            when (currentProductionType) {
                                 ProductionTypeInterval.Wind -> {
-                                    viewModel.fetchWindData(TimeInterval.HOURS, currentWeekStartDate)
+                                    viewModel.fetchWindData(
+                                        TimeInterval.HOURS,
+                                        currentWeekStartDate
+                                    )
                                 }
+
                                 ProductionTypeInterval.Total -> {
-                                    viewModel.fetchTotalProductionData(TimeInterval.HOURS, currentWeekStartDate)
+                                    viewModel.fetchTotalProductionData(
+                                        TimeInterval.HOURS,
+                                        currentWeekStartDate
+                                    )
                                 }
-                                ProductionTypeInterval.Solar -> TODO()
+
+                                ProductionTypeInterval.Solar -> {
+                                    viewModel.fetchSolarData(
+                                        TimeInterval.HOURS,
+                                        currentWeekStartDate
+                                    )
+                                }
                             }
 
                             currentTimeInterval = TimeInterval.HOURS
@@ -320,7 +370,7 @@ fun ProductionScreen(
                         ) {
                             Row(
                                 modifier = Modifier
-                                .fillMaxWidth(),
+                                    .fillMaxWidth(),
                                 horizontalArrangement = Arrangement.SpaceBetween,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
@@ -337,19 +387,23 @@ fun ProductionScreen(
 
                                             TimeInterval.HOURS -> {
                                                 // Siirry edellisen päivän alkuun
-                                                currentWeekStartDate = currentWeekStartDate.minusDays(1)
+                                                currentWeekStartDate =
+                                                    currentWeekStartDate.minusDays(1)
 
                                             }
 
                                             TimeInterval.WEEKS -> {
                                                 // Siirry edellisen kuukauden alkuun
                                                 currentWeekStartDate =
-                                                    currentWeekStartDate.minusMonths(1).startOfWeek()
+                                                    currentWeekStartDate.minusMonths(1)
+                                                        .startOfWeek()
 
                                             }
+
                                             TimeInterval.MONTHS -> {
                                                 // Siirry edellisen vuoden alkuun
-                                                currentWeekStartDate = currentWeekStartDate.minusYears(1)
+                                                currentWeekStartDate =
+                                                    currentWeekStartDate.minusYears(1)
                                             }
 
                                             TimeInterval.MAIN -> TODO()
@@ -377,8 +431,12 @@ fun ProductionScreen(
                                         }
 
                                         TimeInterval.WEEKS -> {
-                                            "${currentWeekStartDate.month.name.toLowerCase().capitalize()} ${currentWeekStartDate.year}"
+                                            "${
+                                                currentWeekStartDate.month.name.toLowerCase()
+                                                    .capitalize()
+                                            } ${currentWeekStartDate.year}"
                                         }
+
                                         TimeInterval.MONTHS -> {
                                             "${currentWeekStartDate.year}"
                                         }
@@ -399,15 +457,18 @@ fun ProductionScreen(
                                             }
 
                                             TimeInterval.HOURS -> {
-                                                currentWeekStartDate = currentWeekStartDate.plusDays(1)
+                                                currentWeekStartDate =
+                                                    currentWeekStartDate.plusDays(1)
                                             }
 
                                             TimeInterval.WEEKS -> {
                                                 currentWeekStartDate =
                                                     currentWeekStartDate.plusMonths(1).startOfWeek()
                                             }
+
                                             TimeInterval.MONTHS -> {
-                                                currentWeekStartDate = currentWeekStartDate.plusYears(1)
+                                                currentWeekStartDate =
+                                                    currentWeekStartDate.plusYears(1)
                                             }
 
                                             TimeInterval.MAIN -> TODO()
@@ -434,14 +495,18 @@ fun ProductionScreen(
                                         String.format(
                                             Locale.US,
                                             "%.2f",
-                                            when(currentProductionType) {
+                                            when (currentProductionType) {
                                                 ProductionTypeInterval.Wind -> {
                                                     viewModel.windStatsData?.values?.sum() ?: 0f
                                                 }
+
                                                 ProductionTypeInterval.Total -> {
                                                     viewModel.productionStatsData?.values?.sum() ?: 0f
                                                 }
-                                                ProductionTypeInterval.Solar -> TODO()
+
+                                                ProductionTypeInterval.Solar -> {
+                                                    viewModel.solarStatsData?.values?.sum() ?: 0f
+                                                }
                                             }
                                         )
                                     } kwh",
@@ -456,14 +521,18 @@ fun ProductionScreen(
                                         String.format(
                                             Locale.US,
                                             "%.2f",
-                                            when(currentProductionType) {
+                                            when (currentProductionType) {
                                                 ProductionTypeInterval.Wind -> {
                                                     viewModel.windStatsData?.values?.average() ?: 0f
                                                 }
+
                                                 ProductionTypeInterval.Total -> {
                                                     viewModel.productionStatsData?.values?.average() ?: 0f
                                                 }
-                                                ProductionTypeInterval.Solar -> TODO()
+
+                                                ProductionTypeInterval.Solar -> {
+                                                    viewModel.solarStatsData?.values?.average() ?: 0f
+                                                }
                                             }
                                         )
                                     } kwh",
@@ -484,6 +553,7 @@ fun ProductionScreen(
                                     onClick = {
                                         // Lisää logiikka aurinko dataan siirtymiseen
                                         currentProductionType = ProductionTypeInterval.Solar
+                                        viewModel.fetchData(TimeInterval.DAYS, currentWeekStartDate)
                                     },
                                 ) {
                                     Icon(
@@ -526,8 +596,7 @@ fun ProductionScreen(
                         }
                     }
                 }
-            }
-            else {
+            } else {
                 when {
                     // Latauspalkki
                     viewModel.productionChartState.value.loading -> CircularProgressIndicator(
@@ -545,7 +614,7 @@ fun ProductionScreen(
                             currentProductionType = currentProductionType,
                             isLandscape = isLandscape
                         )
-                            Spacer(modifier = Modifier.weight(0.5f))
+                        Spacer(modifier = Modifier.weight(0.5f))
 
                         // Piirrä nuolinapit ja niiden välissä oleva aikaväli
                         Row(
@@ -574,9 +643,11 @@ fun ProductionScreen(
                                                 currentWeekStartDate.minusMonths(1).startOfWeek()
 
                                         }
+
                                         TimeInterval.MONTHS -> {
                                             // Siirry edellisen vuoden alkuun
-                                            currentWeekStartDate = currentWeekStartDate.minusYears(1)
+                                            currentWeekStartDate =
+                                                currentWeekStartDate.minusYears(1)
                                         }
 
                                         TimeInterval.MAIN -> TODO()
@@ -605,8 +676,12 @@ fun ProductionScreen(
                                     }
 
                                     TimeInterval.WEEKS -> {
-                                        "${currentWeekStartDate.month.name.toLowerCase().capitalize()} ${currentWeekStartDate.year}"
+                                        "${
+                                            currentWeekStartDate.month.name.toLowerCase()
+                                                .capitalize()
+                                        } ${currentWeekStartDate.year}"
                                     }
+
                                     TimeInterval.MONTHS -> {
                                         "${currentWeekStartDate.year}"
                                     }
@@ -635,6 +710,7 @@ fun ProductionScreen(
                                             currentWeekStartDate =
                                                 currentWeekStartDate.plusMonths(1).startOfWeek()
                                         }
+
                                         TimeInterval.MONTHS -> {
                                             currentWeekStartDate = currentWeekStartDate.plusYears(1)
                                         }
@@ -660,14 +736,18 @@ fun ProductionScreen(
                                 String.format(
                                     Locale.US,
                                     "%.2f",
-                                    when(currentProductionType) {
+                                    when (currentProductionType) {
                                         ProductionTypeInterval.Wind -> {
                                             viewModel.windStatsData?.values?.sum() ?: 0f
                                         }
+
                                         ProductionTypeInterval.Total -> {
                                             viewModel.productionStatsData?.values?.sum() ?: 0f
                                         }
-                                        ProductionTypeInterval.Solar -> TODO()
+
+                                        ProductionTypeInterval.Solar -> {
+                                            viewModel.solarStatsData?.values?.sum() ?: 0f
+                                        }
                                     }
                                 )
                             } kwh",
@@ -682,14 +762,18 @@ fun ProductionScreen(
                                 String.format(
                                     Locale.US,
                                     "%.2f",
-                                    when(currentProductionType) {
+                                    when (currentProductionType) {
                                         ProductionTypeInterval.Wind -> {
                                             viewModel.windStatsData?.values?.average() ?: 0f
                                         }
+
                                         ProductionTypeInterval.Total -> {
                                             viewModel.productionStatsData?.values?.average() ?: 0f
                                         }
-                                        ProductionTypeInterval.Solar -> TODO()
+
+                                        ProductionTypeInterval.Solar -> {
+                                            viewModel.solarStatsData?.values?.average() ?: 0f
+                                        }
                                     }
                                 )
                             } kwh",
@@ -710,6 +794,7 @@ fun ProductionScreen(
                                 onClick = {
                                     // Lisää logiikka aurinko dataan siirtymiseen
                                     currentProductionType = ProductionTypeInterval.Solar
+                                    viewModel.fetchData(TimeInterval.DAYS, currentWeekStartDate)
                                 },
                                 modifier = Modifier.padding(8.dp)
                             ) {
@@ -742,7 +827,7 @@ fun ProductionScreen(
                                     // Lisää logiikka total production dataan siirtymiseen
                                     currentProductionType = ProductionTypeInterval.Total
                                 },
-                                 modifier = Modifier.padding(8.dp)
+                                modifier = Modifier.padding(8.dp)
                             ) {
                                 Icon(
                                     imageVector = Icons.Filled.BatteryChargingFull,

@@ -1,6 +1,7 @@
 package com.example.coolbox_mobiiliprojekti_app.api
 
 import com.example.coolbox_mobiiliprojekti_app.model.ProductionStatsResponse
+import com.example.coolbox_mobiiliprojekti_app.model.SolarStatsResponse
 import com.example.coolbox_mobiiliprojekti_app.model.WindStatsResponse
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -72,4 +73,18 @@ interface ProductionApiService {
     @GET("measurement/wind/total_kwh/wind_production/monthly/{date}")
     suspend fun getMonthlyWindProductionsData(@Path("date") date: String): WindStatsResponse
 
+    @GET("measurement/solar/total/seven_day_period/{date}")
+    suspend fun getSevenDaySolarProductionData(@Path("date") date: String): SolarStatsResponse
+
+    @GET("measurement/solar/total/hourly/{date}")
+    suspend fun getHourlySolarProductionData(@Path("date") date: String): SolarStatsResponse
+
+    @GET("measurement/solar/total/daily/week/{date}")
+    suspend fun getDailyByWeekSolarProductionData(@Path("date") date: String): SolarStatsResponse
+
+    @GET("measurement/solar/total/daily/month/{date}")
+    suspend fun getDailyByMonthSolarProductionData(@Path("date") date: String): SolarStatsResponse
+
+    @GET("measurement/solar/total/monthly/{date}")
+    suspend fun getMonthlySolarProductionData(@Path("date") date: String): SolarStatsResponse
 }
