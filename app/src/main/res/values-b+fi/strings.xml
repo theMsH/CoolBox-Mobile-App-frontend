@@ -6,7 +6,7 @@
     <string name="cancel">Peruuta</string>
     <string name="create_account">Luo käyttäjä</string>
     <string name="register">Rekisteröi</string>
-    <string name="register_here">Rekisteröi täällä</string>
+    <string name="register_here">Rekisteröidy</string>
     <string name="login">Kirjaudu sisään</string>
     <string name="logout">Kirjaudu ulos</string>
     <string name="username_placeholder">Käyttäjätunnus</string>
