@@ -1,11 +1,8 @@
 package com.example.coolbox_mobiiliprojekti_app.view
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -33,17 +30,10 @@ import com.example.coolbox_mobiiliprojekti_app.ui.theme.PanelColor
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.SatisfyingBatteryChargeColor
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.TolerableBatteryChargeColor
 import com.example.coolbox_mobiiliprojekti_app.viewmodel.BatteryViewModel
-import kotlin.math.round
-
 
 @Composable
 fun BatteryChart() {
     val viewModel: BatteryViewModel = viewModel()
-
-    // Varmistetaan, että arvot ovat yhden desimaalin tarkkuudella, jotta 7
-    // niitä voidaan käyttää lokalisoinnissa ongelmitta
-    val batteryTemperature: Float = round(viewModel.batteryChartState.value.temp * 10) / 10
-    val batteryTension: Float = round(viewModel.batteryChartState.value.voltage * 10) / 10
 
     val fullCharge: Float = 100.0f
     val stateOfCharge: Float = viewModel.batteryChartState.value.soc
@@ -98,51 +88,21 @@ fun BatteryChart() {
                     text = stringResource(R.string.battery),
                     textAlign = TextAlign.Center
                 )
-                Row(
-                    modifier = Modifier.fillMaxSize(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Column(
-                        // modifier = Modifier.weight(1f),
-                    ) {
-                        Text(
-                            text = stringResource(
-                                R.string.battery_temperature_with_placeholder,
-                                batteryTemperature
-                            ),
-                            lineHeight = 40.sp
-                        )
-                        Text(
-                            modifier = Modifier.padding(bottom = 10.dp),
-                            text = stringResource(
-                                R.string.battery_voltage_with_placeholder,
-                                batteryTension
-                            ),
-                            lineHeight = 40.sp
-                        )
-                    }
-                    Column(
-                        // modifier = Modifier.weight(1f),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Box() {
-                            DonutPieChart(
-                                modifier = Modifier
-                                    .width(100.dp)
-                                    .height(100.dp)
-                                    .background(color = PanelColor),
-                                pieChartData = donutChartData,
-                                pieChartConfig = donutChartConfig
-                            )
-                            Text(
-                                text = "$stateOfCharge %",
-                                color = Color.White,
-                                fontSize = 16.sp,
-                                modifier = Modifier.align(Alignment.Center)
-                            )
-                        }
-                    }
+                Box() {
+                    DonutPieChart(
+                        modifier = Modifier
+                            .width(100.dp)
+                            .height(100.dp)
+                            .background(color = PanelColor),
+                        pieChartData = donutChartData,
+                        pieChartConfig = donutChartConfig
+                    )
+                    Text(
+                        text = "$stateOfCharge %",
+                        color = Color.White,
+                        fontSize = 16.sp,
+                        modifier = Modifier.align(Alignment.Center)
+                    )
                 }
             }
         }
