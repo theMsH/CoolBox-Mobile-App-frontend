@@ -52,7 +52,6 @@ import com.patrykandpatrick.vico.core.model.lineSeries
 fun ConsumptionChart(
     consumptionStatsData: Map<String, Float?>?,
     temperatureStatsData: Map<String, Float?>?,
-    goToConsumption: () -> Unit = {},
     isLandscape: Boolean
 ) {
 
@@ -117,7 +116,6 @@ fun ConsumptionChart(
                 // Sarake, joka täyttää koko leveyden
                 Column(modifier = Modifier
                     .fillMaxWidth()
-                    .clickable(onClick = { goToConsumption() })
                 ) {
                     // Kortti, joka toimii paneelina
                     Card(

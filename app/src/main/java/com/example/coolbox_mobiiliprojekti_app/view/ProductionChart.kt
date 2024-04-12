@@ -51,7 +51,6 @@ import com.patrykandpatrick.vico.core.axis.formatter.AxisValueFormatter
 @Composable
 fun ProductionChart(
     productionStatsData: Map<String, Float?>?,
-    goToProduction: () -> Unit = {},
     currentProductionType: ProductionTypeInterval,
     isLandscape: Boolean
 ) {
@@ -176,7 +175,6 @@ fun ProductionChart(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clickable(onClick = { goToProduction() })
             ) {
                 // Kortti, joka toimii paneelina
                 Card(
