@@ -1,0 +1,135 @@
+package com.example.coolbox_mobiiliprojekti_app.view
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import co.yml.charts.common.model.PlotType
+import co.yml.charts.ui.piechart.charts.DonutPieChart
+import co.yml.charts.ui.piechart.models.PieChartConfig
+import co.yml.charts.ui.piechart.models.PieChartData
+import com.example.coolbox_mobiiliprojekti_app.ui.theme.BadBatteryChargeColor
+import com.example.coolbox_mobiiliprojekti_app.ui.theme.GoodBatteryChargeColor
+import com.example.coolbox_mobiiliprojekti_app.ui.theme.PanelColor
+import com.example.coolbox_mobiiliprojekti_app.ui.theme.SatisfyingBatteryChargeColor
+import com.example.coolbox_mobiiliprojekti_app.ui.theme.TolerableBatteryChargeColor
+import com.example.coolbox_mobiiliprojekti_app.viewmodel.BatteryViewModel
+
+
+@Composable
+fun BatteryChart() {
+    val viewModel: BatteryViewModel = viewModel()
+    val fullCharge: Float = 100.0f
+    val stateOfCharge: Float = viewModel.batteryChartState.value.soc
+    val missingCharge: Float = fullCharge - stateOfCharge
+    var customColor: Color = GoodBatteryChargeColor
+
+    when {
+        stateOfCharge < 25 -> customColor = BadBatteryChargeColor
+
+        stateOfCharge < 50 -> customColor = TolerableBatteryChargeColor
+
+        stateOfCharge < 75 -> customColor = SatisfyingBatteryChargeColor
+    }
+
+    val donutChartData = PieChartData(
+        slices = listOf(
+            PieChartData.Slice(
+                label = "State of charge",
+                value = stateOfCharge,
+                color = customColor
+            ),
+            PieChartData.Slice(
+                label = "Missing charge",
+                value = missingCharge,
+                color = MaterialTheme.colorScheme.primary
+            )
+        ),
+        plotType = PlotType.Donut
+    )
+    val donutChartConfig = PieChartConfig(
+        isClickOnSliceEnabled = false,
+        strokeWidth = 20f
+    )
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(20.dp)
+    ) {
+        when {
+            viewModel.batteryChartState.value.loading -> CircularProgressIndicator(
+                modifier = Modifier.align(Alignment.Center)
+            )
+
+            else -> Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    modifier = Modifier.padding(bottom = 20.dp),
+                    fontSize = 20.sp,
+                    text = "Battery Charge",
+                    textAlign = TextAlign.Center
+                )
+                Row(
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column(
+//                        modifier = Modifier.weight(1f),
+                    ) {
+                        Text(
+                            text = "Battery temperature: ${viewModel.batteryChartState.value.temp} °C",
+                            lineHeight = 40.sp
+                        )
+                        Text(
+                            modifier = Modifier.padding(bottom = 10.dp),
+                            text = "Battery tension: ${viewModel.batteryChartState.value.voltage} V",
+                            lineHeight = 40.sp
+                        )
+                    }
+                    Column(
+//                        modifier = Modifier.weight(1f),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Box() {
+                            DonutPieChart(
+                                modifier = Modifier
+                                    .width(100.dp)
+                                    .height(100.dp)
+                                    .background(color = PanelColor),
+                                pieChartData = donutChartData,
+                                pieChartConfig = donutChartConfig
+                            )
+                            Text(
+                                text = "$stateOfCharge %",
+                                color = Color.White,
+                                fontSize = 16.sp,
+                                modifier = Modifier.align(Alignment.Center)
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

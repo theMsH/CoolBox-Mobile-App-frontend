@@ -51,6 +51,8 @@ android {
 }
 
 dependencies {
+    // YCharts
+    implementation("co.yml:ycharts:2.1.0")
 
     implementation("androidx.datastore:datastore-preferences:1.0.0")
 

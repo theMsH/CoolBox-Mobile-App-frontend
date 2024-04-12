@@ -35,3 +35,8 @@ val CoolAppText = Color(0xff001849)
 val GraphKwhColor = Color(0xFF0D3E9E)
 val GraphTempColor = Color(0xFFE04646)
 val ProductionLineColor = Color.Green
+
+val GoodBatteryChargeColor = Color.Green
+val SatisfyingBatteryChargeColor = Color.Yellow
+val TolerableBatteryChargeColor = Color(0xFFFFA500)
+val BadBatteryChargeColor = Color.Red

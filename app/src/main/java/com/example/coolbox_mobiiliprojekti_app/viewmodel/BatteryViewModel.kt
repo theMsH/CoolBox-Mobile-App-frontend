@@ -25,7 +25,11 @@ class BatteryViewModel : ViewModel() {
             viewModelScope.launch {
                 _batteryChartState.value = _batteryChartState.value.copy(loading = true)
                 val response = batteryApiService.getMostRecentValuesFromBattery()
-                _batteryChartState.value = _batteryChartState.value.copy(soc = response.currentBatteryStats[0].value)
+                _batteryChartState.value = _batteryChartState.value.copy(
+                    soc = response.currentBatteryStats[0].value,
+                    temp = response.currentBatteryStats[1].value,
+                    voltage = response.currentBatteryStats[2].value
+                )
             }
         } catch (e: Exception) {
             _batteryChartState.value = _batteryChartState.value.copy(error = e.toString())

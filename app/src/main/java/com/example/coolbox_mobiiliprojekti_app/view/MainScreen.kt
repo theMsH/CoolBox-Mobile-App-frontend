@@ -3,10 +3,8 @@ package com.example.coolbox_mobiiliprojekti_app.view
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
@@ -43,7 +41,6 @@ import com.example.coolbox_mobiiliprojekti_app.ui.theme.PanelTextButtonColor
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.PanelTextColor
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.TextsLightColor
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.TopAppBarColor
-import com.example.coolbox_mobiiliprojekti_app.viewmodel.BatteryViewModel
 import com.example.coolbox_mobiiliprojekti_app.viewmodel.MainScreenViewModel
 import com.example.coolbox_mobiiliprojekti_app.viewmodel.ProductionViewModel
 import com.example.coolbox_mobiiliprojekti_app.viewmodel.ConsumptionViewModel
@@ -157,7 +154,7 @@ fun MainScreen(
                                     contentColor = PanelTextColor
                                 )
                             ) {
-                                BatteryCharge()
+                                BatteryChart()
                             }
                         }
                     }
@@ -179,42 +176,6 @@ fun MainScreen(
                     }
 
                 } // Column loppu
-            }
-        }
-    }
-
-}
-
-@Composable
-fun BatteryCharge() {
-    val viewModel: BatteryViewModel = viewModel()
-
-    Box(modifier = Modifier
-        .fillMaxWidth()
-        .padding(20.dp)) {
-        when {
-            viewModel.batteryChartState.value.loading -> CircularProgressIndicator(
-                modifier = Modifier.align(Alignment.Center)
-            )
-
-            else -> Column(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    modifier = Modifier
-                        .align(Alignment.CenterHorizontally),
-                    fontSize = 20.sp,
-                    text = "Akun varaus",
-                    textAlign = TextAlign.Center
-                )
-                Text(
-                    text = viewModel.batteryChartState.value.soc.toString() + " %",
-                    modifier = Modifier.padding(top = 20.dp),
-                    color = PanelTextButtonColor,
-                    fontSize = 30.sp,
-                    textAlign = TextAlign.Center
-                )
             }
         }
     }

@@ -135,7 +135,7 @@ fun ConsumptionChart7Days(
                         .align(Alignment.CenterHorizontally)
                         .padding(top = 20.dp),
                     fontSize = 20.sp,
-                    text = "Total Consumption (kWh) and Indoor Temperature (°C) for 7 Days",
+                    text = "Total Consumption (kWh)",
                     textAlign = TextAlign.Center
                 )
                 // CartesianChartHost, joka sisältää chartin

@@ -136,7 +136,7 @@ fun ProductionChart7Days(
                         .align(Alignment.CenterHorizontally)
                         .padding(top = 20.dp),
                     fontSize = 20.sp,
-                    text = "Total Production (kWh) for 7 days",
+                    text = "Total Production (kWh)",
                     textAlign = TextAlign.Center
                 )
                 // CartesianChartHost, joka sisältää chartin

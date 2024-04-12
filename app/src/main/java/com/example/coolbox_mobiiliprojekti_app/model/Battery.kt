@@ -7,8 +7,12 @@ data class BatteryChartState(
     val loading: Boolean = false,
     // indikoi graafin latautumisen onnistumista
     val error: String? = null,
-    // arvo indikoi akun varaust:
-    val soc: Float = 0f
+    // arvo indikoi akun varausta:
+    val soc: Float = 0f,
+    // arvo indikoi akun lämpötilaa:
+    val temp: Float = 0f,
+    // arvo indikoi akun jännitettä:
+    val voltage: Float = 0f
 )
 
 // Akkudatan responsen rakenne:
