@@ -116,7 +116,7 @@ fun ConsumptionChart7Days(
         Surface(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 5.dp, start = 15.dp, end = 15.dp),
+                .padding(bottom = 5.dp, start = 5.dp, end = 10.dp),
             color = PanelColor
         ) {
             // Kortti, joka toimii paneelina

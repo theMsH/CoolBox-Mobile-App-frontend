@@ -115,7 +115,7 @@ fun ProductionChart7Days(
             // LISÄTTY PADDING:
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 5.dp, start = 15.dp, end = 15.dp),
+                .padding(bottom = 5.dp, start = 5.dp, end = 10.dp),
             // MUOKATTU VÄRIÄ:
             color = PanelColor
         ) {
