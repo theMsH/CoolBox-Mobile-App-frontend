@@ -14,10 +14,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.coolbox_mobiiliprojekti_app.R
 import com.example.coolbox_mobiiliprojekti_app.model.rememberMarker
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.CoolBoxmobiiliprojektiAppTheme
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.ProductionLineColor
@@ -136,7 +138,7 @@ fun ProductionChart7Days(
                         .align(Alignment.CenterHorizontally)
                         .padding(top = 20.dp),
                     fontSize = 20.sp,
-                    text = "Total Production (kWh)",
+                    text = stringResource(R.string.total_production_kwh),
                     textAlign = TextAlign.Center
                 )
                 // CartesianChartHost, joka sisältää chartin
@@ -199,7 +201,7 @@ fun ProductionChart7Days(
                            modifier = Modifier
                                .align(Alignment.CenterHorizontally)
                 ) {
-                    Text(text = "More", color = PanelTextButtonColor)
+                    Text(text = stringResource(R.string.more), color = PanelTextButtonColor)
                 }
             } // Kortti loppuu
 

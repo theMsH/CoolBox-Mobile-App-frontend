@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -25,17 +26,25 @@ import co.yml.charts.common.model.PlotType
 import co.yml.charts.ui.piechart.charts.DonutPieChart
 import co.yml.charts.ui.piechart.models.PieChartConfig
 import co.yml.charts.ui.piechart.models.PieChartData
+import com.example.coolbox_mobiiliprojekti_app.R
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.BadBatteryChargeColor
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.GoodBatteryChargeColor
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.PanelColor
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.SatisfyingBatteryChargeColor
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.TolerableBatteryChargeColor
 import com.example.coolbox_mobiiliprojekti_app.viewmodel.BatteryViewModel
+import kotlin.math.round
 
 
 @Composable
 fun BatteryChart() {
     val viewModel: BatteryViewModel = viewModel()
+
+    // Varmistetaan, että arvot ovat yhden desimaalin tarkkuudella, jotta 7
+    // niitä voidaan käyttää lokalisoinnissa ongelmitta
+    val batteryTemperature: Float = round(viewModel.batteryChartState.value.temp * 10) / 10
+    val batteryTension: Float = round(viewModel.batteryChartState.value.voltage * 10) / 10
+
     val fullCharge: Float = 100.0f
     val stateOfCharge: Float = viewModel.batteryChartState.value.soc
     val missingCharge: Float = fullCharge - stateOfCharge
@@ -52,12 +61,12 @@ fun BatteryChart() {
     val donutChartData = PieChartData(
         slices = listOf(
             PieChartData.Slice(
-                label = "State of charge",
+                label = stringResource(R.string.state_of_charge),
                 value = stateOfCharge,
                 color = customColor
             ),
             PieChartData.Slice(
-                label = "Missing charge",
+                label = stringResource(R.string.missing_charge),
                 value = missingCharge,
                 color = MaterialTheme.colorScheme.primary
             )
@@ -86,7 +95,7 @@ fun BatteryChart() {
                 Text(
                     modifier = Modifier.padding(bottom = 20.dp),
                     fontSize = 20.sp,
-                    text = "Battery Charge",
+                    text = stringResource(R.string.battery),
                     textAlign = TextAlign.Center
                 )
                 Row(
@@ -95,20 +104,26 @@ fun BatteryChart() {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Column(
-//                        modifier = Modifier.weight(1f),
+                        // modifier = Modifier.weight(1f),
                     ) {
                         Text(
-                            text = "Battery temperature: ${viewModel.batteryChartState.value.temp} °C",
+                            text = stringResource(
+                                R.string.battery_temperature_with_placeholder,
+                                batteryTemperature
+                            ),
                             lineHeight = 40.sp
                         )
                         Text(
                             modifier = Modifier.padding(bottom = 10.dp),
-                            text = "Battery tension: ${viewModel.batteryChartState.value.voltage} V",
+                            text = stringResource(
+                                R.string.battery_voltage_with_placeholder,
+                                batteryTension
+                            ),
                             lineHeight = 40.sp
                         )
                     }
                     Column(
-//                        modifier = Modifier.weight(1f),
+                        // modifier = Modifier.weight(1f),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Box() {

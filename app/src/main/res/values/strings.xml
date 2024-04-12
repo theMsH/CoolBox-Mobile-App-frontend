@@ -13,8 +13,18 @@
     <string name="no_account">No account?</string>
     <string name="user_not_found">Username or password is incorrect!</string>
     <string name="user">Logged in as: </string>
+    <string name="state_of_charge">State of charge</string>
 
     <string name="code_500">500 Internal Server Error</string>
     <string name="retry">Retry</string>
     <string name="autologin_401">User is logged out. New login is required</string>
+    <string name="missing_charge">Missing charge</string>
+    <string name="battery">Battery</string>
+    <string name="battery_temperature_with_placeholder">Battery temperature: %.1f °C</string>
+    <string name="battery_voltage_with_placeholder">Battery tension: %.1f V</string>
+    <string name="total_consumption_kwh">Total Consumption (kWh)</string>
+    <string name="more">More</string>
+    <string name="front_page">Front Page</string>
+    <string name="temperature_data_not_available">Temperature data is not available</string>
+    <string name="total_production_kwh">Total Production (kWh)</string>
 </resources>

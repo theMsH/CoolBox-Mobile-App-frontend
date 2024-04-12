@@ -31,10 +31,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.coolbox_mobiiliprojekti_app.R
 import com.example.coolbox_mobiiliprojekti_app.datastore.UserPreferences
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.PanelColor
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.PanelTextButtonColor
@@ -72,7 +74,7 @@ fun MainScreen(
         topBar = {
             Surface(shadowElevation = 2.dp) {
                 CenterAlignedTopAppBar(
-                    title = { Text(text = "Main") },
+                    title = { Text(text = stringResource(R.string.front_page)) },
                     actions = {
                         IconButton(
                             onClick = { onMenuClick() }
@@ -198,7 +200,7 @@ fun TemperatureDatas() {
 
             // Jos lämpötiladatat ovat tyhjiä tai null, näytetään virheviesti.
             viewModel.temperaturesStatsData.isNullOrEmpty() -> Text(
-                text = "Lämpötilatietoja ei ole saatavilla",
+                text = stringResource(R.string.temperature_data_not_available),
                 modifier = Modifier.align(Alignment.Center),
                 fontSize = 20.sp,
                 color = Color.Red // Virhetekstin väri asetettu punaiseksi.

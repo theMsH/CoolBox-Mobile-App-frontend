@@ -5,8 +5,8 @@
 
     <string name="cancel">Peruuta</string>
     <string name="create_account">Luo käyttäjä</string>
-    <string name="register">Registeröi</string>
-    <string name="register_here">Registeröi täällä</string>
+    <string name="register">Rekisteröi</string>
+    <string name="register_here">Rekisteröi täällä</string>
     <string name="login">Kirjaudu sisään</string>
     <string name="logout">Kirjaudu ulos</string>
     <string name="username_placeholder">Käyttäjätunnus</string>
@@ -14,8 +14,18 @@
     <string name="no_account">Ei käyttäjää?</string>
     <string name="user_not_found">Käyttäjänimi tai salasana on väärin!</string>
     <string name="user">Kirjautuneena käyttäjällä: </string>
+    <string name="state_of_charge">Akun varaus</string>
 
     <string name="code_500">500 Internal Server Error</string>
     <string name="retry">Yritä uudelleen</string>
     <string name="autologin_401">Käyttäjä on kirjattu ulos. Uusi kirjautuminen vaaditaan</string>
+    <string name="missing_charge">Puuttuva varaus</string>
+    <string name="battery">Akku</string>
+    <string name="battery_temperature_with_placeholder">Akun lämpötila: %.1f °C</string>
+    <string name="battery_voltage_with_placeholder">Akun jännite: %.1f V</string>
+    <string name="total_consumption_kwh">Kokonaiskulutus (kWh)</string>
+    <string name="more">Lisää</string>
+    <string name="front_page">Etusivu</string>
+    <string name="temperature_data_not_available">Lämpötilatietoja ei ole saatavilla</string>
+    <string name="total_production_kwh">Kokonaistuotto (kWh)</string>
 </resources>
