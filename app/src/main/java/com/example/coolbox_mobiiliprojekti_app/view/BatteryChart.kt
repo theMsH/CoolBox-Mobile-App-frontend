@@ -65,7 +65,9 @@ fun BatteryChart() {
     )
     val donutChartConfig = PieChartConfig(
         isClickOnSliceEnabled = false,
-        strokeWidth = 20f
+        strokeWidth = 20f,
+        isAnimationEnable = true,
+        animationDuration = 600
     )
 
     Box(
