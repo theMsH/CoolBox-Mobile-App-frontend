@@ -34,20 +34,20 @@
 
     <string name="consumption_title">Consumption</string>
     <string name="con_graph_title">Total Consumption and Indoor Temperature</string>
-    <string name="months_text">Months</string>
-    <string name="days_text">Days</string>
-    <string name="weeks_text">Weeks</string>
-    <string name="hours_text">Hours</string>
-    <string name="total_con_text">Total Consumption</string>
-    <string name="avg_con_text">Avg Consumption</string>
-    <string name="avg_temp_text">Avg Indoor Temperature</string>
+    <string name="months_text">Year</string>
+    <string name="days_text">Week</string>
+    <string name="weeks_text">Month</string>
+    <string name="hours_text">Day</string>
+    <string name="total_con_text">Total</string>
+    <string name="avg_con_text">Avg</string>
+    <string name="avg_temp_text">Avg Temp</string>
 
     <string name="production_title">Production</string>
     <string name="pro_graph_title_total">Total Production</string>
     <string name="pro_graph_title_solar">Solar Production</string>
     <string name="pro_graph_title_wind">Wind Production</string>
-    <string name="total_pro_text">Total Production</string>
-    <string name="avg_pro_text">Avg Production</string>
+    <string name="total_pro_text">Total</string>
+    <string name="avg_pro_text">Avg</string>
     <string name="solar_text">Solar</string>
     <string name="wind_text">Wind</string>
 

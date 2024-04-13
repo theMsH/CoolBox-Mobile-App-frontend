@@ -36,6 +36,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.style.TextAlign
@@ -43,6 +44,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.coolbox_mobiiliprojekti_app.R
+import com.example.coolbox_mobiiliprojekti_app.ui.theme.BottomAppBarColor
+import com.example.coolbox_mobiiliprojekti_app.ui.theme.TopAppBarColor
 import com.example.coolbox_mobiiliprojekti_app.viewmodel.ConsumptionViewModel
 import kotlinx.coroutines.Job
 import java.time.DayOfWeek
@@ -121,7 +124,7 @@ fun ConsumptionScreen(
             // Yläpalkki
             CenterAlignedTopAppBar(
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer
+                    containerColor = TopAppBarColor
                 ),
                 // Navigointinappi (takaisin)
                 navigationIcon = {
@@ -148,7 +151,7 @@ fun ConsumptionScreen(
         bottomBar = {
             // Alapalkki
             BottomAppBar(
-                containerColor = Color.Blue
+                containerColor = BottomAppBarColor
             ) {
                 Row(
                     modifier = Modifier.fillMaxSize(),
@@ -157,6 +160,7 @@ fun ConsumptionScreen(
                 ) {
                     // Kuukausi-nappi
                     Button(
+                        enabled = currentTimeInterval != TimeInterval.MONTHS,
                         onClick = {
                             // Lisää logiikka kuukausidataan siirtymiseen
                             val currentMonthStartDate = LocalDate.now().withDayOfMonth(1)
@@ -171,6 +175,7 @@ fun ConsumptionScreen(
                     }
                     // Viikko-nappi
                     Button(
+                        enabled = currentTimeInterval != TimeInterval.WEEKS,
                         onClick = {
                             // Hae viikkodata
                             val currentWeekNumber = LocalDate.now()
@@ -198,6 +203,7 @@ fun ConsumptionScreen(
 
                     // Päivä-nappi
                     Button(
+                        enabled = currentTimeInterval != TimeInterval.DAYS,
                         onClick = {
                             // Hae päivädata
                             currentWeekStartDate = LocalDate.now().startOfWeek()
@@ -210,6 +216,7 @@ fun ConsumptionScreen(
 
                     // Tunti-nappi
                     Button(
+                        enabled = currentTimeInterval != TimeInterval.HOURS,
                         onClick = {
                             // Hae tuntidata
                             currentWeekStartDate = LocalDate.now()

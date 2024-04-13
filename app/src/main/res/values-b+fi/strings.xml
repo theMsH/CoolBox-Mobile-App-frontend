@@ -35,20 +35,20 @@
 
     <string name="consumption_title">Kulutus</string>
     <string name="con_graph_title">Kokonaiskulutus ja Sisälämpötila</string>
-    <string name="months_text">Kuukaudet</string>
-    <string name="days_text">Päivät</string>
-    <string name="weeks_text">Viikot</string>
-    <string name="hours_text">Tunnit</string>
-    <string name="total_con_text">Kokonaiskulutus</string>
-    <string name="avg_con_text">Avg Kulutus</string>
-    <string name="avg_temp_text">Avg Sisälämpötila</string>
+    <string name="months_text">Vuosi</string>
+    <string name="days_text">Viikko</string>
+    <string name="weeks_text">Kuukausi</string>
+    <string name="hours_text">Päivä</string>
+    <string name="total_con_text">Yhteensä</string>
+    <string name="avg_con_text">Keskiarvo</string>
+    <string name="avg_temp_text">Avg lämpötila</string>
 
     <string name="production_title">Tuotto</string>
     <string name="pro_graph_title_total">Kokonaistuotto</string>
     <string name="pro_graph_title_solar">Aurinkoenergia Tuotto</string>
     <string name="pro_graph_title_wind">Tuulienergia Tuotto</string>
-    <string name="total_pro_text">Kokonaistuotto</string>
-    <string name="avg_pro_text">Avg tuotto</string>
+    <string name="total_pro_text">Yhteensä</string>
+    <string name="avg_pro_text">Keskiarvo</string>
     <string name="solar_text">Aurinko</string>
     <string name="wind_text">Tuuli</string>
 

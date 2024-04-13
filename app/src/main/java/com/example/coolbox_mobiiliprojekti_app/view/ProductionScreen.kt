@@ -23,10 +23,12 @@ import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -45,6 +47,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.coolbox_mobiiliprojekti_app.R
+import com.example.coolbox_mobiiliprojekti_app.ui.theme.BottomAppBarColor
+import com.example.coolbox_mobiiliprojekti_app.ui.theme.BottomAppBarColorSecondary
+import com.example.coolbox_mobiiliprojekti_app.ui.theme.TopAppBarColor
 import com.example.coolbox_mobiiliprojekti_app.viewmodel.ProductionViewModel
 import kotlinx.coroutines.Job
 import java.time.DayOfWeek
@@ -167,7 +172,7 @@ fun ProductionScreen(
             // Yläpalkki
             CenterAlignedTopAppBar(
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer
+                    containerColor = TopAppBarColor
                 ),
                 // Navigointinappi (takaisin)
                 navigationIcon = {
@@ -194,7 +199,7 @@ fun ProductionScreen(
         bottomBar = {
             // Alapalkki
             BottomAppBar(
-                containerColor = Color.Blue
+                containerColor = BottomAppBarColor
             ) {
                 Row(
                     modifier = Modifier.fillMaxSize(),
@@ -203,6 +208,7 @@ fun ProductionScreen(
                 ) {
                     // Kuukausi-nappi
                     Button(
+                        enabled = currentTimeInterval != TimeInterval.MONTHS,
                         onClick = {
                             // Lisää logiikka kuukausidataan siirtymiseen
                             val currentMonthStartDate = LocalDate.now().withDayOfMonth(1)
@@ -238,6 +244,7 @@ fun ProductionScreen(
                     }
                     // Viikko-nappi
                     Button(
+                        enabled = currentTimeInterval != TimeInterval.WEEKS,
                         onClick = {
                             // Hae viikkodata
                             val currentWeekNumber = LocalDate.now()
@@ -286,6 +293,7 @@ fun ProductionScreen(
 
                     // Päivä-nappi
                     Button(
+                        enabled = currentTimeInterval != TimeInterval.DAYS,
                         onClick = {
                             // Hae päivädata
                             currentWeekStartDate = LocalDate.now().startOfWeek()
@@ -318,6 +326,7 @@ fun ProductionScreen(
 
                     // Tunti-nappi
                     Button(
+                        enabled = currentTimeInterval != TimeInterval.HOURS,
                         onClick = {
                             // Hae tuntidata
                             currentWeekStartDate = LocalDate.now()
@@ -557,12 +566,14 @@ fun ProductionScreen(
 
                             Row(
                                 modifier = Modifier
-                                    .fillMaxWidth(),
+                                    .fillMaxWidth()
+                                    .background(BottomAppBarColorSecondary),
                                 horizontalArrangement = Arrangement.SpaceEvenly,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 // Solar-nappi
-                                Button(
+                                ElevatedButton(
+                                    enabled = currentProductionType != ProductionTypeInterval.Solar,
                                     onClick = {
                                         // Lisää logiikka aurinko dataan siirtymiseen
                                         currentProductionType = ProductionTypeInterval.Solar
@@ -573,11 +584,12 @@ fun ProductionScreen(
                                         imageVector = Icons.Filled.Brightness5,
                                         contentDescription = "Solar"
                                     )
-                                    Text(text = stringResource(R.string.solar_text))
+                                    //Text(text = stringResource(R.string.solar_text))
                                 }
 
                                 // Wind-nappi
-                                Button(
+                                ElevatedButton(
+                                    enabled = currentProductionType != ProductionTypeInterval.Wind,
                                     onClick = {
                                         // Lisää logiikka tuuli dataan siirtymiseen
                                         currentProductionType = ProductionTypeInterval.Wind
@@ -589,10 +601,11 @@ fun ProductionScreen(
                                         imageVector = Icons.Filled.Air,
                                         contentDescription = "Wind"
                                     )
-                                    Text(text = stringResource(R.string.wind_text))
+                                    //Text(text = stringResource(R.string.wind_text))
                                 }
                                 // Total Production-nappi
-                                Button(
+                                ElevatedButton(
+                                    enabled = currentProductionType != ProductionTypeInterval.Total,
                                     onClick = {
                                         // Lisää logiikka total production dataan siirtymiseen
                                         currentProductionType = ProductionTypeInterval.Total
@@ -602,7 +615,7 @@ fun ProductionScreen(
                                         imageVector = Icons.Filled.BatteryChargingFull,
                                         contentDescription = "Total Production"
                                     )
-                                    Text(text = stringResource(R.string.total_pro_text))
+                                    //Text(text = stringResource(R.string.total_pro_text))
                                 }
                             }
 
@@ -793,12 +806,13 @@ fun ProductionScreen(
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .background(Color.Cyan),
+                                .background(BottomAppBarColorSecondary),
                             horizontalArrangement = Arrangement.SpaceEvenly,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             // Solar-nappi
-                            Button(
+                            ElevatedButton(
+                                enabled = currentProductionType != ProductionTypeInterval.Solar,
                                 onClick = {
                                     // Lisää logiikka aurinko dataan siirtymiseen
                                     currentProductionType = ProductionTypeInterval.Solar
@@ -810,11 +824,12 @@ fun ProductionScreen(
                                     imageVector = Icons.Filled.Brightness5,
                                     contentDescription = "Solar"
                                 )
-                                Text(text = stringResource(R.string.solar_text))
+                                //Text(text = stringResource(R.string.solar_text))
                             }
 
                             // Wind-nappi
-                            Button(
+                            ElevatedButton(
+                                enabled = currentProductionType != ProductionTypeInterval.Wind,
                                 onClick = {
                                     // Lisää logiikka tuuli dataan siirtymiseen
                                     currentProductionType = ProductionTypeInterval.Wind
@@ -827,10 +842,11 @@ fun ProductionScreen(
                                     imageVector = Icons.Filled.Air,
                                     contentDescription = "Wind"
                                 )
-                                Text(text = stringResource(R.string.wind_text))
+                                //Text(text = stringResource(R.string.wind_text))
                             }
                             // Total Production-nappi
-                            Button(
+                            ElevatedButton(
+                                enabled = currentProductionType != ProductionTypeInterval.Total,
                                 onClick = {
                                     // Lisää logiikka total production dataan siirtymiseen
                                     currentProductionType = ProductionTypeInterval.Total
@@ -841,7 +857,7 @@ fun ProductionScreen(
                                     imageVector = Icons.Filled.BatteryChargingFull,
                                     contentDescription = "Total Production"
                                 )
-                                Text(text = stringResource(R.string.total_pro_text))
+                                //Text(text = stringResource(R.string.total_pro_text))
                             }
                         }
                     }
