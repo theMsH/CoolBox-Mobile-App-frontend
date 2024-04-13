@@ -117,6 +117,23 @@ fun ProductionScreen(
     var currentWeekStartDate by remember { mutableStateOf(LocalDate.now().startOfWeek()) }
     var currentWeekEndDate = currentWeekStartDate.plusDays(6)
 
+    // Haetaan localeForMonthAndDay-muuttujaan arvo käyttöjärjestelmän kielen
+    // mukaan. Nimetään käyttöliittymässä näkyvä kuukausi ja päivä
+    // localeForMonthAndDay-muuttujaan tallennetulla kielellä.
+    val systemLocale = Locale.getDefault()
+    var localeForMonthAndDay = Locale("us", "US")
+    var monthName = currentWeekStartDate.month.getDisplayName(TextStyle.FULL, localeForMonthAndDay).capitalize()
+    var dayName = currentWeekStartDate.dayOfWeek.getDisplayName(TextStyle.FULL, localeForMonthAndDay).capitalize()
+
+    if (systemLocale.language == "fi") {
+        localeForMonthAndDay = Locale("fi", "FI")
+        // Koska kuukausien ja päivien nimet ovat suomenkielisessä
+        // käännöksessä partitiivimuodossa, pudotetaan kaksi viimeisintä
+        // kirjainta pois.
+        monthName = currentWeekStartDate.month.getDisplayName(TextStyle.FULL, localeForMonthAndDay).capitalize().dropLast(2)
+        dayName = currentWeekStartDate.dayOfWeek.getDisplayName(TextStyle.FULL, localeForMonthAndDay).capitalize().dropLast(2)
+    }
+
     // Päivitä kulutustilastot ja lämpötilatilastot haettaessa dataa
     // Reagoi tuotantotyypin tai aikavälin muutoksiin ja nouta tiedot vastaavasti
     LaunchedEffect(
@@ -426,16 +443,11 @@ fun ProductionScreen(
                                         }
 
                                         TimeInterval.HOURS -> {
-                                            currentWeekStartDate.dayOfWeek.getDisplayName(
-                                                TextStyle.FULL, Locale.US
-                                            ) + " (${currentWeekStartDate.dayOfMonth}/${currentWeekStartDate.monthValue})"
+                                            dayName + " (${currentWeekStartDate.dayOfMonth}/${currentWeekStartDate.monthValue})"
                                         }
 
                                         TimeInterval.WEEKS -> {
-                                            "${
-                                                currentWeekStartDate.month.name.toLowerCase()
-                                                    .capitalize()
-                                            } ${currentWeekStartDate.year}"
+                                            "$monthName ${currentWeekStartDate.year}"
                                         }
 
                                         TimeInterval.MONTHS -> {
@@ -671,16 +683,11 @@ fun ProductionScreen(
                                     }
 
                                     TimeInterval.HOURS -> {
-                                        currentWeekStartDate.dayOfWeek.getDisplayName(
-                                            TextStyle.FULL, Locale.US
-                                        ) + " (${currentWeekStartDate.dayOfMonth}/${currentWeekStartDate.monthValue})"
+                                        dayName + " (${currentWeekStartDate.dayOfMonth}/${currentWeekStartDate.monthValue})"
                                     }
 
                                     TimeInterval.WEEKS -> {
-                                        "${
-                                            currentWeekStartDate.month.name.toLowerCase()
-                                                .capitalize()
-                                        } ${currentWeekStartDate.year}"
+                                        "$monthName ${currentWeekStartDate.year}"
                                     }
 
                                     TimeInterval.MONTHS -> {
