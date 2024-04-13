@@ -9,7 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowLeft
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -18,17 +18,17 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.coolbox_mobiiliprojekti_app.R
 import com.example.coolbox_mobiiliprojekti_app.datastore.UserPreferences
 import com.example.coolbox_mobiiliprojekti_app.viewmodel.MainScreenViewModel
 import com.example.coolbox_mobiiliprojekti_app.viewmodel.PanelsViewModel
@@ -50,6 +50,7 @@ fun PanelsScreen(
     val consumptionChecked = preferenceDataStore.getConsumptionActive.collectAsState(initial = true)
     val productionChecked = preferenceDataStore.getProductionActive.collectAsState(initial = true)
     val batteryChecked = preferenceDataStore.getBatteryActive.collectAsState(initial = true)
+    val tempChecked = preferenceDataStore.getTempActive.collectAsState(initial = true)
 
     Scaffold(
         topBar =
@@ -58,12 +59,12 @@ fun PanelsScreen(
                 navigationIcon = {
                     IconButton(onClick = { goBack() }) {
                         Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowLeft,
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back"
                         )
                     }
                 },
-                title = { Text(text = "Panels") },
+                title = { Text(text = stringResource(R.string.panels_title)) },
                 actions = {
                     IconButton(onClick = { onMenuClick() }) {
                         Icon(imageVector = Icons.Filled.Menu, contentDescription = "Menu")
@@ -81,10 +82,21 @@ fun PanelsScreen(
             ) {
                 Row(
                     modifier = Modifier
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .padding(5.dp)
+                ) {
+                    Text(text = stringResource(R.string.panels_description),
+                         fontSize = 28.sp,
+                         textAlign = TextAlign.Center)
+                }
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(5.dp),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text(text = "Consumption panel")
+                    Text(text = stringResource(R.string.con_panel_name),
+                         fontSize = 20.sp)
                     Switch(
                         checked = consumptionChecked.value,
                         onCheckedChange = {
@@ -95,10 +107,12 @@ fun PanelsScreen(
                 }
                 Row(
                     modifier = Modifier
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .padding(5.dp),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text(text = "Production panel")
+                    Text(text = stringResource(R.string.pro_panel_name),
+                         fontSize = 20.sp)
                     Switch(
                         checked = productionChecked.value,
                         onCheckedChange = {
@@ -109,15 +123,33 @@ fun PanelsScreen(
                 }
                 Row(
                     modifier = Modifier
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .padding(5.dp),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text(text = "Battery panel")
+                    Text(text = stringResource(R.string.bat_panel_name),
+                         fontSize = 20.sp)
                     Switch(
                         checked = batteryChecked.value,
                         onCheckedChange = {
                             scope.launch {
                                 preferenceDataStore.setBatteryActive(it)
+                            }
+                        })
+                }
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(5.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(text = stringResource(R.string.temp_panel_name),
+                         fontSize = 20.sp)
+                    Switch(
+                        checked = tempChecked.value,
+                        onCheckedChange = {
+                            scope.launch {
+                                preferenceDataStore.setTempActive(it)
                             }
                         })
                 }

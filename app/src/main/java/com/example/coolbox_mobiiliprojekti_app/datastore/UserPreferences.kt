@@ -21,6 +21,7 @@ class UserPreferences(context: Context) {
     var consumptionActive = booleanPreferencesKey("CONSUMPTION_ACTIVE")
     var productionActive = booleanPreferencesKey("PRODUCTION_ACTIVE")
     var batteryActive = booleanPreferencesKey("BATTERY_ACTIVE")
+    var tempActive = booleanPreferencesKey("TEMP_ACTIVE")
 
     // Haetaan booleanit dataStoresta
     var getConsumptionActive = flow {
@@ -47,6 +48,14 @@ class UserPreferences(context: Context) {
         })
     }
 
+    var getTempActive = flow {
+        pref.data.map {
+            it[tempActive]?:true
+        }.collect(collector = {
+            emit(it)
+        })
+    }
+
     // Asetetaan booleanit annettuun arvoon
     suspend fun setConsumptionActive(state : Boolean) {
         pref.edit {
@@ -63,6 +72,12 @@ class UserPreferences(context: Context) {
     suspend fun setBatteryActive(state : Boolean) {
         pref.edit {
             it[batteryActive] = state
+        }
+    }
+
+    suspend fun setTempActive(state : Boolean) {
+        pref.edit {
+            it[tempActive] = state
         }
     }
 }

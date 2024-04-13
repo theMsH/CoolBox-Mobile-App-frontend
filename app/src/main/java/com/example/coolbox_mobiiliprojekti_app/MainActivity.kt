@@ -159,7 +159,7 @@ class MainActivity : ComponentActivity() {
                                     modifier = Modifier
                                         .padding(NavigationDrawerItemDefaults.ItemPadding)
                                     ,
-                                    label = { Text(text = "Logout") },
+                                    label = { Text(text = stringResource(R.string.logout)) },
                                     selected = navBackStackEntry?.destination?.route == "loginScreen",
                                     onClick = {
                                         loginVm.logout()
@@ -184,7 +184,7 @@ class MainActivity : ComponentActivity() {
                                     modifier = Modifier
                                         .padding(NavigationDrawerItemDefaults.ItemPadding)
                                     ,
-                                    label = { Text(text = "Home") },
+                                    label = { Text(text = stringResource(R.string.menu_home)) },
                                     selected = navBackStackEntry?.destination?.route == "mainScreen",
                                     onClick = {
                                         navController.navigate("mainScreen") {
@@ -205,7 +205,7 @@ class MainActivity : ComponentActivity() {
                                     modifier = Modifier
                                         .padding(NavigationDrawerItemDefaults.ItemPadding)
                                     ,
-                                    label = { Text(text = "Panels") },
+                                    label = { Text(text = stringResource(R.string.menu_panels)) },
                                     selected = navBackStackEntry?.destination?.route == "panelsScreen",
                                     onClick = {
                                         navController.navigate("panelsScreen") {
@@ -226,7 +226,7 @@ class MainActivity : ComponentActivity() {
                                     modifier = Modifier
                                         .padding(NavigationDrawerItemDefaults.ItemPadding)
                                     ,
-                                    label = { Text(text = "Themes") },
+                                    label = { Text(text = stringResource(R.string.menu_themes)) },
                                     selected = navBackStackEntry?.destination?.route == "themesScreen",
                                     onClick = {
                                         navController.navigate("themesScreen") {

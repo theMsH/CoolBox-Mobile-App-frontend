@@ -2,6 +2,10 @@
     <string name="app_name">CoolBox-mobiiliprojekti-App</string>
     <string name="drawer_menu_title">Cooldev Project</string>
 
+    <string name="menu_home">Home</string>
+    <string name="menu_panels">Panels</string>
+    <string name="menu_themes">Themes</string>
+
     <string name="cancel">Cancel</string>
     <string name="create_account">Create account</string>
     <string name="register">Register</string>
@@ -27,4 +31,32 @@
     <string name="front_page">Front Page</string>
     <string name="temperature_data_not_available">Temperature data is not available</string>
     <string name="total_production_kwh">Total Production (kWh)</string>
+
+    <string name="consumption_title">Consumption</string>
+    <string name="con_graph_title">Total Consumption and Indoor Temperature</string>
+    <string name="months_text">Months</string>
+    <string name="days_text">Days</string>
+    <string name="weeks_text">Weeks</string>
+    <string name="hours_text">Hours</string>
+    <string name="total_con_text">Total Consumption</string>
+    <string name="avg_con_text">Avg Consumption</string>
+    <string name="avg_temp_text">Avg Indoor Temperature</string>
+
+    <string name="production_title">Production</string>
+    <string name="pro_graph_title_total">Total Production</string>
+    <string name="pro_graph_title_solar">Solar Production</string>
+    <string name="pro_graph_title_wind">Wind Production</string>
+    <string name="total_pro_text">Total Production</string>
+    <string name="avg_pro_text">Avg Production</string>
+    <string name="solar_text">Solar</string>
+    <string name="wind_text">Wind</string>
+
+    <string name="panels_title">Edit Panels</string>
+    <string name="panels_description">Change visibility of panels in the Main screen</string>
+    <string name="con_panel_name">Consumption Panel</string>
+    <string name="pro_panel_name">Production Panel</string>
+    <string name="bat_panel_name">Battery Panel</string>
+    <string name="temp_panel_name">Temperature Panel</string>
+
+    <string name="themes_title">Edit Themes</string>
 </resources>

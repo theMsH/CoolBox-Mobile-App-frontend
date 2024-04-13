@@ -22,6 +22,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -33,13 +34,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.coolbox_mobiiliprojekti_app.ui.theme.BottomAppBarColor
-import com.example.coolbox_mobiiliprojekti_app.ui.theme.TopAppBarColor
+import com.example.coolbox_mobiiliprojekti_app.R
 import com.example.coolbox_mobiiliprojekti_app.viewmodel.ConsumptionViewModel
 import kotlinx.coroutines.Job
 import java.time.DayOfWeek
@@ -68,6 +71,23 @@ fun ConsumptionScreen(
     // Määritä nykyisen viikon ensimmäinen päivä
     var currentWeekStartDate by remember { mutableStateOf(LocalDate.now().startOfWeek()) }
     var currentWeekEndDate = currentWeekStartDate.plusDays(6)
+
+    // Haetaan localeForMonthAndDay-muuttujaan arvo käyttöjärjestelmän kielen
+    // mukaan. Nimetään käyttöliittymässä näkyvä kuukausi ja päivä
+    // localeForMonthAndDay-muuttujaan tallennetulla kielellä.
+    val systemLocale = Locale.getDefault()
+    var localeForMonthAndDay = Locale("us", "US")
+    var monthName = currentWeekStartDate.month.getDisplayName(TextStyle.FULL, localeForMonthAndDay).capitalize()
+    var dayName = currentWeekStartDate.dayOfWeek.getDisplayName(TextStyle.FULL, localeForMonthAndDay).capitalize()
+
+    if (systemLocale.language == "fi") {
+        localeForMonthAndDay = Locale("fi", "FI")
+        // Koska kuukausien ja päivien nimet ovat suomenkielisessä
+        // käännöksessä partitiivimuodossa, pudotetaan kaksi viimeisintä
+        // kirjainta pois.
+        monthName = currentWeekStartDate.month.getDisplayName(TextStyle.FULL, localeForMonthAndDay).capitalize().dropLast(2)
+        dayName = currentWeekStartDate.dayOfWeek.getDisplayName(TextStyle.FULL, localeForMonthAndDay).capitalize().dropLast(2)
+    }
 
     // Päivitä kulutustilastot ja lämpötilatilastot haettaessa dataa
     LaunchedEffect(key1 = currentWeekStartDate, key2 = Unit) {
@@ -101,7 +121,7 @@ fun ConsumptionScreen(
             // Yläpalkki
             CenterAlignedTopAppBar(
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = TopAppBarColor
+                    containerColor = MaterialTheme.colorScheme.primaryContainer
                 ),
                 // Navigointinappi (takaisin)
                 navigationIcon = {
@@ -113,7 +133,7 @@ fun ConsumptionScreen(
                     }
                 },
                 // Otsikko
-                title = { Text(text = "Consumption") },
+                title = { Text(text = stringResource(R.string.consumption_title)) },
                 // Toiminnot
                 actions = {
                     IconButton(onClick = { onMenuClick() }) {
@@ -128,7 +148,7 @@ fun ConsumptionScreen(
         bottomBar = {
             // Alapalkki
             BottomAppBar(
-                containerColor = BottomAppBarColor
+                containerColor = Color.Blue
             ) {
                 Row(
                     modifier = Modifier.fillMaxSize(),
@@ -137,7 +157,6 @@ fun ConsumptionScreen(
                 ) {
                     // Kuukausi-nappi
                     Button(
-                        enabled = currentTimeInterval != TimeInterval.MONTHS,
                         onClick = {
                             // Lisää logiikka kuukausidataan siirtymiseen
                             val currentMonthStartDate = LocalDate.now().withDayOfMonth(1)
@@ -148,11 +167,10 @@ fun ConsumptionScreen(
                             currentTimeInterval = TimeInterval.MONTHS
                         }
                     ) {
-                        Text(text = "Year")
+                        Text(text = stringResource(R.string.months_text))
                     }
                     // Viikko-nappi
                     Button(
-                        enabled = currentTimeInterval != TimeInterval.WEEKS,
                         onClick = {
                             // Hae viikkodata
                             val currentWeekNumber = LocalDate.now()
@@ -175,12 +193,11 @@ fun ConsumptionScreen(
 
                         }
                     ) {
-                        Text(text = "Month")
+                        Text(text = stringResource(R.string.weeks_text))
                     }
 
                     // Päivä-nappi
                     Button(
-                        enabled = currentTimeInterval != TimeInterval.DAYS,
                         onClick = {
                             // Hae päivädata
                             currentWeekStartDate = LocalDate.now().startOfWeek()
@@ -188,12 +205,11 @@ fun ConsumptionScreen(
                             currentTimeInterval = TimeInterval.DAYS
                         }
                     ) {
-                        Text(text = "Week")
+                        Text(text = stringResource(R.string.days_text))
                     }
 
                     // Tunti-nappi
                     Button(
-                        enabled = currentTimeInterval != TimeInterval.HOURS,
                         onClick = {
                             // Hae tuntidata
                             currentWeekStartDate = LocalDate.now()
@@ -201,7 +217,7 @@ fun ConsumptionScreen(
                             currentTimeInterval = TimeInterval.HOURS
                         }
                     ) {
-                        Text(text = "Day")
+                        Text(text = stringResource(R.string.hours_text))
                     }
                 }
             }
@@ -297,16 +313,11 @@ fun ConsumptionScreen(
                                         }
 
                                         TimeInterval.HOURS -> {
-                                            currentWeekStartDate.dayOfWeek.getDisplayName(
-                                                TextStyle.FULL, Locale.US
-                                            ) + " (${currentWeekStartDate.dayOfMonth}/${currentWeekStartDate.monthValue})"
+                                            dayName + " (${currentWeekStartDate.dayOfMonth}/${currentWeekStartDate.monthValue})"
                                         }
 
                                         TimeInterval.WEEKS -> {
-                                            "${
-                                                currentWeekStartDate.month.name.toLowerCase()
-                                                    .capitalize()
-                                            } ${currentWeekStartDate.year}"
+                                            "$monthName ${currentWeekStartDate.year}"
                                         }
 
                                         TimeInterval.MONTHS -> {
@@ -363,7 +374,7 @@ fun ConsumptionScreen(
                                 modifier = Modifier
                                     .padding(vertical = 10.dp)
                                     .align(Alignment.CenterHorizontally),
-                                text = "Total consumption:  ${
+                                text = stringResource(R.string.total_con_text) + ":  ${
                                     String.format(
                                         Locale.US,
                                         "%.2f",
@@ -378,7 +389,7 @@ fun ConsumptionScreen(
                                 modifier = Modifier
                                     .padding(vertical = 10.dp)
                                     .align(Alignment.CenterHorizontally),
-                                text = "Avg consumption:  ${
+                                text = stringResource(R.string.avg_con_text) + ":  ${
                                     String.format(
                                         Locale.US,
                                         "%.2f",
@@ -393,8 +404,7 @@ fun ConsumptionScreen(
                                 modifier = Modifier
                                     .padding(vertical = 10.dp)
                                     .align(Alignment.CenterHorizontally),
-                                text =
-                                "Avg indoor temperature:  ${
+                                text = stringResource(R.string.avg_temp_text) + ":  ${
                                     String.format(
                                         Locale.US,
                                         "%.1f",
@@ -482,16 +492,11 @@ fun ConsumptionScreen(
                                     }
 
                                     TimeInterval.HOURS -> {
-                                        currentWeekStartDate.dayOfWeek.getDisplayName(
-                                            TextStyle.FULL, Locale.US
-                                        ) + " (${currentWeekStartDate.dayOfMonth}/${currentWeekStartDate.monthValue})"
+                                        dayName + " (${currentWeekStartDate.dayOfMonth}/${currentWeekStartDate.monthValue})"
                                     }
 
                                     TimeInterval.WEEKS -> {
-                                        "${
-                                            currentWeekStartDate.month.name.toLowerCase()
-                                                .capitalize()
-                                        } ${currentWeekStartDate.year}"
+                                        "$monthName ${currentWeekStartDate.year}"
                                     }
 
                                     TimeInterval.MONTHS -> {
@@ -546,7 +551,7 @@ fun ConsumptionScreen(
                             Text(
                                 modifier = Modifier
                                     .padding(vertical = 16.dp),
-                                text = "Total:  ${
+                                text = stringResource(R.string.total_con_text) + ":  ${
                                     String.format(
                                         Locale.US,
                                         "%.2f",
@@ -560,7 +565,7 @@ fun ConsumptionScreen(
                             Text(
                                 modifier = Modifier
                                     .padding(vertical = 16.dp),
-                                text = "Avg:  ${
+                                text = stringResource(R.string.avg_con_text) + ":  ${
                                     String.format(
                                         Locale.US,
                                         "%.2f",
@@ -574,8 +579,7 @@ fun ConsumptionScreen(
                             Text(
                                 modifier = Modifier
                                     .padding(vertical = 16.dp),
-                                text =
-                                "Avg indoor temperature:  ${
+                                text = stringResource(R.string.avg_temp_text) + ":  ${
                                     String.format(
                                         Locale.US,
                                         "%.1f",

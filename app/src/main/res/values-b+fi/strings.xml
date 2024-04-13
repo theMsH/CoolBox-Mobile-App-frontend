@@ -3,6 +3,10 @@
     <string name="app_name">CoolBox-mobiiliprojekti-App</string>
     <string name="drawer_menu_title">CoolDev Projekti</string>
 
+    <string name="menu_home">Koti</string>
+    <string name="menu_panels">Paneelit</string>
+    <string name="menu_themes">Teemat</string>
+
     <string name="cancel">Peruuta</string>
     <string name="create_account">Luo käyttäjä</string>
     <string name="register">Rekisteröi</string>
@@ -28,4 +32,32 @@
     <string name="front_page">Etusivu</string>
     <string name="temperature_data_not_available">Lämpötilatietoja ei ole saatavilla</string>
     <string name="total_production_kwh">Kokonaistuotto (kWh)</string>
+
+    <string name="consumption_title">Kulutus</string>
+    <string name="con_graph_title">Kokonaiskulutus ja Sisälämpötila</string>
+    <string name="months_text">Kuukaudet</string>
+    <string name="days_text">Päivät</string>
+    <string name="weeks_text">Viikot</string>
+    <string name="hours_text">Tunnit</string>
+    <string name="total_con_text">Kokonaiskulutus</string>
+    <string name="avg_con_text">Avg Kulutus</string>
+    <string name="avg_temp_text">Avg Sisälämpötila</string>
+
+    <string name="production_title">Tuotto</string>
+    <string name="pro_graph_title_total">Kokonaistuotto</string>
+    <string name="pro_graph_title_solar">Aurinkoenergia Tuotto</string>
+    <string name="pro_graph_title_wind">Tuulienergia Tuotto</string>
+    <string name="total_pro_text">Kokonaistuotto</string>
+    <string name="avg_pro_text">Avg tuotto</string>
+    <string name="solar_text">Aurinko</string>
+    <string name="wind_text">Tuuli</string>
+
+    <string name="panels_title">Muokkaa Paneeleita</string>
+    <string name="panels_description">Vaihda Etusivulla olevien paneelien näkyvyyttä</string>
+    <string name="con_panel_name">Kulutuspaneeli</string>
+    <string name="pro_panel_name">Tuottopaneeli</string>
+    <string name="bat_panel_name">Akkupaneeli</string>
+    <string name="temp_panel_name">Lämpötilapaneeli</string>
+
+    <string name="themes_title">Muokkaa Teemoja</string>
 </resources>

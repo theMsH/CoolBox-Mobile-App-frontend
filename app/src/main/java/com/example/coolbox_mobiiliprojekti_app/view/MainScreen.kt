@@ -66,7 +66,7 @@ fun MainScreen(
     val conPanelVisible = preferenceDataStore.getConsumptionActive.collectAsState(initial = true)
     val prodPanelVisible = preferenceDataStore.getProductionActive.collectAsState(initial = true)
     val batPanelVisible = preferenceDataStore.getBatteryActive.collectAsState(initial = true)
-    val tempPanelVisible = mainScreenVm.tempPanelVisible
+    val tempPanelVisible = preferenceDataStore.getTempActive.collectAsState(initial = true)
 
 
 
@@ -155,7 +155,7 @@ fun MainScreen(
                             }
                         }
                     }
-                    if (tempPanelVisible) {
+                    if (tempPanelVisible.value) {
                         item {
                             Card(
                                 modifier = Modifier
