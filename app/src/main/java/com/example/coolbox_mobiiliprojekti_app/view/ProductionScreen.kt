@@ -45,10 +45,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.example.coolbox_mobiiliprojekti_app.R
 import com.example.coolbox_mobiiliprojekti_app.viewmodel.ProductionViewModel
 import com.patrykandpatrick.vico.core.model.lineSeries
 import kotlinx.coroutines.Job
@@ -161,7 +163,7 @@ fun ProductionScreen(
                     }
                 },
                 // Otsikko
-                title = { Text(text = "Production") },
+                title = { Text(text = stringResource(R.string.production_title)) },
                 // Toiminnot
                 actions = {
                     IconButton(onClick = { onMenuClick() }) {
@@ -216,7 +218,7 @@ fun ProductionScreen(
                             currentTimeInterval = TimeInterval.MONTHS
                         }
                     ) {
-                        Text(text = "Months")
+                        Text(text = stringResource(R.string.months_text))
                     }
                     // Viikko-nappi
                     Button(
@@ -263,7 +265,7 @@ fun ProductionScreen(
 
                         }
                     ) {
-                        Text(text = "Weeks")
+                        Text(text = stringResource(R.string.weeks_text))
                     }
 
                     // Päivä-nappi
@@ -295,7 +297,7 @@ fun ProductionScreen(
                             currentTimeInterval = TimeInterval.DAYS
                         }
                     ) {
-                        Text(text = "Days")
+                        Text(text = stringResource(R.string.days_text))
                     }
 
                     // Tunti-nappi
@@ -330,7 +332,7 @@ fun ProductionScreen(
                             currentTimeInterval = TimeInterval.HOURS
                         }
                     ) {
-                        Text(text = "Hours")
+                        Text(text = stringResource(R.string.hours_text))
                     }
                 }
             }
@@ -491,7 +493,7 @@ fun ProductionScreen(
                             ) {
                                 // Näytä yhteenveto
                                 Text(
-                                    text = "Total:  ${
+                                    text = stringResource(R.string.total_pro_text) + ":  ${
                                         String.format(
                                             Locale.US,
                                             "%.2f",
@@ -517,7 +519,7 @@ fun ProductionScreen(
                                 Text(
                                     modifier = Modifier
                                         .padding(vertical = 16.dp),
-                                    text = "Avg:  ${
+                                    text = stringResource(R.string.avg_pro_text) + ":  ${
                                         String.format(
                                             Locale.US,
                                             "%.2f",
@@ -560,7 +562,7 @@ fun ProductionScreen(
                                         imageVector = Icons.Filled.Brightness5,
                                         contentDescription = "Solar"
                                     )
-                                    Text(text = "Solar")
+                                    Text(text = stringResource(R.string.solar_text))
                                 }
 
                                 // Wind-nappi
@@ -576,7 +578,7 @@ fun ProductionScreen(
                                         imageVector = Icons.Filled.Air,
                                         contentDescription = "Wind"
                                     )
-                                    Text(text = "Wind")
+                                    Text(text = stringResource(R.string.wind_text))
                                 }
                                 // Total Production-nappi
                                 Button(
@@ -589,7 +591,7 @@ fun ProductionScreen(
                                         imageVector = Icons.Filled.BatteryChargingFull,
                                         contentDescription = "Total Production"
                                     )
-                                    Text(text = "Total Production")
+                                    Text(text = stringResource(R.string.total_pro_text))
                                 }
                             }
 
@@ -732,7 +734,7 @@ fun ProductionScreen(
                         Text(
                             modifier = Modifier
                                 .padding(vertical = 16.dp),
-                            text = "Total:  ${
+                            text = stringResource(R.string.total_pro_text) + ":  ${
                                 String.format(
                                     Locale.US,
                                     "%.2f",
@@ -758,7 +760,7 @@ fun ProductionScreen(
                         Text(
                             modifier = Modifier
                                 .padding(vertical = 16.dp),
-                            text = "Avg:  ${
+                            text = stringResource(R.string.avg_pro_text) + ":  ${
                                 String.format(
                                     Locale.US,
                                     "%.2f",
@@ -802,7 +804,7 @@ fun ProductionScreen(
                                     imageVector = Icons.Filled.Brightness5,
                                     contentDescription = "Solar"
                                 )
-                                Text(text = "Solar")
+                                Text(text = stringResource(R.string.solar_text))
                             }
 
                             // Wind-nappi
@@ -819,7 +821,7 @@ fun ProductionScreen(
                                     imageVector = Icons.Filled.Air,
                                     contentDescription = "Wind"
                                 )
-                                Text(text = "Wind")
+                                Text(text = stringResource(R.string.wind_text))
                             }
                             // Total Production-nappi
                             Button(
@@ -833,7 +835,7 @@ fun ProductionScreen(
                                     imageVector = Icons.Filled.BatteryChargingFull,
                                     contentDescription = "Total Production"
                                 )
-                                Text(text = "Total Production")
+                                Text(text = stringResource(R.string.total_pro_text))
                             }
                         }
                     }

@@ -21,9 +21,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.coolbox_mobiiliprojekti_app.R
 import com.example.coolbox_mobiiliprojekti_app.model.rememberMarker
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.CoolBoxmobiiliprojektiAppTheme
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.ScreenPanelColor
@@ -198,9 +200,9 @@ fun ProductionChart(
                             .padding(top = 20.dp),
                         fontSize = 20.sp,
                         text = when (currentProductionType) {
-                            ProductionTypeInterval.Wind -> "Wind Production"
-                            ProductionTypeInterval.Solar -> "Solar Production"
-                            ProductionTypeInterval.Total -> "Total Production"
+                            ProductionTypeInterval.Wind -> stringResource(R.string.pro_graph_title_wind)
+                            ProductionTypeInterval.Solar -> stringResource(R.string.pro_graph_title_solar)
+                            ProductionTypeInterval.Total -> stringResource(R.string.pro_graph_title_total)
                         },
                         color = Color.Black
                     )

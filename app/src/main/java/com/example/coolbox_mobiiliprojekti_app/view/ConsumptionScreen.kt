@@ -36,10 +36,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.coolbox_mobiiliprojekti_app.R
 import com.example.coolbox_mobiiliprojekti_app.viewmodel.ConsumptionViewModel
 import kotlinx.coroutines.Job
 import java.time.DayOfWeek
@@ -113,7 +115,7 @@ fun ConsumptionScreen(
                     }
                 },
                 // Otsikko
-                title = { Text(text = "Consumption") },
+                title = { Text(text = stringResource(R.string.consumption_title)) },
                 // Toiminnot
                 actions = {
                     IconButton(onClick = { onMenuClick() }) {
@@ -147,7 +149,7 @@ fun ConsumptionScreen(
                             currentTimeInterval = TimeInterval.MONTHS
                         }
                     ) {
-                        Text(text = "Months")
+                        Text(text = stringResource(R.string.months_text))
                     }
                     // Viikko-nappi
                     Button(
@@ -173,7 +175,7 @@ fun ConsumptionScreen(
 
                         }
                     ) {
-                        Text(text = "Weeks")
+                        Text(text = stringResource(R.string.weeks_text))
                     }
 
                     // Päivä-nappi
@@ -185,7 +187,7 @@ fun ConsumptionScreen(
                             currentTimeInterval = TimeInterval.DAYS
                         }
                     ) {
-                        Text(text = "Days")
+                        Text(text = stringResource(R.string.days_text))
                     }
 
                     // Tunti-nappi
@@ -197,7 +199,7 @@ fun ConsumptionScreen(
                             currentTimeInterval = TimeInterval.HOURS
                         }
                     ) {
-                        Text(text = "Hours")
+                        Text(text = stringResource(R.string.hours_text))
                     }
                 }
             }
@@ -359,7 +361,7 @@ fun ConsumptionScreen(
                                 modifier = Modifier
                                     .padding(vertical = 10.dp)
                                     .align(Alignment.CenterHorizontally),
-                                text = "Total consumption:  ${
+                                text = stringResource(R.string.total_con_text) + ":  ${
                                     String.format(
                                         Locale.US,
                                         "%.2f",
@@ -374,7 +376,7 @@ fun ConsumptionScreen(
                                 modifier = Modifier
                                     .padding(vertical = 10.dp)
                                     .align(Alignment.CenterHorizontally),
-                                text = "Avg consumption:  ${
+                                text = stringResource(R.string.avg_con_text) + ":  ${
                                     String.format(
                                         Locale.US,
                                         "%.2f",
@@ -389,8 +391,7 @@ fun ConsumptionScreen(
                                 modifier = Modifier
                                     .padding(vertical = 10.dp)
                                     .align(Alignment.CenterHorizontally),
-                                text =
-                                "Avg indoor temperature:  ${
+                                text = stringResource(R.string.avg_temp_text) + ":  ${
                                     String.format(
                                         Locale.US,
                                         "%.1f",
@@ -542,7 +543,7 @@ fun ConsumptionScreen(
                             Text(
                                 modifier = Modifier
                                     .padding(vertical = 16.dp),
-                                text = "Total:  ${
+                                text = stringResource(R.string.total_con_text) + ":  ${
                                     String.format(
                                         Locale.US,
                                         "%.2f",
@@ -556,7 +557,7 @@ fun ConsumptionScreen(
                             Text(
                                 modifier = Modifier
                                     .padding(vertical = 16.dp),
-                                text = "Avg:  ${
+                                text = stringResource(R.string.avg_con_text) + ":  ${
                                     String.format(
                                         Locale.US,
                                         "%.2f",
@@ -570,8 +571,7 @@ fun ConsumptionScreen(
                             Text(
                                 modifier = Modifier
                                     .padding(vertical = 16.dp),
-                                text =
-                                "Avg indoor temperature:  ${
+                                text = stringResource(R.string.avg_temp_text) + ":  ${
                                     String.format(
                                         Locale.US,
                                         "%.1f",
