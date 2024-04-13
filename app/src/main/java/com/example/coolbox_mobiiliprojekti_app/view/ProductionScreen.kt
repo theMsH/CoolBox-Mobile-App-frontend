@@ -1,7 +1,6 @@
 package com.example.coolbox_mobiiliprojekti_app.view
 
 import android.content.res.Configuration
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -13,8 +12,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
@@ -22,12 +19,10 @@ import androidx.compose.material.icons.filled.Air
 import androidx.compose.material.icons.filled.BatteryChargingFull
 import androidx.compose.material.icons.filled.Brightness5
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -49,10 +44,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
 import com.example.coolbox_mobiiliprojekti_app.R
 import com.example.coolbox_mobiiliprojekti_app.viewmodel.ProductionViewModel
-import com.patrykandpatrick.vico.core.model.lineSeries
 import kotlinx.coroutines.Job
 import java.time.DayOfWeek
 import java.time.LocalDate
@@ -81,13 +74,19 @@ fun LocalDate.endOfWeek(): LocalDate {
 
 // Funktio muuntaa päivämäärät tekstimuotoon näytettäväksi viikonpäivän lyhyellä nimellä (esim. "Ma", "Ti")
 fun formatToDateToDayOfWeek(dateList: List<String>): List<String> {
+    val systemLocale = Locale.getDefault()
+    var localeForDayOfWeek = Locale("us", "US")
+    if (systemLocale.language == "fi") {
+        localeForDayOfWeek = Locale("fi", "FI")
+    }
+
     return dateList.map { dateString ->
         val datePattern = Regex("\\d{4}-\\d{2}-\\d{2}")
         if (dateString.matches(datePattern)) {
             // Päivämäärä on muodossa "YYYY-MM-DD"
             val date = LocalDate.parse(dateString)
             // Päivän nimi lyhyellä nimellä (esim. "Ma", "Ti")
-            val dayOfWeek = date.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.ENGLISH)
+            val dayOfWeek = date.dayOfWeek.getDisplayName(TextStyle.SHORT, localeForDayOfWeek)
             // Ota talteen vain kaksi ensimmäistä merkkiä päivän nimestä
             dayOfWeek.take(2)
         } else {
