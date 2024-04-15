@@ -23,7 +23,6 @@ import com.example.coolbox_mobiiliprojekti_app.R
 import com.example.coolbox_mobiiliprojekti_app.model.rememberMarker
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.CoolBoxmobiiliprojektiAppTheme
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.GraphKwhColor
-import com.example.coolbox_mobiiliprojekti_app.ui.theme.GraphTempColor
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.PanelColor
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.PanelTextButtonColor
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.PanelTextColor
@@ -33,28 +32,22 @@ import com.patrykandpatrick.vico.compose.axis.rememberAxisLabelComponent
 import com.patrykandpatrick.vico.compose.axis.vertical.rememberStartAxis
 import com.patrykandpatrick.vico.compose.chart.CartesianChartHost
 import com.patrykandpatrick.vico.compose.chart.layer.rememberColumnCartesianLayer
-import com.patrykandpatrick.vico.compose.chart.layer.rememberLineCartesianLayer
-import com.patrykandpatrick.vico.compose.chart.layer.rememberLineSpec
 import com.patrykandpatrick.vico.compose.chart.layout.fullWidth
 import com.patrykandpatrick.vico.compose.chart.rememberCartesianChart
 import com.patrykandpatrick.vico.compose.component.rememberLineComponent
 import com.patrykandpatrick.vico.compose.component.shape.dashedShape
-import com.patrykandpatrick.vico.compose.component.shape.shader.color
 import com.patrykandpatrick.vico.core.axis.AxisItemPlacer
 import com.patrykandpatrick.vico.core.axis.AxisPosition
 import com.patrykandpatrick.vico.core.chart.layout.HorizontalLayout
-import com.patrykandpatrick.vico.core.component.shape.shader.DynamicShaders
 import com.patrykandpatrick.vico.core.model.CartesianChartModelProducer
 import com.patrykandpatrick.vico.core.model.ExtraStore
 import com.patrykandpatrick.vico.core.model.columnSeries
-import com.patrykandpatrick.vico.core.model.lineSeries
 import com.patrykandpatrick.vico.core.axis.formatter.AxisValueFormatter
 import com.patrykandpatrick.vico.core.component.shape.Shapes
 
 @Composable
 fun ConsumptionChart7Days(
     consumptionStatsData: Map<String, Float?>?,
-    temperatureStatsData: Map<String, Float?>?,
     goToConsumption: () -> Unit = {}
 ) {
 
@@ -74,37 +67,30 @@ fun ConsumptionChart7Days(
         }
 
     // Käynnistetään effect, joka reagoi consumptionStatsData:n ja temperatureStatsData:n muutoksiin
-    LaunchedEffect(key1 = consumptionStatsData, key2 = temperatureStatsData) {
+    LaunchedEffect(key1 = consumptionStatsData) {
         viewModel.consumptionStatsData?.let { consumptionStatsData ->
-            viewModel.temperatureStatsData?.let { temperatureStatsData ->
-                // Yritetään suorittaa transaktio modelProducerilla
-                modelProducer.tryRunTransaction {
-                    // Haetaan datan avaimet ja arvot listoiksi
-                    val dates = consumptionStatsData.keys.toList()
+            // Yritetään suorittaa transaktio modelProducerilla
+            modelProducer.tryRunTransaction {
+                // Haetaan datan avaimet ja arvot listoiksi
+                val dates = consumptionStatsData.keys.toList()
 
-                    val splittedDates = dates.map { date ->
-                        val parts = date.split("-")
-                        val month = parts[1].toInt().toString()
-                        val day = parts[2].toInt().toString()
-                        val formattedDate = "$day.$month."
-                        formattedDate
-                    }.toList()
+                val splittedDates = dates.map { date ->
+                    val parts = date.split("-")
+                    val month = parts[1].toInt().toString()
+                    val day = parts[2].toInt().toString()
+                    val formattedDate = "$day.$month."
+                    formattedDate
+                }.toList()
 
-                    val consumptions = consumptionStatsData.values.toList()
-                    val temperatures = temperatureStatsData.values.toList()
+                val consumptions = consumptionStatsData.values.toList()
 
-                    // Luodaan sarakkeet kulutusdatalle
-                    columnSeries {
-                        series(consumptions)
-                    }
-                    // Luodaan viivat lämpötiladatalle
-                    lineSeries {
-                        series(temperatures)
-                    }
-                    // Päivitetään extras lisäämällä päivämäärät
-                    updateExtras {
-                        it[labelListKey] = splittedDates
-                    }
+                // Luodaan sarakkeet kulutusdatalle
+                columnSeries {
+                    series(consumptions)
+                }
+                // Päivitetään extras lisäämällä päivämäärät
+                updateExtras {
+                    it[labelListKey] = splittedDates
                 }
             }
         }
@@ -153,16 +139,6 @@ fun ConsumptionChart7Days(
                                 rememberLineComponent(
                                     color = GraphKwhColor,
                                     thickness = 8.dp, // Adjust as needed
-                                )
-                            ),
-                        ),
-                        rememberLineCartesianLayer(
-                            lines = listOf(
-                                rememberLineSpec(
-                                    shader = DynamicShaders.color(GraphTempColor)
-                                ),
-                                rememberLineSpec(
-                                    shader = DynamicShaders.color(GraphTempColor)
                                 )
                             ),
                         ),
