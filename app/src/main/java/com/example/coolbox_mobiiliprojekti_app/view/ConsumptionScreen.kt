@@ -22,7 +22,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -34,11 +33,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -88,8 +84,8 @@ fun ConsumptionScreen(
         // Koska kuukausien ja päivien nimet ovat suomenkielisessä
         // käännöksessä partitiivimuodossa, pudotetaan kaksi viimeisintä
         // kirjainta pois.
-        monthName = currentWeekStartDate.month.getDisplayName(TextStyle.FULL, localeForMonthAndDay).capitalize().dropLast(2)
-        dayName = currentWeekStartDate.dayOfWeek.getDisplayName(TextStyle.FULL, localeForMonthAndDay).capitalize().dropLast(2)
+        monthName = currentWeekStartDate.month.getDisplayName(TextStyle.FULL, localeForMonthAndDay).dropLast(2)
+        dayName = currentWeekStartDate.dayOfWeek.getDisplayName(TextStyle.FULL, localeForMonthAndDay).dropLast(2)
     }
 
     // Päivitä kulutustilastot ja lämpötilatilastot haettaessa dataa

@@ -34,7 +34,6 @@ import com.example.coolbox_mobiiliprojekti_app.viewmodel.BatteryViewModel
 @Composable
 fun BatteryChart() {
     val viewModel: BatteryViewModel = viewModel()
-
     val fullCharge: Float = 100.0f
     val stateOfCharge: Float = viewModel.batteryChartState.value.soc
     val missingCharge: Float = fullCharge - stateOfCharge
@@ -63,6 +62,7 @@ fun BatteryChart() {
         ),
         plotType = PlotType.Donut
     )
+
     val donutChartConfig = PieChartConfig(
         isClickOnSliceEnabled = false,
         strokeWidth = 20f,
@@ -105,8 +105,8 @@ fun BatteryChart() {
                         fontSize = 16.sp,
                         modifier = Modifier.align(Alignment.Center)
                     )
-                }
+                } // Graafin Box loppuu
             }
         }
-    }
+    } // Paneeli Box loppuu
 }
