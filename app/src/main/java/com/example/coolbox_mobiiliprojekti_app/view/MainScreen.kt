@@ -310,7 +310,6 @@ fun ConsumptionPanel7Days(
                 // Piirrä kaavio
                 ConsumptionChart7Days(
                     viewModel.consumptionStatsData,
-                    viewModel.temperatureStatsData,
                     goToConsumption
                 )
             }
