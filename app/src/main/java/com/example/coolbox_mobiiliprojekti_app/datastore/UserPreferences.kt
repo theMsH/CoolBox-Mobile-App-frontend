@@ -22,6 +22,7 @@ class UserPreferences(context: Context) {
     var productionActive = booleanPreferencesKey("PRODUCTION_ACTIVE")
     var batteryActive = booleanPreferencesKey("BATTERY_ACTIVE")
     var tempActive = booleanPreferencesKey("TEMP_ACTIVE")
+    var darkMode = booleanPreferencesKey("DARK_MODE")
 
     // Haetaan booleanit dataStoresta
     var getConsumptionActive = flow {
@@ -56,6 +57,14 @@ class UserPreferences(context: Context) {
         })
     }
 
+    var getDarkMode = flow {
+        pref.data.map {
+            it[darkMode]?:true
+        }.collect(collector = {
+            emit(it)
+        })
+    }
+
     // Asetetaan booleanit annettuun arvoon
     suspend fun setConsumptionActive(state : Boolean) {
         pref.edit {
@@ -78,6 +87,12 @@ class UserPreferences(context: Context) {
     suspend fun setTempActive(state : Boolean) {
         pref.edit {
             it[tempActive] = state
+        }
+    }
+
+    suspend fun setDarkMode(state : Boolean) {
+        pref.edit {
+            it[darkMode] = state
         }
     }
 }

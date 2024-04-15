@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.ColorLens
 import androidx.compose.material.icons.filled.DashboardCustomize
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.LockOpen
@@ -36,8 +35,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -55,7 +52,6 @@ import com.example.coolbox_mobiiliprojekti_app.view.MainScreen
 import com.example.coolbox_mobiiliprojekti_app.view.PanelsScreen
 import com.example.coolbox_mobiiliprojekti_app.view.ProductionScreen
 import com.example.coolbox_mobiiliprojekti_app.view.RegisterScreen
-import com.example.coolbox_mobiiliprojekti_app.view.ThemesScreen
 import com.example.coolbox_mobiiliprojekti_app.viewmodel.LoginViewModel
 import com.example.coolbox_mobiiliprojekti_app.view.ConsumptionScreen
 import kotlinx.coroutines.launch
@@ -222,6 +218,8 @@ class MainActivity : ComponentActivity() {
                                         )
                                     }
                                 )
+
+                                /* Poistettu käytöstä
                                 NavigationDrawerItem(
                                     modifier = Modifier
                                         .padding(NavigationDrawerItemDefaults.ItemPadding)
@@ -243,7 +241,7 @@ class MainActivity : ComponentActivity() {
                                         )
                                     }
                                 )
-
+                                */
                             }
                         }
                     ) {
@@ -309,6 +307,7 @@ class MainActivity : ComponentActivity() {
                                     }
                                 )
                             }
+                            /* Poistettu käytöstä
                             composable("themesScreen") {
                                 ThemesScreen(
                                     goBack = {
@@ -319,6 +318,7 @@ class MainActivity : ComponentActivity() {
                                     }
                                 )
                             }
+                            */
                             composable("registerScreen") {
                                 RegisterScreen(
                                     onRegisterClick = {

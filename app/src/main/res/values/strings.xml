@@ -3,7 +3,7 @@
     <string name="drawer_menu_title">Cooldev Project</string>
 
     <string name="menu_home">Home</string>
-    <string name="menu_panels">Panels</string>
+    <string name="menu_panels">Customization</string>
     <string name="menu_themes">Themes</string>
 
     <string name="cancel">Cancel</string>
@@ -49,12 +49,13 @@
     <string name="solar_text">Solar</string>
     <string name="wind_text">Wind</string>
 
-    <string name="panels_title">Edit Panels</string>
+    <string name="panels_title">Customize</string>
     <string name="panels_description">Change visibility of panels in the Main screen</string>
     <string name="con_panel_name">Consumption Panel</string>
     <string name="pro_panel_name">Production Panel</string>
     <string name="bat_panel_name">Battery Panel</string>
     <string name="temp_panel_name">Temperature Panel</string>
+    <string name="use_darkmode">Dark Mode</string>
 
     <string name="themes_title">Edit Themes</string>
 </resources>

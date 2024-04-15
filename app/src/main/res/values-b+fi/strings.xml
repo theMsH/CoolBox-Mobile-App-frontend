@@ -4,7 +4,7 @@
     <string name="drawer_menu_title">CoolDev Projekti</string>
 
     <string name="menu_home">Koti</string>
-    <string name="menu_panels">Paneelit</string>
+    <string name="menu_panels">Mukauttaminen</string>
     <string name="menu_themes">Teemat</string>
 
     <string name="cancel">Peruuta</string>
@@ -50,12 +50,13 @@
     <string name="solar_text">Aurinko</string>
     <string name="wind_text">Tuuli</string>
 
-    <string name="panels_title">Muokkaa Paneeleita</string>
+    <string name="panels_title">Mukauta</string>
     <string name="panels_description">Vaihda Etusivulla olevien paneelien näkyvyyttä</string>
     <string name="con_panel_name">Kulutuspaneeli</string>
     <string name="pro_panel_name">Tuottopaneeli</string>
     <string name="bat_panel_name">Akkupaneeli</string>
     <string name="temp_panel_name">Lämpötilapaneeli</string>
+    <string name="use_darkmode">Tumma Teema</string>
 
     <string name="themes_title">Muokkaa Teemoja</string>
 </resources>
