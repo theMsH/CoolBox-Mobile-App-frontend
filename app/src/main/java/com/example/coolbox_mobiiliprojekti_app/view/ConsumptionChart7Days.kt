@@ -23,6 +23,7 @@ import com.example.coolbox_mobiiliprojekti_app.R
 import com.example.coolbox_mobiiliprojekti_app.model.rememberMarker
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.CoolBoxmobiiliprojektiAppTheme
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.GraphKwhColor
+import com.example.coolbox_mobiiliprojekti_app.ui.theme.GraphKwhColorPanel
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.PanelColor
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.PanelTextButtonColor
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.PanelTextColor
@@ -133,11 +134,11 @@ fun ConsumptionChart7Days(
                         rememberColumnCartesianLayer(
                             columns = listOf(
                                 rememberLineComponent(
-                                    color = GraphKwhColor,
+                                    color = GraphKwhColorPanel,
                                     thickness = 8.dp, // Adjust as needed
                                 ),
                                 rememberLineComponent(
-                                    color = GraphKwhColor,
+                                    color = GraphKwhColorPanel,
                                     thickness = 8.dp, // Adjust as needed
                                 )
                             ),

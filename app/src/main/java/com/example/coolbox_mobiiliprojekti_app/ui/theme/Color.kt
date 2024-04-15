@@ -34,6 +34,7 @@ val OutlineColor = Color(0xFF3F4758)
 val BackgroundColor = Color(0xFFE4ECF1)
 val CoolAppText = Color(0xff001849)
 
+val GraphKwhColorPanel = Color(0xFF3B7DFF)
 val GraphKwhColor = Color(0xFF0D3E9E)
 val GraphTempColor = Color(0xFFE04646)
 val ProductionLineColor = Color.Green
