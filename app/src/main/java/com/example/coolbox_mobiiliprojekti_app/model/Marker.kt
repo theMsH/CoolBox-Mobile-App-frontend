@@ -18,6 +18,7 @@ import com.patrykandpatrick.vico.compose.component.shape.dashedShape
 import com.patrykandpatrick.vico.compose.component.shape.markerCorneredShape
 import com.patrykandpatrick.vico.compose.dimensions.dimensionsOf
 import com.patrykandpatrick.vico.core.chart.dimensions.HorizontalDimensions
+import com.patrykandpatrick.vico.core.chart.insets.HorizontalInsets
 import com.patrykandpatrick.vico.core.chart.insets.Insets
 import com.patrykandpatrick.vico.core.component.marker.MarkerComponent
 import com.patrykandpatrick.vico.core.component.shape.Shapes
@@ -86,18 +87,23 @@ internal fun rememberMarker(
             buildString {
                 val consumptions = viewModel.consumptionStatsData?.values?.toList()
                 val temperatures = viewModel.temperatureStatsData?.values?.toList()
-                // Format the marker label using the provided entries and chartValues
-                append("Column Series Data: ")
+
+                append("Consumption: ")
                 if (consumptions != null) {
-                    append(consumptions.joinToString(", "))
+                    append(consumptions.joinToString(", ") { "$it kWh" }) // Adding units
+                } else {
+                    append("No data")
                 }
-                append("\nLine Series Data: ")
+                append("\nTemperature: ")
                 if (temperatures != null) {
-                    append(temperatures.joinToString(", "))
+                    append(temperatures.joinToString(", ") { "$it °C" }) // Adding units
+                } else {
+                    append("No data")
                 }
             }
         }
     }
+
 
     // Palautetaan muistettu markeri
     return remember(label, labelPosition, indicator, guideline, markerLabelFormatter) {

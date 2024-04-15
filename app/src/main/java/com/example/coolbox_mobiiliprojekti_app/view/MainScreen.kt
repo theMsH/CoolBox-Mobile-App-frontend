@@ -3,9 +3,12 @@ package com.example.coolbox_mobiiliprojekti_app.view
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
@@ -31,6 +34,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -38,6 +42,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.coolbox_mobiiliprojekti_app.R
 import com.example.coolbox_mobiiliprojekti_app.datastore.UserPreferences
+import com.example.coolbox_mobiiliprojekti_app.ui.theme.CoolAppText
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.PanelColor
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.PanelTextButtonColor
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.PanelTextColor
@@ -207,24 +212,77 @@ fun TemperatureDatas() {
                 verticalArrangement = Arrangement.spacedBy(10.dp), // Elementtien välinen pystysuuntainen etäisyys.
                 horizontalAlignment = Alignment.CenterHorizontally // Vaakasuora keskitys.
             ) {
-                // Otsikkoteksti lämpötiladatalle.
+                // Otsikkoteksti lämpötila datalle.
                 Text(
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally),
-                    fontSize = 20.sp,
-                    text = "Lämpötila datat - Last updated: ${viewModel.lastFetchTime ?: "Not available"}",
+                    fontSize = 30.sp,
+                    text = "Temperature data's",
                     textAlign = TextAlign.Center
                 )
 
-                // Iteroidaan läpi lämpötiladatat ja luodaan jokaiselle sensorille oma tekstielementti.
-                viewModel.temperaturesStatsData!!.forEach { (sensor, temperature) ->
-                    Text(
-                        text = "$sensor: $temperature °C", // Sensorin nimi ja lämpötila Celsius-asteina.
-                        fontSize = 30.sp,
-                        color = PanelTextButtonColor, // Tekstin väri, joka on määritetty sovelluksen teemassa.
-                        textAlign = TextAlign.Center
-                    )
-                }
+                Spacer(Modifier.height(5.dp))
+
+                // Viimeksi päivitetty lämpötila dataa.
+                Text(
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally),
+                    fontSize = 25.sp,
+                    text = "Last updated: \n${viewModel.lastFetchTime ?: "Not available"}",
+                    textAlign = TextAlign.Center
+                )
+
+                Spacer(Modifier.height(16.dp))
+
+                Icon(painter = painterResource(id = R.drawable.wc_internal_temperature_icon),
+                    contentDescription = "WC Internal Temperature Icon",
+                    Modifier.size(75.dp),
+                    tint = Color.White)
+                Text(
+                    text = "WC Temp: ${viewModel.temperaturesStatsData!!["Bathroom_9in1:"]} °C",
+                    fontSize = 30.sp,
+                    color = PanelTextButtonColor,
+                    textAlign = TextAlign.Center
+                )
+
+                Spacer(Modifier.height(8.dp))
+
+                Icon(painter = painterResource(id = R.drawable.technology_box_temperature_icon),
+                    contentDescription = "Technology Box Temperature Icon",
+                    Modifier.size(85.dp),
+                    tint = Color.White)
+                Text(
+                    text = "Tech-Box Temp: ${viewModel.temperaturesStatsData!!["TB_9in1:"]} °C",
+                    fontSize = 30.sp,
+                    color = PanelTextButtonColor,
+                    textAlign = TextAlign.Center
+                )
+
+                Spacer(Modifier.height(8.dp))
+
+                Icon(painter = painterResource(id = R.drawable.indoor_temperature_icon),
+                    contentDescription = "Indoor Temperature Icon",
+                    Modifier.size(75.dp),
+                    tint = Color.White)
+                Text(
+                    text = "Indoor Temp: ${viewModel.temperaturesStatsData!!["Indoor_9in1:"]} °C",
+                    fontSize = 30.sp,
+                    color = PanelTextButtonColor,
+                    textAlign = TextAlign.Center
+                )
+
+                Spacer(Modifier.height(8.dp))
+
+                Icon(painter = painterResource(id = R.drawable.outside_temperature_icon),
+                    contentDescription = "Outside Temperature Icon",
+                    Modifier.size(75.dp),
+                    tint = Color.White)
+                Text(
+                    text = "Outside Temp: ${viewModel.temperaturesStatsData!!["Weather2"]} °C",
+                    fontSize = 30.sp,
+                    color = PanelTextButtonColor,
+                    textAlign = TextAlign.Center
+                )
             }
         }
     }

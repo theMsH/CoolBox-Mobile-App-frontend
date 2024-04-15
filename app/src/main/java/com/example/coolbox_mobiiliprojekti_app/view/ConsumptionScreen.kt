@@ -546,53 +546,91 @@ fun ConsumptionScreen(
                             }
                         }
                         Column(
-                            modifier = Modifier.fillMaxSize(),
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(horizontal = 60.dp), // Add horizontal padding to the entire column
                             verticalArrangement = Arrangement.Center,
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            // Näytä yhteenveto
-                            Text(
-                                modifier = Modifier
-                                    .padding(vertical = 16.dp),
-                                text = stringResource(R.string.total_con_text) + ":  ${
-                                    String.format(
-                                        Locale.US,
-                                        "%.2f",
-                                        viewModel.consumptionStatsData?.values?.sum() ?: 0f
-                                    )
-                                } kwh",
-                                fontSize = 30.sp
-                            )
+                            Row(modifier = Modifier.fillMaxWidth()) {
+                                // Display total consumption text
+                                Text(
+                                    modifier = Modifier
+                                        .padding(vertical = 16.dp)
+                                        .weight(1f), // Adjust weight to reduce stretching
+                                    text = stringResource(R.string.total_con_text) + ":",
+                                    fontSize = 30.sp
+                                )
 
-                            // Näytä keskiarvo
-                            Text(
-                                modifier = Modifier
-                                    .padding(vertical = 16.dp),
-                                text = stringResource(R.string.avg_con_text) + ":  ${
-                                    String.format(
-                                        Locale.US,
-                                        "%.2f",
-                                        viewModel.consumptionStatsData?.values?.average() ?: 0f
-                                    )
-                                } kwh",
-                                fontSize = 30.sp
-                            )
+                                // Display total consumption data
+                                Text(
+                                    modifier = Modifier
+                                        .padding(vertical = 16.dp)
+                                        .weight(1f), // Adjust weight to keep data closer to the text
+                                    text = "${String.format(
+                                            Locale.US,
+                                            "%.2f",
+                                            viewModel.consumptionStatsData?.values?.sum() ?: 0f
+                                        )
+                                    } kwh",
+                                    fontSize = 30.sp,
+                                    textAlign = TextAlign.End // Ensure data text aligns to the end
+                                )
+                            }
 
-                            // Näytä keskimääräinen lämpötila
-                            Text(
-                                modifier = Modifier
-                                    .padding(vertical = 16.dp),
-                                text = stringResource(R.string.avg_temp_text) + ":  ${
-                                    String.format(
-                                        Locale.US,
-                                        "%.1f",
-                                        viewModel.temperatureStatsData?.values?.average() ?: 0f
-                                    )
-                                } °C",
-                                textAlign = TextAlign.Center,
-                                fontSize = 30.sp, // Aseta tekstin koko 16 sp (scaled pixels)
-                                lineHeight = 40.sp
-                            )
+                            Row(modifier = Modifier.fillMaxWidth()) {
+                                // Display average consumption text
+                                Text(
+                                    modifier = Modifier
+                                        .padding(vertical = 16.dp)
+                                        .weight(1f), // Consistent weight for alignment
+                                    text = stringResource(R.string.avg_con_text) + ":",
+                                    fontSize = 30.sp
+                                )
+
+                                // Display average consumption data
+                                Text(
+                                    modifier = Modifier
+                                        .padding(vertical = 16.dp)
+                                        .weight(1f), // Consistent weight for alignment
+                                    text = "${String.format(
+                                            Locale.US,
+                                            "%.2f",
+                                            viewModel.consumptionStatsData?.values?.average() ?: 0f
+                                        )
+                                    } kwh",
+                                    fontSize = 30.sp,
+                                    textAlign = TextAlign.End
+                                )
+                            }
+
+                            Row(modifier = Modifier.fillMaxWidth()) {
+                                // Display average temperature text
+                                Text(
+                                    modifier = Modifier
+                                        .padding(vertical = 16.dp)
+                                        .weight(1f), // Consistent weight for alignment
+                                    text = stringResource(R.string.avg_temp_text) + ":",
+                                    fontSize = 30.sp,
+                                    lineHeight = 40.sp
+                                )
+
+                                // Display average temperature data
+                                Text(
+                                    modifier = Modifier
+                                        .padding(vertical = 16.dp)
+                                        .weight(1f), // Consistent weight for alignment
+                                    text = "${String.format(
+                                            Locale.US,
+                                            "%.1f",
+                                            viewModel.temperatureStatsData?.values?.average() ?: 0f
+                                        )
+                                    } °C",
+                                    fontSize = 30.sp,
+                                    lineHeight = 40.sp,
+                                    textAlign = TextAlign.End
+                                )
+                            }
                         }
                     }
                 }

@@ -40,6 +40,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -746,57 +747,87 @@ fun ProductionScreen(
 
                         Spacer(Modifier.height(30.dp))
 
-                        // Näytä yhteenveto
-                        Text(
+                        Column(
                             modifier = Modifier
-                                .padding(vertical = 16.dp),
-                            text = stringResource(R.string.total_pro_text) + ":  ${
-                                String.format(
-                                    Locale.US,
-                                    "%.2f",
-                                    when (currentProductionType) {
-                                        ProductionTypeInterval.Wind -> {
-                                            viewModel.windStatsData?.values?.sum() ?: 0f
-                                        }
-
-                                        ProductionTypeInterval.Total -> {
-                                            viewModel.productionStatsData?.values?.sum() ?: 0f
-                                        }
-
-                                        ProductionTypeInterval.Solar -> {
-                                            viewModel.solarStatsData?.values?.sum() ?: 0f
-                                        }
-                                    }
+                                .fillMaxSize()
+                                .padding(horizontal = 65.dp), // Adding horizontal padding to the entire column
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Row(modifier = Modifier.fillMaxWidth()) {
+                                // Display production summary text
+                                Text(
+                                    modifier = Modifier
+                                        .padding(vertical = 16.dp)
+                                        .weight(1f), // Use a larger weight for the label to push the value right
+                                    text = stringResource(R.string.total_pro_text) + ":",
+                                    fontSize = 30.sp
                                 )
-                            } kwh",
-                            fontSize = 30.sp
-                        )
 
-                        // Näytä keskiarvo
-                        Text(
-                            modifier = Modifier
-                                .padding(vertical = 16.dp),
-                            text = stringResource(R.string.avg_pro_text) + ":  ${
-                                String.format(
-                                    Locale.US,
-                                    "%.2f",
-                                    when (currentProductionType) {
-                                        ProductionTypeInterval.Wind -> {
-                                            viewModel.windStatsData?.values?.average() ?: 0f
-                                        }
-
-                                        ProductionTypeInterval.Total -> {
-                                            viewModel.productionStatsData?.values?.average() ?: 0f
-                                        }
-
-                                        ProductionTypeInterval.Solar -> {
-                                            viewModel.solarStatsData?.values?.average() ?: 0f
-                                        }
-                                    }
+                                // Display production summary data
+                                Text(
+                                    modifier = Modifier
+                                        .padding(vertical = 16.dp)
+                                        .weight(1f), // Smaller weight for the data to align to the end
+                                    text = "${
+                                        String.format(
+                                            Locale.US,
+                                            "%.2f",
+                                            when (currentProductionType) {
+                                                ProductionTypeInterval.Wind -> {
+                                                    viewModel.windStatsData?.values?.sum() ?: 0f
+                                                }
+                                                ProductionTypeInterval.Total -> {
+                                                    viewModel.productionStatsData?.values?.sum() ?: 0f
+                                                }
+                                                ProductionTypeInterval.Solar -> {
+                                                    viewModel.solarStatsData?.values?.sum() ?: 0f
+                                                }
+                                            }
+                                        )
+                                    } kwh",
+                                    fontSize = 30.sp,
+                                    textAlign = TextAlign.End
                                 )
-                            } kwh",
-                            fontSize = 30.sp
-                        )
+                            }
+
+                            Row(modifier = Modifier.fillMaxWidth()) {
+                                // Display average production text
+                                Text(
+                                    modifier = Modifier
+                                        .padding(vertical = 16.dp)
+                                        .weight(1f), // Consistent weight for label
+                                    text = stringResource(R.string.avg_pro_text) + ":",
+                                    fontSize = 30.sp
+                                )
+
+                                // Display average production data
+                                Text(
+                                    modifier = Modifier
+                                        .padding(vertical = 16.dp)
+                                        .weight(1f), // Consistent weight for data
+                                    text = "${
+                                        String.format(
+                                            Locale.US,
+                                            "%.2f",
+                                            when (currentProductionType) {
+                                                ProductionTypeInterval.Wind -> {
+                                                    viewModel.windStatsData?.values?.average() ?: 0f
+                                                }
+                                                ProductionTypeInterval.Total -> {
+                                                    viewModel.productionStatsData?.values?.average() ?: 0f
+                                                }
+                                                ProductionTypeInterval.Solar -> {
+                                                    viewModel.solarStatsData?.values?.average() ?: 0f
+                                                }
+                                            }
+                                        )
+                                    } kwh",
+                                    fontSize = 30.sp,
+                                    textAlign = TextAlign.End
+                                )
+                            }
+                        }
 
                         Spacer(Modifier.weight(1f))
 
