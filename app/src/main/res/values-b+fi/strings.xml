@@ -51,7 +51,8 @@
     <string name="wind_text">Tuuli</string>
 
     <string name="panels_title">Mukauta</string>
-    <string name="panels_description">Vaihda Etusivulla olevien paneelien näkyvyyttä</string>
+    <string name="panels_description">Vaihda etusivulla olevien paneelien näkyvyyttä</string>
+    <string name="panels_ui">Käyttöliittymän asetukset</string>
     <string name="con_panel_name">Kulutuspaneeli</string>
     <string name="pro_panel_name">Tuottopaneeli</string>
     <string name="bat_panel_name">Akkupaneeli</string>

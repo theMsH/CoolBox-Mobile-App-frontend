@@ -67,7 +67,7 @@ fun BatteryChart() {
             PieChartData.Slice(
                 label = stringResource(R.string.missing_charge),
                 value = missingCharge,
-                color = MaterialTheme.colorScheme.primary
+                color = MaterialTheme.colorScheme.onSecondary.copy(alpha = .3f)
             )
         ),
         plotType = PlotType.Donut

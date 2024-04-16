@@ -50,7 +50,8 @@
     <string name="wind_text">Wind</string>
 
     <string name="panels_title">Customize</string>
-    <string name="panels_description">Change visibility of panels in the Main screen</string>
+    <string name="panels_description">Change visibility of panels in the front page</string>
+    <string name="panels_ui">User interface settings</string>
     <string name="con_panel_name">Consumption Panel</string>
     <string name="pro_panel_name">Production Panel</string>
     <string name="bat_panel_name">Battery Panel</string>

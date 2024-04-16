@@ -12,16 +12,18 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.coolbox_mobiiliprojekti_app.R
+import com.example.coolbox_mobiiliprojekti_app.datastore.UserPreferences
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.CoolBoxmobiiliprojektiAppTheme
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.GraphKwhColor
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.GraphKwhColorDark
@@ -58,6 +60,11 @@ fun ConsumptionChart(
 
     // Haetaan viewmodel
     val viewModel: ConsumptionViewModel = viewModel()
+
+    // Haetaan datastoresta darkmode asetus
+    val context = LocalContext.current
+    val pref = UserPreferences(context)
+    val darkTheme = pref.getDarkMode.collectAsState(isSystemInDarkTheme()).value
 
     // Luodaan modelProducer, joka vastaa chartin datan käsittelystä
     val modelProducer = remember { CartesianChartModelProducer.build() }
@@ -137,16 +144,15 @@ fun ConsumptionChart(
                             fontSize = 20.sp,
                             text = stringResource(R.string.con_graph_title),
                             textAlign = TextAlign.Center,
-                            color = Color.Black
+                            color = MaterialTheme.colorScheme.onSecondary
                         )
                             // CartesianChartHost, joka sisältää chartin
                             CartesianChartHost(
-                                chart =
-                                rememberCartesianChart(
+                                chart = rememberCartesianChart(
                                     rememberColumnCartesianLayer(
                                         columns = listOf(
                                             rememberLineComponent(
-                                                color = if (isSystemInDarkTheme()) GraphKwhColorDark else GraphKwhColor,
+                                                color = if (darkTheme) GraphKwhColorDark else GraphKwhColor,
                                                 thickness = 8.dp, // Adjust as needed
                                             )
                                         ),
@@ -155,14 +161,13 @@ fun ConsumptionChart(
                                         lines = listOf(
                                             rememberLineSpec(
                                                 shader = DynamicShaders.color(
-                                                    if (isSystemInDarkTheme()) GraphTempColorDark else GraphTempColor
+                                                    if (darkTheme) GraphTempColorDark else GraphTempColor
                                                 )
                                             )
                                         ),
                                     ),
                                     startAxis = rememberStartAxis(),
-                                    bottomAxis =
-                                    rememberBottomAxis(
+                                    bottomAxis = rememberBottomAxis(
                                         valueFormatter = valueFormatterString,
                                         itemPlacer =
                                         remember {

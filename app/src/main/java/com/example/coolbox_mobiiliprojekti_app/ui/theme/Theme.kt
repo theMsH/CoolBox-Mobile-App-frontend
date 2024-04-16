@@ -1,6 +1,7 @@
 package com.example.coolbox_mobiiliprojekti_app.ui.theme
 
 import android.app.Activity
+import android.content.Context
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -10,10 +11,12 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
+import com.example.coolbox_mobiiliprojekti_app.datastore.UserPreferences
 
 
 private val DarkColorScheme = darkColorScheme(
@@ -29,20 +32,20 @@ private val DarkColorScheme = darkColorScheme(
     tertiary =  TertiaryColorDark,
     onTertiary = TextsColorDark,                            // No account? -text
     //tertiaryContainer = Color.Red,
-    //onTertiaryContainer = Color.Red,
+    onTertiaryContainer = SettingsScreenTextDark,           // Ei vaikuta defaultisti mihinkään tässä softassa.
     background = BackgroundColorDark,                       // Tausta
     surface = DrawerLayoutColorDark,                        // TopAppBar, drawerlayout, BottomAppBar
     onSurface = TextsColorDark,                             // Titlet / Disabled nappi tausta, Textfieldin text
     surfaceVariant = PanelColorDark,                        // Paneelit (cards), disabled Toggle slider tausta.
     onSurfaceVariant = TextsColorDark,                      // Titlet Cardseissa, menuitemit, hamburgericon, textfield placeholder ja silmä
-    //surfaceTint = Color.Red,
+    surfaceTint = TemperatureValuesColorDark,               // Ei vaikuta defaultisti mihinkään tässä softassa.
     //inverseSurface = Color.Red,
     inverseOnSurface = PanelTextButtonColorDark,            // Ei vaikuta defaultisti mihinkään tässä softassa.
     //error = Color.Red,
     //onError = Color.Red,
     //onErrorContainer = Color.Red,
     outline = OutlineColorDark,                             // Textfieldien ja togglebuttoneiden outline
-    outlineVariant = OutlineColorDark,                      // Dividerviiva drawerlayoutissa
+    outlineVariant = OutlineColorVariantDark,               // Dividerviiva drawerlayoutissa
     //surfaceBright = Color.Red,
     surfaceContainer = TopAppBarColorDark,                  // Ei vaikuta defaultisti mihinkään tässä softassa.
     surfaceContainerHigh = ScreenPanelColorDark,            // Ei vaikuta defaultisti mihinkään tässä softassa.
@@ -65,20 +68,20 @@ private val LightColorScheme = lightColorScheme(
     tertiary =  TertiaryColor,
     onTertiary = TextsColor,                            // No account? -text
     //tertiaryContainer = Color.Red,
-    //onTertiaryContainer = Color.Red,
+    onTertiaryContainer = SettingsScreenText,           // Ei vaikuta defaultisti mihinkään tässä softassa.
     background = BackgroundColor,                       // Tausta
     surface = DrawerLayoutColor,                        // TopAppBar, drawerlayout, BottomAppBar
     onSurface = TextsColor,                             // Titlet / Disabled nappi tausta, Textfieldin text
     surfaceVariant = PanelColor,                        // Paneelit (cards), disabled Toggle slider tausta.
     onSurfaceVariant = TextsColor,                      // Titlet Cardseissa, menuitemit, hamburgericon, textfield placeholder ja silmä
-    //surfaceTint = Color.Red,
+    surfaceTint = TemperatureValuesColor,               // Ei vaikuta defaultisti mihinkään tässä softassa.
     //inverseSurface = Color.Red,
     inverseOnSurface = PanelTextButtonColor,            // Ei vaikuta defaultisti mihinkään tässä softassa.
     //error = Color.Red,
     //onError = Color.Red,
     //onErrorContainer = Color.Red,
     outline = OutlineColor,                             // Textfieldien ja togglebuttoneiden outline
-    outlineVariant = OutlineColor,                      // Dividerviiva drawerlayoutissa
+    outlineVariant = OutlineColorVariant,               // Dividerviiva drawerlayoutissa
     //surfaceBright = Color.Red,
     surfaceContainer = TopAppBarColor,                  // Ei vaikuta defaultisti mihinkään tässä softassa.
     surfaceContainerHigh = ScreenPanelColor,            // Ei vaikuta defaultisti mihinkään tässä softassa.
@@ -91,14 +94,14 @@ private val LightColorScheme = lightColorScheme(
 
 @Composable
 fun CoolBoxmobiiliprojektiAppTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    context: Context = LocalContext.current,
+    darkTheme: Boolean = UserPreferences(context).getDarkMode.collectAsState(isSystemInDarkTheme()).value,
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
 

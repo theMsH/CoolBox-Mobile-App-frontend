@@ -5,20 +5,21 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -29,7 +30,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.coolbox_mobiiliprojekti_app.R
@@ -54,25 +54,30 @@ fun PanelsScreen(
 
     Scaffold(
         topBar = {
-            CenterAlignedTopAppBar(
-                navigationIcon = {
-                    IconButton(onClick = { goBack() }) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back"
-                        )
-                    }
-                },
-                title = { Text(text = stringResource(R.string.panels_title)) },
-                actions = {
-                    IconButton(onClick = { onMenuClick() }) {
-                        Icon(imageVector = Icons.Filled.Menu, contentDescription = "Menu")
-                    }
-                },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceContainer
+            Surface(shadowElevation = 2.dp) {
+                CenterAlignedTopAppBar(
+                    navigationIcon = {
+                        IconButton(onClick = { goBack() }) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = "Back"
+                            )
+                        }
+                    },
+                    title = { Text(text = stringResource(R.string.panels_title)) },
+                    actions = {
+                        IconButton(onClick = { onMenuClick() }) {
+                            Icon(
+                                imageVector = Icons.Filled.Menu,
+                                contentDescription = "Menu"
+                            )
+                        }
+                    },
+                    colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceContainer
+                    )
                 )
-            )
+            }
         }
     ) {
         Box(
@@ -83,108 +88,144 @@ fun PanelsScreen(
             Column(
                 modifier = Modifier.fillMaxSize()
             ) {
-                // Use DarkTheme switchi
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(5.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(text = stringResource(R.string.use_darkmode),
-                         fontSize = 20.sp)
-                    Switch(
-                        checked = darkColoursChecked.value,
-                        onCheckedChange = {
-                            scope.launch {
-                                preferenceDataStore.setDarkMode(it)
-                            }
-                        }
-                    )
-                }
-                Spacer(Modifier.height(20.dp))
+                Text(
+                    modifier = Modifier.padding(horizontal = 20.dp, vertical = 10.dp),
+                    text = stringResource(R.string.panels_ui),
+                    fontSize = 25.sp,
+                    color = MaterialTheme.colorScheme.onTertiaryContainer
+                )
 
-                Row(
+                Card(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(5.dp)
-                ) {
-                    Text(text = stringResource(R.string.panels_description),
-                         fontSize = 28.sp,
-                         textAlign = TextAlign.Center)
-                }
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(5.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(text = stringResource(R.string.con_panel_name),
-                         fontSize = 20.sp)
-                    Switch(
-                        checked = consumptionChecked.value,
-                        onCheckedChange = {
-                            scope.launch {
-                                preferenceDataStore.setConsumptionActive(it)
-                            }
-                        }
+                        .padding(bottom = 30.dp, top = 10.dp, start = 10.dp, end = 10.dp)
+                        .fillMaxWidth(),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                        contentColor = MaterialTheme.colorScheme.primary,
                     )
-                }
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(5.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(text = stringResource(R.string.pro_panel_name),
-                         fontSize = 20.sp)
-                    Switch(
-                        checked = productionChecked.value,
-                        onCheckedChange = {
-                            scope.launch {
-                                preferenceDataStore.setProductionActive(it)
+                    // Use DarkTheme switchi
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(5.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = stringResource(R.string.use_darkmode),
+                            fontSize = 20.sp
+                        )
+                        Switch(
+                            checked = darkColoursChecked.value,
+                            onCheckedChange = {
+                                scope.launch {
+                                    preferenceDataStore.setDarkMode(it)
+                                }
                             }
-                        }
-                    )
+                        )
+                    }
                 }
-                Row(
+
+                Text(
+                    modifier = Modifier.padding(horizontal = 20.dp, vertical = 10.dp),
+                    text = stringResource(R.string.panels_description),
+                    fontSize = 25.sp,
+                    color = MaterialTheme.colorScheme.onTertiaryContainer
+                )
+
+                Card(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(5.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(text = stringResource(R.string.bat_panel_name),
-                         fontSize = 20.sp)
-                    Switch(
-                        checked = batteryChecked.value,
-                        onCheckedChange = {
-                            scope.launch {
-                                preferenceDataStore.setBatteryActive(it)
-                            }
-                        }
+                        .padding(10.dp)
+                        .fillMaxWidth(),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                        contentColor = MaterialTheme.colorScheme.primary,
                     )
-                }
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(5.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(text = stringResource(R.string.temp_panel_name),
-                         fontSize = 20.sp)
-                    Switch(
-                        checked = tempChecked.value,
-                        onCheckedChange = {
-                            scope.launch {
-                                preferenceDataStore.setTempActive(it)
+
+                    Row(
+                        modifier = Modifier
+                            .padding(5.dp)
+                            .fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = stringResource(R.string.con_panel_name),
+                            fontSize = 20.sp
+                        )
+                        Switch(
+                            checked = consumptionChecked.value,
+                            onCheckedChange = {
+                                scope.launch {
+                                    preferenceDataStore.setConsumptionActive(it)
+                                }
                             }
-                        }
-                    )
+                        )
+                    }
+                    Row(
+                        modifier = Modifier
+                            .padding(5.dp)
+                            .fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = stringResource(R.string.pro_panel_name),
+                            fontSize = 20.sp
+                        )
+                        Switch(
+                            checked = productionChecked.value,
+                            onCheckedChange = {
+                                scope.launch {
+                                    preferenceDataStore.setProductionActive(it)
+                                }
+                            }
+                        )
+                    }
+                    Row(
+                        modifier = Modifier
+                            .padding(5.dp)
+                            .fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = stringResource(R.string.bat_panel_name),
+                            fontSize = 20.sp
+                        )
+                        Switch(
+                            checked = batteryChecked.value,
+                            onCheckedChange = {
+                                scope.launch {
+                                    preferenceDataStore.setBatteryActive(it)
+                                }
+                            }
+                        )
+                    }
+                    Row(
+                        modifier = Modifier
+                            .padding(5.dp)
+                            .fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = stringResource(R.string.temp_panel_name),
+                            fontSize = 20.sp
+                        )
+                        Switch(
+                            checked = tempChecked.value,
+                            onCheckedChange = {
+                                scope.launch {
+                                    preferenceDataStore.setTempActive(it)
+                                }
+                            }
+                        )
+                    }
                 }
+
             }
         }
     }
