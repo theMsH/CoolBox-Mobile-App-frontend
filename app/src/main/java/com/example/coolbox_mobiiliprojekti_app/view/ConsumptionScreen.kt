@@ -22,7 +22,9 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -40,8 +42,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.coolbox_mobiiliprojekti_app.R
-import com.example.coolbox_mobiiliprojekti_app.ui.theme.BottomAppBarColor
-import com.example.coolbox_mobiiliprojekti_app.ui.theme.TopAppBarColor
 import com.example.coolbox_mobiiliprojekti_app.viewmodel.ConsumptionViewModel
 import kotlinx.coroutines.Job
 import java.time.DayOfWeek
@@ -76,8 +76,8 @@ fun ConsumptionScreen(
     // localeForMonthAndDay-muuttujaan tallennetulla kielellä.
     val systemLocale = Locale.getDefault()
     var localeForMonthAndDay = Locale("us", "US")
-    var monthName = currentWeekStartDate.month.getDisplayName(TextStyle.FULL, localeForMonthAndDay).capitalize()
-    var dayName = currentWeekStartDate.dayOfWeek.getDisplayName(TextStyle.FULL, localeForMonthAndDay).capitalize()
+    var monthName = currentWeekStartDate.month.getDisplayName(TextStyle.FULL, localeForMonthAndDay).capitalize(Locale.ROOT)
+    var dayName = currentWeekStartDate.dayOfWeek.getDisplayName(TextStyle.FULL, localeForMonthAndDay).capitalize(Locale.ROOT)
 
     if (systemLocale.language == "fi") {
         localeForMonthAndDay = Locale("fi", "FI")
@@ -117,37 +117,39 @@ fun ConsumptionScreen(
     // Määritä näytön sisältö
     Scaffold(
         topBar = {
-            // Yläpalkki
-            CenterAlignedTopAppBar(
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = TopAppBarColor
-                ),
-                // Navigointinappi (takaisin)
-                navigationIcon = {
-                    IconButton(onClick = { goBack() }) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back"
-                        )
+            Surface(shadowElevation = 2.dp) {
+                // Yläpalkki
+                CenterAlignedTopAppBar(
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceContainer
+                    ),
+                    // Navigointinappi (takaisin)
+                    navigationIcon = {
+                        IconButton(onClick = { goBack() }) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = "Back"
+                            )
+                        }
+                    },
+                    // Otsikko
+                    title = { Text(text = stringResource(R.string.consumption_title)) },
+                    // Toiminnot
+                    actions = {
+                        IconButton(onClick = { onMenuClick() }) {
+                            Icon(
+                                imageVector = Icons.Filled.Menu,
+                                contentDescription = "Menu"
+                            )
+                        }
                     }
-                },
-                // Otsikko
-                title = { Text(text = stringResource(R.string.consumption_title)) },
-                // Toiminnot
-                actions = {
-                    IconButton(onClick = { onMenuClick() }) {
-                        Icon(
-                            imageVector = Icons.Filled.Menu,
-                            contentDescription = "Menu"
-                        )
-                    }
-                }
-            )
+                )
+            }
         },
         bottomBar = {
             // Alapalkki
             BottomAppBar(
-                containerColor = BottomAppBarColor
+                containerColor = MaterialTheme.colorScheme.surfaceContainerLowest
             ) {
                 Row(
                     modifier = Modifier.fillMaxSize(),
@@ -188,7 +190,10 @@ fun ConsumptionScreen(
                             currentWeekStartDate = firstDayOfWeek
                             currentWeekEndDate = firstDayOfWeek.plusDays(6)
 
-                            viewModel.consumptionFetchData(TimeInterval.WEEKS, currentWeekStartDate)
+                            viewModel.consumptionFetchData(
+                                TimeInterval.WEEKS,
+                                currentWeekStartDate
+                            )
 
                             currentTimeInterval = TimeInterval.WEEKS
 
@@ -203,7 +208,10 @@ fun ConsumptionScreen(
                         onClick = {
                             // Hae päivädata
                             currentWeekStartDate = LocalDate.now().startOfWeek()
-                            viewModel.consumptionFetchData(TimeInterval.DAYS, currentWeekStartDate)
+                            viewModel.consumptionFetchData(
+                                TimeInterval.DAYS,
+                                currentWeekStartDate
+                            )
                             currentTimeInterval = TimeInterval.DAYS
                         }
                     ) {
@@ -216,7 +224,10 @@ fun ConsumptionScreen(
                         onClick = {
                             // Hae tuntidata
                             currentWeekStartDate = LocalDate.now()
-                            viewModel.consumptionFetchData(TimeInterval.HOURS, currentWeekStartDate)
+                            viewModel.consumptionFetchData(
+                                TimeInterval.HOURS,
+                                currentWeekStartDate
+                            )
                             currentTimeInterval = TimeInterval.HOURS
                         }
                     ) {

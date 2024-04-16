@@ -14,12 +14,12 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -32,7 +32,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -42,12 +41,6 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.coolbox_mobiiliprojekti_app.R
 import com.example.coolbox_mobiiliprojekti_app.datastore.UserPreferences
-import com.example.coolbox_mobiiliprojekti_app.ui.theme.CoolAppText
-import com.example.coolbox_mobiiliprojekti_app.ui.theme.PanelColor
-import com.example.coolbox_mobiiliprojekti_app.ui.theme.PanelTextButtonColor
-import com.example.coolbox_mobiiliprojekti_app.ui.theme.PanelTextColor
-import com.example.coolbox_mobiiliprojekti_app.ui.theme.TextsLightColor
-import com.example.coolbox_mobiiliprojekti_app.ui.theme.TopAppBarColor
 import com.example.coolbox_mobiiliprojekti_app.viewmodel.MainScreenViewModel
 import com.example.coolbox_mobiiliprojekti_app.viewmodel.ProductionViewModel
 import com.example.coolbox_mobiiliprojekti_app.viewmodel.ConsumptionViewModel
@@ -63,16 +56,16 @@ fun MainScreen(
     goToProduction: () -> Unit
 ) {
     val mainScreenVm: MainScreenViewModel = viewModel()
-    val consumptionVM: ConsumptionViewModel = viewModel()
     // DataStoren käyttöönotto
+
     val context = LocalContext.current
     val preferenceDataStore = UserPreferences(context)
+
     // Haetaan DataStoresta booleanit, joiden avulla laitetaan paneelit näkyviin/pois näkyvistä
     val conPanelVisible = preferenceDataStore.getConsumptionActive.collectAsState(initial = true)
     val prodPanelVisible = preferenceDataStore.getProductionActive.collectAsState(initial = true)
     val batPanelVisible = preferenceDataStore.getBatteryActive.collectAsState(initial = true)
     val tempPanelVisible = preferenceDataStore.getTempActive.collectAsState(initial = true)
-
 
 
     Scaffold(
@@ -91,7 +84,7 @@ fun MainScreen(
                         }
                     },
                     colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                        containerColor = TopAppBarColor
+                        containerColor = MaterialTheme.colorScheme.surfaceContainer
                     )
                 )
             }
@@ -118,11 +111,7 @@ fun MainScreen(
                                 modifier = Modifier
                                     .wrapContentSize(Alignment.Center)
                                     .fillMaxWidth()
-                                    .padding(horizontal = 2.dp, vertical = 4.dp),
-                                colors = CardDefaults.cardColors(
-                                    containerColor = PanelColor,
-                                    contentColor = TextsLightColor
-                                )
+                                    .padding(horizontal = 2.dp, vertical = 4.dp)
                             ) {
                                 ConsumptionPanel7Days(goToConsumption)
                             }
@@ -134,11 +123,7 @@ fun MainScreen(
                                 modifier = Modifier
                                     .wrapContentSize(Alignment.Center)
                                     .fillMaxWidth()
-                                    .padding(horizontal = 2.dp, vertical = 4.dp),
-                                colors = CardDefaults.cardColors(
-                                    containerColor = PanelColor,
-                                    contentColor = TextsLightColor
-                                )
+                                    .padding(horizontal = 2.dp, vertical = 4.dp)
                             ) {
                                 ProductionPanel7Days(goToProduction)
                             }
@@ -150,11 +135,7 @@ fun MainScreen(
                                 modifier = Modifier
                                     .wrapContentSize(Alignment.Center)
                                     .fillMaxWidth()
-                                    .padding(horizontal = 2.dp, vertical = 4.dp),
-                                colors = CardDefaults.cardColors(
-                                    containerColor = PanelColor,
-                                    contentColor = PanelTextColor
-                                )
+                                    .padding(horizontal = 2.dp, vertical = 4.dp)
                             ) {
                                 BatteryChart()
                             }
@@ -166,11 +147,7 @@ fun MainScreen(
                                 modifier = Modifier
                                     .wrapContentSize(Alignment.Center)
                                     .fillMaxWidth()
-                                    .padding(horizontal = 2.dp, vertical = 4.dp),
-                                colors = CardDefaults.cardColors(
-                                    containerColor = PanelColor,
-                                    contentColor = PanelTextColor
-                                )
+                                    .padding(horizontal = 2.dp, vertical = 4.dp)
                             ){
                                 TemperatureDatas()
                             }
@@ -203,7 +180,7 @@ fun TemperatureDatas() {
                 text = stringResource(R.string.temperature_data_not_available),
                 modifier = Modifier.align(Alignment.Center),
                 fontSize = 20.sp,
-                color = Color.Red // Virhetekstin väri asetettu punaiseksi.
+                color = MaterialTheme.colorScheme.error // Virhetekstin väri asetettu punaiseksi.
             )
 
             // Jos datat ovat saatavilla, näytetään ne sarakkeessa.
@@ -237,11 +214,11 @@ fun TemperatureDatas() {
                 Icon(painter = painterResource(id = R.drawable.wc_internal_temperature_icon),
                     contentDescription = "WC Internal Temperature Icon",
                     Modifier.size(75.dp),
-                    tint = Color.White)
+                    tint = MaterialTheme.colorScheme.surfaceContainerHighest)
                 Text(
                     text = "WC Temp: ${viewModel.temperaturesStatsData!!["Bathroom_9in1:"]} °C",
                     fontSize = 30.sp,
-                    color = PanelTextButtonColor,
+                    color = MaterialTheme.colorScheme.onSecondary,
                     textAlign = TextAlign.Center
                 )
 
@@ -250,11 +227,11 @@ fun TemperatureDatas() {
                 Icon(painter = painterResource(id = R.drawable.technology_box_temperature_icon),
                     contentDescription = "Technology Box Temperature Icon",
                     Modifier.size(85.dp),
-                    tint = Color.White)
+                    tint = MaterialTheme.colorScheme.surfaceContainerHighest)
                 Text(
                     text = "Tech-Box Temp: ${viewModel.temperaturesStatsData!!["TB_9in1:"]} °C",
                     fontSize = 30.sp,
-                    color = PanelTextButtonColor,
+                    color = MaterialTheme.colorScheme.onSecondary,
                     textAlign = TextAlign.Center
                 )
 
@@ -263,11 +240,11 @@ fun TemperatureDatas() {
                 Icon(painter = painterResource(id = R.drawable.indoor_temperature_icon),
                     contentDescription = "Indoor Temperature Icon",
                     Modifier.size(75.dp),
-                    tint = Color.White)
+                    tint = MaterialTheme.colorScheme.surfaceContainerHighest)
                 Text(
                     text = "Indoor Temp: ${viewModel.temperaturesStatsData!!["Indoor_9in1:"]} °C",
                     fontSize = 30.sp,
-                    color = PanelTextButtonColor,
+                    color = MaterialTheme.colorScheme.onSecondary,
                     textAlign = TextAlign.Center
                 )
 
@@ -276,11 +253,11 @@ fun TemperatureDatas() {
                 Icon(painter = painterResource(id = R.drawable.outside_temperature_icon),
                     contentDescription = "Outside Temperature Icon",
                     Modifier.size(75.dp),
-                    tint = Color.White)
+                    tint = MaterialTheme.colorScheme.surfaceContainerHighest)
                 Text(
                     text = "Outside Temp: ${viewModel.temperaturesStatsData!!["Weather2"]} °C",
                     fontSize = 30.sp,
-                    color = PanelTextButtonColor,
+                    color = MaterialTheme.colorScheme.onSecondary,
                     textAlign = TextAlign.Center
                 )
             }

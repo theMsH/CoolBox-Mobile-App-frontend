@@ -1,6 +1,7 @@
 package com.example.coolbox_mobiiliprojekti_app.view
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,26 +26,35 @@ import co.yml.charts.ui.piechart.models.PieChartConfig
 import co.yml.charts.ui.piechart.models.PieChartData
 import com.example.coolbox_mobiiliprojekti_app.R
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.BadBatteryChargeColor
+import com.example.coolbox_mobiiliprojekti_app.ui.theme.BadBatteryChargeColorDark
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.GoodBatteryChargeColor
-import com.example.coolbox_mobiiliprojekti_app.ui.theme.PanelColor
+import com.example.coolbox_mobiiliprojekti_app.ui.theme.GoodBatteryChargeColorDark
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.SatisfyingBatteryChargeColor
+import com.example.coolbox_mobiiliprojekti_app.ui.theme.SatisfyingBatteryChargeColorDark
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.TolerableBatteryChargeColor
+import com.example.coolbox_mobiiliprojekti_app.ui.theme.TolerableBatteryChargeColorDark
 import com.example.coolbox_mobiiliprojekti_app.viewmodel.BatteryViewModel
 
 @Composable
 fun BatteryChart() {
     val viewModel: BatteryViewModel = viewModel()
-    val fullCharge: Float = 100.0f
+    val fullCharge = 100.0f
     val stateOfCharge: Float = viewModel.batteryChartState.value.soc
     val missingCharge: Float = fullCharge - stateOfCharge
-    var customColor: Color = GoodBatteryChargeColor
+    var customColor: Color = if (isSystemInDarkTheme()) GoodBatteryChargeColorDark else GoodBatteryChargeColor
 
     when {
-        stateOfCharge < 25 -> customColor = BadBatteryChargeColor
+        stateOfCharge < 25 -> {
+            customColor = if (isSystemInDarkTheme()) BadBatteryChargeColorDark else BadBatteryChargeColor
+        }
 
-        stateOfCharge < 50 -> customColor = TolerableBatteryChargeColor
+        stateOfCharge < 50 -> {
+            customColor = if (isSystemInDarkTheme()) TolerableBatteryChargeColorDark else TolerableBatteryChargeColor
+        }
 
-        stateOfCharge < 75 -> customColor = SatisfyingBatteryChargeColor
+        stateOfCharge < 75 -> {
+            customColor = if (isSystemInDarkTheme()) SatisfyingBatteryChargeColorDark else SatisfyingBatteryChargeColor
+        }
     }
 
     val donutChartData = PieChartData(
@@ -95,13 +105,13 @@ fun BatteryChart() {
                         modifier = Modifier
                             .width(100.dp)
                             .height(100.dp)
-                            .background(color = PanelColor),
+                            .background(color = MaterialTheme.colorScheme.secondary),
                         pieChartData = donutChartData,
                         pieChartConfig = donutChartConfig
                     )
                     Text(
                         text = "$stateOfCharge %",
-                        color = Color.White,
+                        color = Color(0xFFC6CDEC),
                         fontSize = 16.sp,
                         modifier = Modifier.align(Alignment.Center)
                     )

@@ -1,23 +1,18 @@
 package com.example.coolbox_mobiiliprojekti_app.view
 
-import android.content.res.Configuration
-import android.util.Log
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardColors
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,20 +21,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.coolbox_mobiiliprojekti_app.R
-import com.example.coolbox_mobiiliprojekti_app.model.rememberMarker
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.CoolBoxmobiiliprojektiAppTheme
-import com.example.coolbox_mobiiliprojekti_app.ui.theme.ScreenPanelColor
-import com.example.coolbox_mobiiliprojekti_app.ui.theme.TextsLightColor
+import com.example.coolbox_mobiiliprojekti_app.ui.theme.ProductionLineColor
+import com.example.coolbox_mobiiliprojekti_app.ui.theme.ProductionLineColorDark
 import com.example.coolbox_mobiiliprojekti_app.viewmodel.ProductionViewModel
 import com.patrykandpatrick.vico.compose.axis.horizontal.rememberBottomAxis
 import com.patrykandpatrick.vico.compose.axis.vertical.rememberStartAxis
 import com.patrykandpatrick.vico.compose.chart.CartesianChartHost
-import com.patrykandpatrick.vico.compose.chart.layer.rememberColumnCartesianLayer
 import com.patrykandpatrick.vico.compose.chart.layer.rememberLineCartesianLayer
 import com.patrykandpatrick.vico.compose.chart.layer.rememberLineSpec
 import com.patrykandpatrick.vico.compose.chart.layout.fullWidth
 import com.patrykandpatrick.vico.compose.chart.rememberCartesianChart
-import com.patrykandpatrick.vico.compose.component.rememberLineComponent
 import com.patrykandpatrick.vico.compose.component.shape.shader.color
 import com.patrykandpatrick.vico.core.axis.AxisItemPlacer
 import com.patrykandpatrick.vico.core.axis.AxisPosition
@@ -69,10 +61,9 @@ fun ProductionChart(
     // Määritetään akselin arvojen muotoilu
     val valueFormatterString =
         AxisValueFormatter<AxisPosition.Horizontal.Bottom> { x, chartValues, _ ->
-            chartValues.model.extraStore[labelListKey]?.get(x.toInt()) ?: ""
+            chartValues.model.extraStore[labelListKey][x.toInt()]
         }
 
-    //
 
     // Käynnistetään effect, joka reagoi productionStatsDatan muutoksiin
     LaunchedEffect(
@@ -183,11 +174,9 @@ fun ProductionChart(
                     modifier = Modifier
                         .fillMaxWidth()
                         .wrapContentSize(Alignment.Center),
-                    colors = CardColors(
-                        containerColor = ScreenPanelColor,
-                        contentColor = TextsLightColor,
-                        disabledContainerColor = MaterialTheme.colorScheme.secondaryContainer,
-                        disabledContentColor = MaterialTheme.colorScheme.secondary
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                        contentColor = MaterialTheme.colorScheme.primary
                     )
                 ) {
 
@@ -209,25 +198,12 @@ fun ProductionChart(
                     CartesianChartHost(
                         chart =
                         rememberCartesianChart(
-                            rememberColumnCartesianLayer(
-                                columns = listOf(
-                                    rememberLineComponent(
-                                        color = Color.Blue,
-                                        thickness = 8.dp, // Adjust as needed
-                                    ),
-                                    rememberLineComponent(
-                                        color = Color.Blue,
-                                        thickness = 8.dp, // Adjust as needed
-                                    )
-                                ),
-                            ),
                             rememberLineCartesianLayer(
                                 lines = listOf(
                                     rememberLineSpec(
-                                        shader = DynamicShaders.color(Color.Red)
-                                    ),
-                                    rememberLineSpec(
-                                        shader = DynamicShaders.color(Color.Red)
+                                        shader = DynamicShaders.color(
+                                            if (isSystemInDarkTheme()) ProductionLineColorDark else ProductionLineColor
+                                        )
                                     )
                                 ),
                             ),

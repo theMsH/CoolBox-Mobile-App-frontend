@@ -1,10 +1,10 @@
 package com.example.coolbox_mobiiliprojekti_app.view
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardColors
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -20,13 +20,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.coolbox_mobiiliprojekti_app.R
-import com.example.coolbox_mobiiliprojekti_app.model.rememberMarker
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.CoolBoxmobiiliprojektiAppTheme
-import com.example.coolbox_mobiiliprojekti_app.ui.theme.GraphKwhColor
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.GraphKwhColorPanel
-import com.example.coolbox_mobiiliprojekti_app.ui.theme.PanelColor
-import com.example.coolbox_mobiiliprojekti_app.ui.theme.PanelTextButtonColor
-import com.example.coolbox_mobiiliprojekti_app.ui.theme.PanelTextColor
+import com.example.coolbox_mobiiliprojekti_app.ui.theme.GraphKwhColorPanelDark
 import com.example.coolbox_mobiiliprojekti_app.viewmodel.ConsumptionViewModel
 import com.patrykandpatrick.vico.compose.axis.horizontal.rememberBottomAxis
 import com.patrykandpatrick.vico.compose.axis.rememberAxisLabelComponent
@@ -64,7 +60,7 @@ fun ConsumptionChart7Days(
     // Määritetään akselin arvojen muotoilu
     val valueFormatterString =
         AxisValueFormatter<AxisPosition.Horizontal.Bottom> { x, chartValues, _ ->
-            chartValues.model.extraStore[labelListKey][x.toInt()] ?: ""
+            chartValues.model.extraStore[labelListKey][x.toInt()]
         }
 
     // Käynnistetään effect, joka reagoi consumptionStatsData:n ja temperatureStatsData:n muutoksiin
@@ -103,20 +99,14 @@ fun ConsumptionChart7Days(
         Surface(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 5.dp, start = 5.dp, end = 10.dp),
-            color = PanelColor
+                .padding(bottom = 5.dp, start = 3.dp, end = 8.dp),
+            color = MaterialTheme.colorScheme.secondary
         ) {
             // Kortti, joka toimii paneelina
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .wrapContentSize(Alignment.Center),
-                colors = CardColors(
-                    containerColor = PanelColor,
-                    contentColor = PanelTextColor,
-                    disabledContainerColor = MaterialTheme.colorScheme.secondaryContainer,
-                    disabledContentColor = MaterialTheme.colorScheme.secondary
-                )
+                    .wrapContentSize(Alignment.Center)
             ) {
                 // Teksti paneelin keskelle
                 Text(
@@ -134,26 +124,21 @@ fun ConsumptionChart7Days(
                         rememberColumnCartesianLayer(
                             columns = listOf(
                                 rememberLineComponent(
-                                    color = GraphKwhColorPanel,
-                                    thickness = 8.dp, // Adjust as needed
-                                ),
-                                rememberLineComponent(
-                                    color = GraphKwhColorPanel,
+                                    color = if (isSystemInDarkTheme()) GraphKwhColorPanelDark else GraphKwhColorPanel,
                                     thickness = 8.dp, // Adjust as needed
                                 )
                             ),
                         ),
                         startAxis = rememberStartAxis(
                             label = rememberAxisLabelComponent(
-                                color = PanelTextColor
+                                color = MaterialTheme.colorScheme.onSecondary
                             ),
                             axis = rememberLineComponent(
-                                color = PanelTextColor
+                                color = MaterialTheme.colorScheme.onSecondary
                             ),
                             guideline = rememberLineComponent(
-                                color = PanelTextColor,
-                                shape =
-                                remember {
+                                color = MaterialTheme.colorScheme.onSecondary,
+                                shape = remember {
                                     Shapes.dashedShape(
                                         shape = Shapes.rectShape,
                                         dashLength = 3.dp,
@@ -162,18 +147,16 @@ fun ConsumptionChart7Days(
                                 },
                             )
                         ),
-                        bottomAxis =
-                        rememberBottomAxis(
+                        bottomAxis = rememberBottomAxis(
                             label = rememberAxisLabelComponent(
-                                color = PanelTextColor
+                                color = MaterialTheme.colorScheme.onSecondary
                             ),
                             axis = rememberLineComponent(
-                                color = PanelTextColor
+                                color = MaterialTheme.colorScheme.onSecondary
                             ),
                             guideline = null,
                             valueFormatter = valueFormatterString,
-                            itemPlacer =
-                            remember {
+                            itemPlacer = remember {
                                 AxisItemPlacer.Horizontal.default(
                                     spacing = 1,
                                     addExtremeLabelPadding = true
@@ -187,10 +170,9 @@ fun ConsumptionChart7Days(
                 )
                 TextButton(
                     onClick = { goToConsumption() },
-                    modifier = Modifier
-                        .align(Alignment.CenterHorizontally)
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
                 ) {
-                    Text(text = stringResource(R.string.more), color = PanelTextButtonColor)
+                    Text(text = stringResource(R.string.more), color = MaterialTheme.colorScheme.inverseOnSurface)
                 }
 
             } // Paneeli loppuu

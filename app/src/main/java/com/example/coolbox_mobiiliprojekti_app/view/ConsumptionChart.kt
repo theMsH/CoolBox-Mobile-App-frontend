@@ -1,12 +1,12 @@
 package com.example.coolbox_mobiiliprojekti_app.view
 
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardColors
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -22,12 +22,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.coolbox_mobiiliprojekti_app.R
-import com.example.coolbox_mobiiliprojekti_app.model.rememberMarker
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.CoolBoxmobiiliprojektiAppTheme
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.GraphKwhColor
+import com.example.coolbox_mobiiliprojekti_app.ui.theme.GraphKwhColorDark
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.GraphTempColor
-import com.example.coolbox_mobiiliprojekti_app.ui.theme.ScreenPanelColor
-import com.example.coolbox_mobiiliprojekti_app.ui.theme.TextsLightColor
+import com.example.coolbox_mobiiliprojekti_app.ui.theme.GraphTempColorDark
 import com.example.coolbox_mobiiliprojekti_app.viewmodel.ConsumptionViewModel
 import com.patrykandpatrick.vico.compose.axis.horizontal.rememberBottomAxis
 import com.patrykandpatrick.vico.compose.axis.vertical.rememberStartAxis
@@ -69,7 +68,7 @@ fun ConsumptionChart(
     // Määritetään akselin arvojen muotoilu
     val valueFormatterString =
             AxisValueFormatter<AxisPosition.Horizontal.Bottom> { x, chartValues, _ ->
-        chartValues.model.extraStore[labelListKey]?.get(x.toInt()) ?: ""
+        chartValues.model.extraStore[labelListKey][x.toInt()]
     }
 
     // Käynnistetään effect, joka reagoi consumptionStatsData:n ja temperatureStatsData:n muutoksiin
@@ -124,11 +123,9 @@ fun ConsumptionChart(
                         modifier = Modifier
                             .fillMaxWidth()
                             .wrapContentSize(Alignment.Center),
-                        colors = CardColors(
-                            containerColor = ScreenPanelColor,
-                            contentColor = TextsLightColor,
-                            disabledContainerColor = MaterialTheme.colorScheme.secondaryContainer,
-                            disabledContentColor = MaterialTheme.colorScheme.secondary
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                            contentColor = MaterialTheme.colorScheme.primary
                         )
                     ) {
 
@@ -149,11 +146,7 @@ fun ConsumptionChart(
                                     rememberColumnCartesianLayer(
                                         columns = listOf(
                                             rememberLineComponent(
-                                                color = GraphKwhColor,
-                                                thickness = 8.dp, // Adjust as needed
-                                            ),
-                                            rememberLineComponent(
-                                                color = GraphKwhColor,
+                                                color = if (isSystemInDarkTheme()) GraphKwhColorDark else GraphKwhColor,
                                                 thickness = 8.dp, // Adjust as needed
                                             )
                                         ),
@@ -161,10 +154,9 @@ fun ConsumptionChart(
                                     rememberLineCartesianLayer(
                                         lines = listOf(
                                             rememberLineSpec(
-                                                shader = DynamicShaders.color(GraphTempColor)
-                                            ),
-                                            rememberLineSpec(
-                                                shader = DynamicShaders.color(GraphTempColor)
+                                                shader = DynamicShaders.color(
+                                                    if (isSystemInDarkTheme()) GraphTempColorDark else GraphTempColor
+                                                )
                                             )
                                         ),
                                     ),

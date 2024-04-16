@@ -44,9 +44,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.coolbox_mobiiliprojekti_app.ui.theme.CoolAppText
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.CoolBoxmobiiliprojektiAppTheme
-import com.example.coolbox_mobiiliprojekti_app.ui.theme.TertiaryColor
 import com.example.coolbox_mobiiliprojekti_app.view.LoginScreen
 import com.example.coolbox_mobiiliprojekti_app.view.MainScreen
 import com.example.coolbox_mobiiliprojekti_app.view.PanelsScreen
@@ -107,12 +105,12 @@ class MainActivity : ComponentActivity() {
                                         Icon(painter = painterResource(id = R.drawable.coolapp_icon),
                                              contentDescription = "CoolAppIcon",
                                              Modifier.size(50.dp),
-                                             tint = CoolAppText
+                                             tint = MaterialTheme.colorScheme.onPrimaryContainer
                                         )
                                         Text(
                                             fontSize = 20.sp,
                                             text = "oolApp",
-                                            color = CoolAppText
+                                            color = MaterialTheme.colorScheme.onPrimaryContainer
                                         )
                                     }
                                     Spacer(Modifier.height(20.dp))
@@ -142,7 +140,7 @@ class MainActivity : ComponentActivity() {
                                             text = stringResource(R.string.user)
                                         )
                                         Text(
-                                            color = TertiaryColor,
+                                            color = MaterialTheme.colorScheme.tertiary,
                                             text = loginVm.user.value.user.username
                                         )
                                     }
