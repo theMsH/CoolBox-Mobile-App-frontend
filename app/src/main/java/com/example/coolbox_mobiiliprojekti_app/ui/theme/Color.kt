@@ -3,108 +3,71 @@ package com.example.coolbox_mobiiliprojekti_app.ui.theme
 import androidx.compose.ui.graphics.Color
 
 
-// Light Theme
-val lightColors: List<Color> = listOf(
-    Color(0xFF363C55),  // TextsDarkColor
-    Color(0xFFCAD6DF),  // TextsLightColor
+// Light colors
+val TextsColor = Color(0xFF363C55)
 
-    Color(0xff001849),  // PanelColor
-    Color(0xFFF0F0F0),  // ScreenPanelColor
-    Color(0xff495d92),  // PanelTextColor
-    Color.White,              // PanelTextButtonColor
+val PanelColor = Color(0xFF042058)
+val ScreenPanelColor = Color(0xFFF0F0F0)
+val PanelTextColor = Color(0xFF99A9E2)
+val PanelTextColorBright = Color(0xFFE1E8FF)
+val PanelTextButtonColor = Color(0xFFFFFFFF)
 
-    Color(0xFFEEEFFF),  // DrawerLayoutColor
-    Color(0xff001849),  // CoolAppText
-    Color(0xFFE6EAFF),  // TopAppBarColor
-    Color(0xFFCFD7FF),  // BottomAppBarColor
-    Color(0xFFE6EAFF),  // BottomAppBarColorSecondary
+val DrawerLayoutColor = Color(0xFFEEEFFF)
+val CoolAppText = Color(0xFF05225C)
+val TopAppBarColor = Color(0xFFEBEFFF)
+val BottomAppBarColor = Color(0xFFD3D9FF)
+val BottomAppBarColorSecondary = Color(0xFFEBEFFF)
 
-    Color(0xFF03396C),  // PrimaryColor
-    Color(0xFFCFDDFF),  // PrimaryContentsColor
-    Color(0xFFB2BFE2),  // SecondaryColor
-    Color(0xFFFFFFFF),  // SecondaryContentsColor
-    Color(0xFF1F5FFF),  // TertiaryColor
-    Color(0xFF3F4758),  // OutlineColor
-    Color(0xFFE4ECF1),  // BackgroundColor
+val PrimaryColor = Color(0xFF1066B8)
+val PrimaryContentsColor = Color(0xFFCFDDFF)
+val SecondaryColor = Color(0xFF8396CA)
+val SecondaryContentsColor = Color(0xFFFFFFFF)
+val TertiaryColor = Color(0xFF1F5FFF)
+val OutlineColor = Color(0xFF3F4758)
+val BackgroundColor = Color(0xFFE4ECF1)
 
-    Color(0xFF3B7DFF),  // GraphKwhColorPanel
-    Color(0xFF0D3E9E),  // GraphKwhColor
-    Color(0xFFE04646),  // GraphTempColor
-    Color.Green,              // ProductionLineColor
+val GraphKwhColorPanel = Color(0xFF4E8AFF)
+val GraphKwhColor = Color(0xFF0D3E9E)
+val GraphTempColor = Color(0xFFE04646)
+val ProductionLineColorPanel = Color(0xFF19FF00)
+val ProductionLineColor = Color(0xFF006605)
 
-    Color.Green,              // GoodBatteryChargeColor
-    Color.Yellow,             // SatisfyingBatteryChargeColor
-    Color(0xFFFFA500),  // TolerableBatteryChargeColor
-    Color.Red                 // BadBatteryChargeColor
-)
-
-// Dark Theme
-val darkColors: List<Color> = listOf(
-    Color(0xFF363C55),  // TextsDarkColor
-    Color(0xFF8B9399),  // TextsLightColor
-
-    Color(0xFF0F0F0F),  // PanelColor
-    Color(0xFF0F0F0F),  // ScreenPanelColor
-    Color(0xFF9FA5B8),  // PanelTextColor
-    Color(0xFFC4CADB),  // PanelTextButtonColor
-
-    Color(0xFF222222),  // DrawerLayoutColor
-    Color(0xFF859BC7),  // CoolAppText
-    Color(0xFF090D24),  // TopAppBarColor
-    Color(0xFF11101A),  // BottomAppBarColor
-    Color(0xFF1E1F24),  // BottomAppBarColorSecondary
-
-    Color(0xFF6C72B3),  // PrimaryColor
-    Color(0xFF171718),  // PrimaryContentsColor
-    Color(0xFF586381),  // SecondaryColor
-    Color(0xFFFFFFFF),  // SecondaryContentsColor
-    Color(0xFF6C81B3),  // TertiaryColor
-    Color(0xFFCCCCCC),  // OutlineColor
-    Color(0xFFE4ECF1),  // BackgroundColor
-
-    Color(0xFF7595D5),  // GraphKwhColorPanel
-    Color(0xFF7595D5),  // GraphKwhColor
-    Color(0xFFFF6969),  // GraphTempColor
-    Color(0xFF78DA7A),  // ProductionLineColor
-
-    Color(0xFF6DD640),  // GoodBatteryChargeColor
-    Color(0xFFD6D440),  // SatisfyingBatteryChargeColor
-    Color(0xFFD67040),  // TolerableBatteryChargeColor
-    Color(0xFFEB3838)   // BadBatteryChargeColor
-)
+val GoodBatteryChargeColor = Color.Green
+val SatisfyingBatteryChargeColor = Color.Yellow
+val TolerableBatteryChargeColor = Color(0xFFFFA500)
+val BadBatteryChargeColor = Color.Red
 
 
-// Vaihda tästä teeman väri jos haluat nähdä miltä tummateema voisi näyttää atm
-val colorList = lightColors
+// Dark colors
+val TextsColorDark = Color(0xFF8E9ECE)
 
-val TextsDarkColor = colorList[0]
-val TextsLightColor = colorList[1]
+val PanelColorDark = Color(0xFF1D1D1D)
+val ScreenPanelColorDark = Color(0xFF202020)
+val PanelTextColorDark = Color(0xFF9FA5B8)
+val PanelTextColorBrightDark = Color(0xFFBFC8E2)
+val PanelTextButtonColorDark = Color(0xFFC4CADB)
 
-val PanelColor = colorList[2]
-val ScreenPanelColor = colorList[3]
-val PanelTextColor = colorList[4]
-val PanelTextButtonColor = colorList[5]
+val DrawerLayoutColorDark = Color(0xFF141414)
+val CoolAppTextDark = Color(0xFF859BC7)
+val TopAppBarColorDark = Color(0xFF090D24)
+val BottomAppBarColorDark = Color(0xFF11101A)
+val BottomAppBarColorSecondaryDark = Color(0xFF1E1F24)
 
-val DrawerLayoutColor = colorList[6]
-val CoolAppText = colorList[7]
-val TopAppBarColor = colorList[8]
-val BottomAppBarColor = colorList[9]
-val BottomAppBarColorSecondary = colorList[10]
+val PrimaryColorDark = Color(0xFFA8ABD6)
+val PrimaryContentsColorDark = Color(0xFF171718)
+val SecondaryColorDark = Color(0xFF586381)
+val SecondaryContentsColorDark = Color(0xFFFFFFFF)
+val TertiaryColorDark = Color(0xFF6C81B3)
+val OutlineColorDark = Color(0xFFCCCCCC)
+val BackgroundColorDark = Color(0xFF111111)
 
-val PrimaryColor = colorList[11]
-val PrimaryContentsColor = colorList[12]
-val SecondaryColor = colorList[13]
-val SecondaryContentsColor = colorList[14]
-val TertiaryColor = colorList[15]
-val OutlineColor = colorList[16]
-val BackgroundColor = colorList[17]
+val GraphKwhColorPanelDark = Color(0xFF4B7CDD)
+val GraphKwhColorDark = Color(0xFF7595D5)
+val GraphTempColorDark = Color(0xFFE03D3D)
+val ProductionLineColorPanelDark = Color.Green
+val ProductionLineColorDark = Color.Green
 
-val GraphKwhColorPanel = colorList[18]
-val GraphKwhColor = colorList[19]
-val GraphTempColor = colorList[20]
-val ProductionLineColor = colorList[21]
-
-val GoodBatteryChargeColor = colorList[22]
-val SatisfyingBatteryChargeColor = colorList[23]
-val TolerableBatteryChargeColor = colorList[24]
-val BadBatteryChargeColor = colorList[25]
+val GoodBatteryChargeColorDark = Color(0xFF6DD640)
+val SatisfyingBatteryChargeColorDark = Color(0xFFD6D440)
+val TolerableBatteryChargeColorDark = Color(0xFFD67040)
+val BadBatteryChargeColorDark = Color(0xFFEB3838)
