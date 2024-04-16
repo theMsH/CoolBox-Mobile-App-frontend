@@ -6,7 +6,7 @@ import androidx.compose.ui.graphics.Color
 // Light colors
 val TextsColor = Color(0xFF363C55)
 
-val PanelColor = Color(0xFF041E53)
+val PanelColor = Color(0xFF041A47)
 val ScreenPanelColor = Color(0xFFF0F0F0)
 val PanelTextColor = Color(0xFF99A9E2)
 val PanelTextColorBright = Color(0xFFE1E8FF)
@@ -33,7 +33,7 @@ val GraphKwhColor = Color(0xFF0D3E9E)
 val GraphTempColor = Color(0xFFE04646)
 val ProductionLineColorPanel = Color(0xFF19FF00)
 val ProductionLineColor = Color(0xFF008607)
-val TemperatureValuesColor = Color(0xFFFFA3A3)
+val TemperatureValuesColor = Color(0xFFD66565)
 
 val GoodBatteryChargeColor = Color.Green
 val SatisfyingBatteryChargeColor = Color.Yellow
