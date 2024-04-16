@@ -1,14 +1,17 @@
 package com.example.coolbox_mobiiliprojekti_app.view
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
@@ -32,6 +35,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -193,7 +197,7 @@ fun TemperatureDatas() {
                 Text(
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally),
-                    fontSize = 30.sp,
+                    fontSize = 20.sp,
                     text = "Temperature data's",
                     textAlign = TextAlign.Center
                 )
@@ -204,62 +208,76 @@ fun TemperatureDatas() {
                 Text(
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally),
-                    fontSize = 25.sp,
+                    fontSize = 20.sp,
                     text = "Last updated: \n${viewModel.lastFetchTime ?: "Not available"}",
                     textAlign = TextAlign.Center
                 )
 
-                Spacer(Modifier.height(16.dp))
+                Spacer(Modifier.height(20.dp))
 
-                Icon(painter = painterResource(id = R.drawable.wc_internal_temperature_icon),
-                    contentDescription = "WC Internal Temperature Icon",
-                    Modifier.size(75.dp),
-                    tint = MaterialTheme.colorScheme.surfaceContainerHighest)
-                Text(
-                    text = "WC Temp: ${viewModel.temperaturesStatsData!!["Bathroom_9in1:"]} °C",
-                    fontSize = 30.sp,
-                    color = MaterialTheme.colorScheme.onSecondary,
-                    textAlign = TextAlign.Center
-                )
+                Column(
+                    horizontalAlignment = Alignment.Start
+                ) {
+                    Row {
+                        Icon(painter = painterResource(id = R.drawable.wc_internal_temperature_icon),
+                            contentDescription = "WC Internal Temperature Icon",
+                            Modifier.size(40.dp),
+                            tint = MaterialTheme.colorScheme.surfaceContainerHighest)
+                        Text(
+                            text = "${viewModel.temperaturesStatsData!!["Bathroom_9in1:"]} °C",
+                            fontSize = 25.sp,
+                            color = MaterialTheme.colorScheme.onSecondary,
+                            textAlign = TextAlign.Center
+                        )
+                        // Ylemmän rivin keskeltä menevä väli
+                        Spacer(Modifier.width(60.dp))
 
-                Spacer(Modifier.height(8.dp))
+                        Icon(painter = painterResource(id = R.drawable.technology_box_temperature_icon),
+                            contentDescription = "Technology Box Temperature Icon",
+                            Modifier.size(40.dp),
+                            tint = MaterialTheme.colorScheme.surfaceContainerHighest)
+                        Text(
+                            text = "${viewModel.temperaturesStatsData!!["TB_9in1:"]} °C",
+                            fontSize = 25.sp,
+                            color = MaterialTheme.colorScheme.onSecondary,
+                            textAlign = TextAlign.Center
+                        )
+                    } // Row end
+                } // Column end
 
-                Icon(painter = painterResource(id = R.drawable.technology_box_temperature_icon),
-                    contentDescription = "Technology Box Temperature Icon",
-                    Modifier.size(85.dp),
-                    tint = MaterialTheme.colorScheme.surfaceContainerHighest)
-                Text(
-                    text = "Tech-Box Temp: ${viewModel.temperaturesStatsData!!["TB_9in1:"]} °C",
-                    fontSize = 30.sp,
-                    color = MaterialTheme.colorScheme.onSecondary,
-                    textAlign = TextAlign.Center
-                )
+                // Väliä ylä- ja alarivien välillä
+                Spacer(Modifier.height(20.dp))
 
-                Spacer(Modifier.height(8.dp))
+                Column(
+                    horizontalAlignment = Alignment.End
+                ) {
+                    Row {
+                        Icon(painter = painterResource(id = R.drawable.indoor_temperature_icon),
+                            contentDescription = "Indoor Temperature Icon",
+                            Modifier.size(40.dp),
+                            tint = MaterialTheme.colorScheme.surfaceContainerHighest)
+                        Text(
+                            text = "${viewModel.temperaturesStatsData!!["Indoor_9in1:"]} °C",
+                            fontSize = 25.sp,
+                            color = MaterialTheme.colorScheme.onSecondary,
+                            textAlign = TextAlign.Center
+                        )
 
-                Icon(painter = painterResource(id = R.drawable.indoor_temperature_icon),
-                    contentDescription = "Indoor Temperature Icon",
-                    Modifier.size(75.dp),
-                    tint = MaterialTheme.colorScheme.surfaceContainerHighest)
-                Text(
-                    text = "Indoor Temp: ${viewModel.temperaturesStatsData!!["Indoor_9in1:"]} °C",
-                    fontSize = 30.sp,
-                    color = MaterialTheme.colorScheme.onSecondary,
-                    textAlign = TextAlign.Center
-                )
+                        // Alemman rivin keskeltä menevä väli
+                        Spacer(Modifier.width(60.dp))
 
-                Spacer(Modifier.height(8.dp))
-
-                Icon(painter = painterResource(id = R.drawable.outside_temperature_icon),
-                    contentDescription = "Outside Temperature Icon",
-                    Modifier.size(75.dp),
-                    tint = MaterialTheme.colorScheme.surfaceContainerHighest)
-                Text(
-                    text = "Outside Temp: ${viewModel.temperaturesStatsData!!["Weather2"]} °C",
-                    fontSize = 30.sp,
-                    color = MaterialTheme.colorScheme.onSecondary,
-                    textAlign = TextAlign.Center
-                )
+                        Icon(painter = painterResource(id = R.drawable.outside_temperature_icon),
+                            contentDescription = "Outside Temperature Icon",
+                            Modifier.size(40.dp),
+                            tint = MaterialTheme.colorScheme.surfaceContainerHighest)
+                        Text(
+                            text = "${viewModel.temperaturesStatsData!!["Weather2"]} °C",
+                            fontSize = 25.sp,
+                            color = MaterialTheme.colorScheme.onSecondary,
+                            textAlign = TextAlign.Center
+                        )
+                    } // Row end
+                } // Column end
             }
         }
     }
