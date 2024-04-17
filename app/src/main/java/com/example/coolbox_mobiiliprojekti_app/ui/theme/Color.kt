@@ -19,7 +19,7 @@ val TopAppBarColor = Color(0xFFEBEFFF)
 val BottomAppBarColor = Color(0xFFD3D9FF)
 val BottomAppBarColorSecondary = Color(0xFFEBEFFF)
 
-val PrimaryColor = Color(0xFF1066B8)
+val PrimaryColor = Color(0xFF062B4E)
 val PrimaryContentsColor = Color(0xFFCFDDFF)
 val SecondaryColor = Color(0xFF6376AA)
 val SecondaryContentsColor = Color(0xFFFFFFFF)
@@ -33,7 +33,7 @@ val GraphKwhColor = Color(0xFF0D3E9E)
 val GraphTempColor = Color(0xFFE04646)
 val ProductionLineColorPanel = Color(0xFF19FF00)
 val ProductionLineColor = Color(0xFF008607)
-val TemperatureValuesColor = Color(0xFFD66565)
+val TemperatureValuesColor = Color(0xFFFFEBEB)
 
 val GoodBatteryChargeColor = Color.Green
 val SatisfyingBatteryChargeColor = Color.Yellow

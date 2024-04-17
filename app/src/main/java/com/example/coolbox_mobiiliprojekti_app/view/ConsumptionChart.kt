@@ -147,7 +147,7 @@ fun ConsumptionChart(
                             fontSize = 20.sp,
                             text = stringResource(R.string.con_graph_title),
                             textAlign = TextAlign.Center,
-                            color = MaterialTheme.colorScheme.onSecondary
+                            color = MaterialTheme.colorScheme.primary
                         )
                             // CartesianChartHost, joka sisältää chartin
                             CartesianChartHost(

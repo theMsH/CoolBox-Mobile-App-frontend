@@ -271,7 +271,7 @@ fun TemperatureDatas() {
                             painter = painterResource(id = R.drawable.wc_internal_temperature_icon),
                             contentDescription = "WC Internal Temperature Icon",
                             Modifier.size(40.dp),
-                            tint = MaterialTheme.colorScheme.surfaceContainerHighest
+                            tint = MaterialTheme.colorScheme.onSecondary
                         )
                         Spacer(Modifier.width(8.dp))
                         Text(
@@ -289,7 +289,7 @@ fun TemperatureDatas() {
                             painter = painterResource(id = R.drawable.technology_box_temperature_icon),
                             contentDescription = "Technology Box Temperature Icon",
                             Modifier.size(45.dp),
-                            tint = MaterialTheme.colorScheme.surfaceContainerHighest
+                            tint = MaterialTheme.colorScheme.onSecondary
                         )
                         Spacer(Modifier.width(8.dp))
                         Text(
@@ -317,7 +317,7 @@ fun TemperatureDatas() {
                             painter = painterResource(id = R.drawable.indoor_temperature_icon),
                             contentDescription = "Indoor Temperature Icon",
                             Modifier.size(45.dp),
-                            tint = MaterialTheme.colorScheme.surfaceContainerHighest
+                            tint = MaterialTheme.colorScheme.onSecondary
                         )
                         Spacer(Modifier.width(8.dp))
                         Text(
@@ -335,7 +335,7 @@ fun TemperatureDatas() {
                             painter = painterResource(id = R.drawable.outside_temperature_icon),
                             contentDescription = "Outside Temperature Icon",
                             Modifier.size(40.dp),
-                            tint = MaterialTheme.colorScheme.surfaceContainerHighest
+                            tint = MaterialTheme.colorScheme.onSecondary
                         )
                         Spacer(Modifier.width(8.dp))
                         Text(

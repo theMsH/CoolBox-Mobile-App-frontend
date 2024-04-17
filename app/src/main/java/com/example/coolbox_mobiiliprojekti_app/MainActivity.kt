@@ -183,6 +183,7 @@ class MainActivity : ComponentActivity() {
                                     onClick = {
                                         navController.navigate("mainScreen") {
                                             launchSingleTop = true
+                                            popUpTo("mainScreen") { inclusive = false }
                                         }
                                         scope.launch {
                                             drawerState.close()
@@ -251,7 +252,9 @@ class MainActivity : ComponentActivity() {
                                 LoginScreen(
                                     loginVm, // Välitetään täällä luotu loginVM LoginScreenin viewmodeliksi
                                     onLoginSuccess = {
-                                        navController.navigate("mainScreen")
+                                        navController.navigate("mainScreen") {
+                                            popUpTo("loginScreen") { inclusive = true }
+                                        }
                                     },
                                     gotoRegister = {
                                         navController.navigate("registerScreen")

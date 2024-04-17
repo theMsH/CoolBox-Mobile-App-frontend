@@ -202,7 +202,7 @@ fun ProductionChart(
                             ProductionTypeInterval.Solar -> stringResource(R.string.pro_graph_title_solar)
                             ProductionTypeInterval.Total -> stringResource(R.string.pro_graph_title_total)
                         },
-                        color = MaterialTheme.colorScheme.onSecondary
+                        color = MaterialTheme.colorScheme.primary
                     )
 
                     // CartesianChartHost, joka sisältää chartin
