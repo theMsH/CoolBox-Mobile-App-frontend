@@ -100,7 +100,22 @@ fun MainScreen(
         topBar = {
             Surface(shadowElevation = 2.dp) {
                 CenterAlignedTopAppBar(
-                    title = { Text(text = stringResource(R.string.front_page)) },
+                    title = {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(painter = painterResource(id = R.drawable.coolapp_icon),
+                                 contentDescription = "CoolAppIcon",
+                                 Modifier.size(30.dp),
+                                 tint = MaterialTheme.colorScheme.onPrimaryContainer
+                            )
+                            Text(
+                                fontSize = 20.sp,
+                                text = "oolApp",
+                                color = MaterialTheme.colorScheme.onPrimaryContainer
+                            )
+                        }
+                    },
                     actions = {
                         IconButton(
                             onClick = { onMenuClick() }
