@@ -263,7 +263,7 @@ fun ConsumptionScreen(
                             ConsumptionChart(
                                 viewModel.consumptionStatsData,
                                 viewModel.temperatureStatsData,
-                                isLandscape = isLandscape
+                                isLandscape = true
                             )
                         }
                         Column(
@@ -449,7 +449,7 @@ fun ConsumptionScreen(
                         ConsumptionChart(
                             viewModel.consumptionStatsData,
                             viewModel.temperatureStatsData,
-                            isLandscape = isLandscape
+                            isLandscape = false
                         )
                         Spacer(Modifier.height(30.dp))
 

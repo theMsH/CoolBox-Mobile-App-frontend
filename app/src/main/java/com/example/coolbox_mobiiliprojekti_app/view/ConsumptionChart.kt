@@ -31,6 +31,7 @@ import com.example.coolbox_mobiiliprojekti_app.ui.theme.GraphTempColor
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.GraphTempColorDark
 import com.example.coolbox_mobiiliprojekti_app.viewmodel.ConsumptionViewModel
 import com.patrykandpatrick.vico.compose.axis.horizontal.rememberBottomAxis
+import com.patrykandpatrick.vico.compose.axis.rememberAxisLabelComponent
 import com.patrykandpatrick.vico.compose.axis.vertical.rememberStartAxis
 import com.patrykandpatrick.vico.compose.chart.CartesianChartHost
 import com.patrykandpatrick.vico.compose.chart.layer.rememberColumnCartesianLayer
@@ -39,11 +40,13 @@ import com.patrykandpatrick.vico.compose.chart.layer.rememberLineSpec
 import com.patrykandpatrick.vico.compose.chart.layout.fullWidth
 import com.patrykandpatrick.vico.compose.chart.rememberCartesianChart
 import com.patrykandpatrick.vico.compose.component.rememberLineComponent
+import com.patrykandpatrick.vico.compose.component.shape.dashedShape
 import com.patrykandpatrick.vico.compose.component.shape.shader.color
 import com.patrykandpatrick.vico.core.axis.AxisItemPlacer
 import com.patrykandpatrick.vico.core.axis.AxisPosition
 import com.patrykandpatrick.vico.core.axis.formatter.AxisValueFormatter
 import com.patrykandpatrick.vico.core.chart.layout.HorizontalLayout
+import com.patrykandpatrick.vico.core.component.shape.Shapes
 import com.patrykandpatrick.vico.core.component.shape.shader.DynamicShaders
 import com.patrykandpatrick.vico.core.model.CartesianChartModelProducer
 import com.patrykandpatrick.vico.core.model.ExtraStore
@@ -132,7 +135,7 @@ fun ConsumptionChart(
                             .wrapContentSize(Alignment.Center),
                         colors = CardDefaults.cardColors(
                             containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-                            contentColor = MaterialTheme.colorScheme.primary
+                            contentColor = MaterialTheme.colorScheme.onTertiaryContainer
                         )
                     ) {
 
@@ -166,11 +169,33 @@ fun ConsumptionChart(
                                             )
                                         ),
                                     ),
-                                    startAxis = rememberStartAxis(),
+                                    startAxis = rememberStartAxis(
+                                        label = rememberAxisLabelComponent(
+                                            color = MaterialTheme.colorScheme.onTertiaryContainer
+                                        ),
+                                        axis = rememberLineComponent(
+                                            color = MaterialTheme.colorScheme.onTertiaryContainer
+                                        ),
+                                        guideline = rememberLineComponent(
+                                            color = MaterialTheme.colorScheme.onTertiaryContainer,
+                                            shape = remember {
+                                                Shapes.dashedShape(
+                                                    shape = Shapes.rectShape,
+                                                    dashLength = 3.dp,
+                                                    gapLength = 3.dp,
+                                                )
+                                            },
+                                        )
+                                    ),
                                     bottomAxis = rememberBottomAxis(
+                                        label = rememberAxisLabelComponent(
+                                            color = MaterialTheme.colorScheme.onTertiaryContainer
+                                        ),
+                                        axis = rememberLineComponent(
+                                            color = MaterialTheme.colorScheme.onTertiaryContainer
+                                        ),
                                         valueFormatter = valueFormatterString,
-                                        itemPlacer =
-                                        remember {
+                                        itemPlacer = remember {
                                             AxisItemPlacer.Horizontal.default(
                                                 spacing = 1,
                                                 addExtremeLabelPadding = true

@@ -28,12 +28,15 @@ import com.example.coolbox_mobiiliprojekti_app.ui.theme.ProductionLineColor
 import com.example.coolbox_mobiiliprojekti_app.ui.theme.ProductionLineColorDark
 import com.example.coolbox_mobiiliprojekti_app.viewmodel.ProductionViewModel
 import com.patrykandpatrick.vico.compose.axis.horizontal.rememberBottomAxis
+import com.patrykandpatrick.vico.compose.axis.rememberAxisLabelComponent
 import com.patrykandpatrick.vico.compose.axis.vertical.rememberStartAxis
 import com.patrykandpatrick.vico.compose.chart.CartesianChartHost
 import com.patrykandpatrick.vico.compose.chart.layer.rememberLineCartesianLayer
 import com.patrykandpatrick.vico.compose.chart.layer.rememberLineSpec
 import com.patrykandpatrick.vico.compose.chart.layout.fullWidth
 import com.patrykandpatrick.vico.compose.chart.rememberCartesianChart
+import com.patrykandpatrick.vico.compose.component.rememberLineComponent
+import com.patrykandpatrick.vico.compose.component.shape.dashedShape
 import com.patrykandpatrick.vico.compose.component.shape.shader.color
 import com.patrykandpatrick.vico.core.axis.AxisItemPlacer
 import com.patrykandpatrick.vico.core.axis.AxisPosition
@@ -43,6 +46,7 @@ import com.patrykandpatrick.vico.core.model.CartesianChartModelProducer
 import com.patrykandpatrick.vico.core.model.ExtraStore
 import com.patrykandpatrick.vico.core.model.lineSeries
 import com.patrykandpatrick.vico.core.axis.formatter.AxisValueFormatter
+import com.patrykandpatrick.vico.core.component.shape.Shapes
 
 @Composable
 fun ProductionChart(
@@ -183,7 +187,7 @@ fun ProductionChart(
                         .wrapContentSize(Alignment.Center),
                     colors = CardDefaults.cardColors(
                         containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-                        contentColor = MaterialTheme.colorScheme.onSecondary
+                        contentColor = MaterialTheme.colorScheme.onTertiaryContainer
                     )
                 ) {
 
@@ -213,8 +217,31 @@ fun ProductionChart(
                                     )
                                 ),
                             ),
-                            startAxis = rememberStartAxis(),
+                            startAxis = rememberStartAxis(
+                                label = rememberAxisLabelComponent(
+                                    color = MaterialTheme.colorScheme.onTertiaryContainer
+                                ),
+                                axis = rememberLineComponent(
+                                    color = MaterialTheme.colorScheme.onTertiaryContainer
+                                ),
+                                guideline = rememberLineComponent(
+                                    color = MaterialTheme.colorScheme.onTertiaryContainer,
+                                    shape = remember {
+                                        Shapes.dashedShape(
+                                            shape = Shapes.rectShape,
+                                            dashLength = 3.dp,
+                                            gapLength = 3.dp,
+                                        )
+                                    },
+                                )
+                            ),
                             bottomAxis = rememberBottomAxis(
+                                label = rememberAxisLabelComponent(
+                                    color = MaterialTheme.colorScheme.onTertiaryContainer
+                                ),
+                                axis = rememberLineComponent(
+                                    color = MaterialTheme.colorScheme.onTertiaryContainer
+                                ),
                                 valueFormatter = valueFormatterString,
                                 itemPlacer = remember {
                                     AxisItemPlacer.Horizontal.default(
