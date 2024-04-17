@@ -11,10 +11,11 @@ import com.example.coolbox_mobiiliprojekti_app.api.productionApiService
 import com.example.coolbox_mobiiliprojekti_app.model.ProductionChartState
 import com.example.coolbox_mobiiliprojekti_app.model.ProductionStatsResponse
 import com.example.coolbox_mobiiliprojekti_app.model.SolarStatsResponse
-import com.example.coolbox_mobiiliprojekti_app.model.WindChartState
 import com.example.coolbox_mobiiliprojekti_app.model.WindStatsResponse
 import com.example.coolbox_mobiiliprojekti_app.view.ProductionTypeInterval
 import com.example.coolbox_mobiiliprojekti_app.view.TimeInterval
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class ProductionViewModel(
@@ -29,11 +30,16 @@ class ProductionViewModel(
     var productionStatsData by mutableStateOf<Map<String, Float>?>(null)
         private set
 
+    // Refreshaukseen liittyvät apumuuttujat:
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading = _isLoading.asStateFlow()
+
     // Haetaan dataa valitun aikavälin perusteella
     fun fetchTotalProductionData(interval: TimeInterval, date: Any) {
         viewModelScope.launch {
             try {
                 _productionChartState.value = _productionChartState.value.copy(loading = true)
+                _isLoading.value = true
                 when (interval) {
                     TimeInterval.HOURS -> {
                         fetchHourlyProductionsData(date.toString())
@@ -55,6 +61,7 @@ class ProductionViewModel(
                 Log.d("Error", e.toString())
             } finally {
                 _productionChartState.value = _productionChartState.value.copy(loading = false)
+                _isLoading.value = false
             }
         }
     }

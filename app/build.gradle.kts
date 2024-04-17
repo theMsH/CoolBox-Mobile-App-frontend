@@ -51,6 +51,9 @@ android {
 }
 
 dependencies {
+    // Refreshaus:
+    implementation("com.google.accompanist:accompanist-swiperefresh:0.27.0")
+
     // YCharts
     implementation("co.yml:ycharts:2.1.0")
 

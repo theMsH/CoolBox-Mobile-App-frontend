@@ -2,20 +2,16 @@ package com.example.coolbox_mobiiliprojekti_app.viewmodel
 
 import android.util.Log
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.coolbox_mobiiliprojekti_app.api.batteryApiService
-import com.example.coolbox_mobiiliprojekti_app.api.consumptionApiService
 import com.example.coolbox_mobiiliprojekti_app.api.temperaturesApiService
-import com.example.coolbox_mobiiliprojekti_app.model.BatteryChartState
-import com.example.coolbox_mobiiliprojekti_app.model.ConsumptionStatsResponse
-import com.example.coolbox_mobiiliprojekti_app.model.TemperatureStatsResponse
 import com.example.coolbox_mobiiliprojekti_app.model.TemperaturesChartState
 import com.example.coolbox_mobiiliprojekti_app.model.TemperaturesStatsData
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -31,17 +27,22 @@ class TemperaturesViewModel : ViewModel() {
     var lastFetchTime by mutableStateOf<String?>(null)
         private set
 
+    // Refreshaukseen liittyvät apumuuttujat:
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading = _isLoading.asStateFlow()
+
     init {
         // Luokan alustaja, joka kutsuu lämpötilatietojen noutamista palvelimelta.
         fetchTemperaturesData()
     }
 
-    private fun fetchTemperaturesData() {
+    fun fetchTemperaturesData() {
         // Käynnistää koroutiinin ViewModel-skoopissa.
         viewModelScope.launch {
             try {
                 // Asettaa graafin tilan lataavaksi.
                 _temperaturesChartState.value = _temperaturesChartState.value.copy(loading = true)
+                _isLoading.value = true
                 // Tekee pyynnön palvelimelle ja odottaa vastausta.
                 val response = temperaturesApiService.getMostRecentValuesFrom4DifferentTemperatures()
 
@@ -73,6 +74,7 @@ class TemperaturesViewModel : ViewModel() {
             } finally {
                 // Lopuksi asetetaan graafin tila ei-lataavaksi.
                 _temperaturesChartState.value = _temperaturesChartState.value.copy(loading = false)
+                _isLoading.value = false
             }
         }
     }

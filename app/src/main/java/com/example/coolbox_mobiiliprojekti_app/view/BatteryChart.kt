@@ -41,19 +41,23 @@ fun BatteryChart() {
     val fullCharge = 100.0f
     val stateOfCharge: Float = viewModel.batteryChartState.value.soc
     val missingCharge: Float = fullCharge - stateOfCharge
-    var customColor: Color = if (isSystemInDarkTheme()) GoodBatteryChargeColorDark else GoodBatteryChargeColor
+    var customColor: Color =
+        if (isSystemInDarkTheme()) GoodBatteryChargeColorDark else GoodBatteryChargeColor
 
     when {
         stateOfCharge < 25 -> {
-            customColor = if (isSystemInDarkTheme()) BadBatteryChargeColorDark else BadBatteryChargeColor
+            customColor =
+                if (isSystemInDarkTheme()) BadBatteryChargeColorDark else BadBatteryChargeColor
         }
 
         stateOfCharge < 50 -> {
-            customColor = if (isSystemInDarkTheme()) TolerableBatteryChargeColorDark else TolerableBatteryChargeColor
+            customColor =
+                if (isSystemInDarkTheme()) TolerableBatteryChargeColorDark else TolerableBatteryChargeColor
         }
 
         stateOfCharge < 75 -> {
-            customColor = if (isSystemInDarkTheme()) SatisfyingBatteryChargeColorDark else SatisfyingBatteryChargeColor
+            customColor =
+                if (isSystemInDarkTheme()) SatisfyingBatteryChargeColorDark else SatisfyingBatteryChargeColor
         }
     }
 
@@ -86,9 +90,15 @@ fun BatteryChart() {
             .padding(20.dp)
     ) {
         when {
-            viewModel.batteryChartState.value.loading -> CircularProgressIndicator(
-                modifier = Modifier.align(Alignment.Center)
-            )
+            viewModel.batteryChartState.value.loading -> Box(
+                modifier = Modifier
+                    .height(164.dp)
+                    .align(Alignment.Center)
+            ) {
+                CircularProgressIndicator(
+                    modifier = Modifier.align(Alignment.Center)
+                )
+            }
 
             else -> Column(
                 modifier = Modifier.fillMaxWidth(),

@@ -12,7 +12,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Card
@@ -43,10 +44,13 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.coolbox_mobiiliprojekti_app.R
 import com.example.coolbox_mobiiliprojekti_app.datastore.UserPreferences
+import com.example.coolbox_mobiiliprojekti_app.viewmodel.BatteryViewModel
 import com.example.coolbox_mobiiliprojekti_app.viewmodel.MainScreenViewModel
 import com.example.coolbox_mobiiliprojekti_app.viewmodel.ProductionViewModel
 import com.example.coolbox_mobiiliprojekti_app.viewmodel.ConsumptionViewModel
 import com.example.coolbox_mobiiliprojekti_app.viewmodel.TemperaturesViewModel
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import java.time.LocalDate
 
 
@@ -58,6 +62,11 @@ fun MainScreen(
     goToProduction: () -> Unit
 ) {
     val mainScreenVm: MainScreenViewModel = viewModel()
+    val consumptionVm: ConsumptionViewModel = viewModel()
+    val productionVm: ProductionViewModel = viewModel()
+    val batteryVm: BatteryViewModel = viewModel()
+    val temperaturesVm: TemperaturesViewModel = viewModel()
+
     // DataStoren käyttöönotto
 
     val context = LocalContext.current
@@ -69,6 +78,23 @@ fun MainScreen(
     val batPanelVisible = preferenceDataStore.getBatteryActive.collectAsState(initial = true)
     val tempPanelVisible = preferenceDataStore.getTempActive.collectAsState(initial = true)
 
+    // Refreshauksen käyttöönotto:
+    val isLoadingProduction by productionVm.isLoading.collectAsState()
+    val isLoadingConsumption by consumptionVm.isLoading.collectAsState()
+    val isLoadingBattery by batteryVm.isLoading.collectAsState()
+    val isLoadingTemperatures by temperaturesVm.isLoading.collectAsState()
+    val isLoading =
+        isLoadingProduction || isLoadingConsumption || isLoadingBattery || isLoadingTemperatures
+
+    val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = isLoading)
+    val currentWeekStartDate by remember { mutableStateOf(LocalDate.now()) }
+
+    val refreshAllData = {
+        productionVm.fetchTotalProductionData(TimeInterval.MAIN, currentWeekStartDate)
+        consumptionVm.consumptionFetchData(TimeInterval.MAIN, currentWeekStartDate)
+        batteryVm.fetchBatteryCharge()
+        temperaturesVm.fetchTemperaturesData()
+    }
 
     Scaffold(
         topBar = {
@@ -103,12 +129,20 @@ fun MainScreen(
                         Alignment.Center
                     )
                 )
-                else -> LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                ) {
-                    if (conPanelVisible.value) { // Jos boolean on tosi, näytetään paneeli
-                        item {
+                else -> SwipeRefresh(
+                    state = swipeRefreshState,
+                    onRefresh = { refreshAllData() },
+                    indicator = { state, _ ->
+                        if (state == swipeRefreshState) {
+                            Box(modifier = Modifier.size(0.dp))
+                        }
+                    }) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .verticalScroll(rememberScrollState())
+                    ) {
+                        if (conPanelVisible.value) { // Jos boolean on tosi, näytetään paneeli
                             Card(
                                 modifier = Modifier
                                     .wrapContentSize(Alignment.Center)
@@ -118,9 +152,7 @@ fun MainScreen(
                                 ConsumptionPanel7Days(goToConsumption)
                             }
                         }
-                    }
-                    if (prodPanelVisible.value) {
-                        item {
+                        if (prodPanelVisible.value) {
                             Card(
                                 modifier = Modifier
                                     .wrapContentSize(Alignment.Center)
@@ -130,9 +162,7 @@ fun MainScreen(
                                 ProductionPanel7Days(goToProduction)
                             }
                         }
-                    }
-                    if (batPanelVisible.value) {
-                        item {
+                        if (batPanelVisible.value) {
                             Card(
                                 modifier = Modifier
                                     .wrapContentSize(Alignment.Center)
@@ -142,23 +172,20 @@ fun MainScreen(
                                 BatteryChart()
                             }
                         }
-                    }
-                    if (tempPanelVisible.value) {
-                        item {
+                        if (tempPanelVisible.value) {
                             Card(
                                 modifier = Modifier
                                     .wrapContentSize(Alignment.Center)
                                     .fillMaxWidth()
                                     .padding(horizontal = 2.dp, vertical = 4.dp)
-                            ){
+                            ) {
                                 TemperatureDatas()
                             }
                         }
-                    }
-
-                } // Column loppu
+                    } // Column loppu
+                }
             }
-        }
+        } // Box loppuu
     }
 
 }
@@ -167,15 +194,25 @@ fun MainScreen(
 fun TemperatureDatas() {
     val viewModel: TemperaturesViewModel = viewModel()
 
-    Box(modifier = Modifier
-        .fillMaxWidth()
-        .padding(20.dp)) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(20.dp)
+    ) {
         // Tarkistetaan ViewModelin tilaa ja valitaan näytettävä sisältö sen mukaan.
         when {
             // Jos data on latautumassa, näytetään latausindikaattori keskellä.
-            viewModel.temperaturesChartState.value.loading -> CircularProgressIndicator(
-                modifier = Modifier.align(Alignment.Center)
-            )
+
+            viewModel.temperaturesChartState.value.loading ->
+                Box(
+                    modifier = Modifier
+                        .height(298.dp)
+                        .align(Alignment.Center)
+                ) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                }
 
             // Jos lämpötiladatat ovat tyhjiä tai null, näytetään virheviesti.
             viewModel.temperaturesStatsData.isNullOrEmpty() -> Text(
@@ -222,7 +259,9 @@ fun TemperatureDatas() {
                 Spacer(Modifier.height(20.dp))
 
                 Row(
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 20.dp),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Row(
@@ -266,7 +305,9 @@ fun TemperatureDatas() {
                 Spacer(Modifier.height(20.dp))
 
                 Row(
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 20.dp),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Row(
@@ -335,9 +376,15 @@ fun ProductionPanel7Days(
     ) {
         when {
             // Latauspalkki
-            viewModel.productionChartState.value.loading -> CircularProgressIndicator(
-                modifier = Modifier.align(Alignment.Center)
-            )
+            viewModel.productionChartState.value.loading -> Box(
+                modifier = Modifier
+                    .height(297.dp)
+                    .align(Alignment.Center)
+            ) {
+                CircularProgressIndicator(
+                    modifier = Modifier.align(Alignment.Center)
+                )
+            }
 
             // Näytä sisältö
             else -> Column(
@@ -378,9 +425,15 @@ fun ConsumptionPanel7Days(
     ) {
         when {
             // Latauspalkki
-            viewModel.consumptionChartState.value.loading -> CircularProgressIndicator(
-                modifier = Modifier.align(Alignment.Center)
-            )
+            viewModel.consumptionChartState.value.loading -> Box(
+                modifier = Modifier
+                    .height(297.dp)
+                    .align(Alignment.Center)
+            ) {
+                CircularProgressIndicator(
+                    modifier = Modifier.align(Alignment.Center)
+                )
+            }
 
             // Näytä sisältö
             else -> Column(

@@ -11,6 +11,8 @@ import com.example.coolbox_mobiiliprojekti_app.model.ConsumptionChartState
 import com.example.coolbox_mobiiliprojekti_app.model.ConsumptionStatsResponse
 import com.example.coolbox_mobiiliprojekti_app.model.TemperatureStatsResponse
 import com.example.coolbox_mobiiliprojekti_app.view.TimeInterval
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class ConsumptionViewModel : ViewModel() {
@@ -27,11 +29,16 @@ class ConsumptionViewModel : ViewModel() {
     var temperatureStatsData by mutableStateOf<Map<String, Float>?>(null)
         private set
 
+    // Refreshaukseen liittyvät apumuuttujat:
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading = _isLoading.asStateFlow()
+
     // Haetaan dataa valitun aikavälin perusteella
     fun consumptionFetchData(interval: TimeInterval, date: Any) {
         viewModelScope.launch {
             try {
                 _consumptionChartState.value = _consumptionChartState.value.copy(loading = true)
+                _isLoading.value = true
                 when (interval) {
                     TimeInterval.HOURS -> {
                         fetchHourlyConsumptionsData(date.toString())
@@ -58,6 +65,7 @@ class ConsumptionViewModel : ViewModel() {
                 Log.d("Error", e.toString())
             } finally {
                 _consumptionChartState.value = _consumptionChartState.value.copy(loading = false)
+                _isLoading.value = false
             }
         }
     }
