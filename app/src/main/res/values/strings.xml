@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CoolBox-mobiiliprojekti-App</string>
+    <string name="app_name">CoolApp</string>
     <string name="drawer_menu_title">Cooldev Project</string>
 
     <string name="menu_home">Home</string>

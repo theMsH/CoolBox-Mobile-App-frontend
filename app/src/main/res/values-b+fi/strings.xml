@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">CoolBox-mobiiliprojekti-App</string>
+    <string name="app_name">CoolApp</string>
     <string name="drawer_menu_title">CoolDev Projekti</string>
 
     <string name="menu_home">Koti</string>
