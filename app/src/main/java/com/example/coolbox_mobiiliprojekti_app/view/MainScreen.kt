@@ -275,7 +275,7 @@ fun TemperatureDatas() {
                     Row (
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 16.dp),
+                            .padding(horizontal = 16.dp), // Add padding if needed
                         horizontalArrangement = Arrangement.SpaceBetween
                     ){
                         Box(modifier = Modifier.weight(1f)) {
@@ -283,16 +283,16 @@ fun TemperatureDatas() {
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Icon(
-                                    painter = painterResource(id = R.drawable.tekniikkaboxin_sis_l_mp_tila),
+                                    painter = painterResource(id = R.drawable.cold_bathtub_512_),
                                     contentDescription = "WC Internal Temperature Icon",
                                     Modifier.size(45.dp),
-                                    tint = MaterialTheme.colorScheme.onSecondary
+                                    tint = MaterialTheme.colorScheme.surfaceContainerHighest
                                 )
-                                Spacer(Modifier.width(8.dp))
+                                Spacer(Modifier.width(8.dp)) // Add spacing between the icon and text
                                 Text(
                                     text = "${viewModel.temperaturesStatsData!!["Bathroom_9in1:"]} °C",
                                     fontSize = 25.sp,
-                                    color = MaterialTheme.colorScheme.surfaceTint
+                                    color = MaterialTheme.colorScheme.onSecondary
                                 )
                             }
                         }
@@ -305,24 +305,24 @@ fun TemperatureDatas() {
                                     painter = painterResource(id = R.drawable.tekniikkaboxin_sis_l_mp_tila),
                                     contentDescription = "Technology Box Temperature Icon",
                                     Modifier.size(45.dp),
-                                    tint = MaterialTheme.colorScheme.onSecondary
+                                    tint = MaterialTheme.colorScheme.surfaceContainerHighest
                                 )
-                                Spacer(Modifier.width(8.dp))
+                                Spacer(Modifier.width(8.dp)) // Add spacing between the icon and text
                                 Text(
                                     text = "${viewModel.temperaturesStatsData!!["TB_9in1:"]} °C",
                                     fontSize = 25.sp,
-                                    color = MaterialTheme.colorScheme.surfaceTint
+                                    color = MaterialTheme.colorScheme.onSecondary
                                 )
                             }
                         }
                     } // Row end
 
-                    Spacer(Modifier.height(20.dp))
+                    Spacer(Modifier.height(20.dp)) // Spacer to add space between rows
 
                     Row (
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 16.dp),
+                            .padding(horizontal = 16.dp), // Add padding if needed
                         horizontalArrangement = Arrangement.SpaceBetween
                     ){
                         Box(modifier = Modifier.weight(1f)) {
@@ -333,13 +333,13 @@ fun TemperatureDatas() {
                                     painter = painterResource(id = R.drawable.indoor_temperature_icon),
                                     contentDescription = "Indoor Temperature Icon",
                                     Modifier.size(45.dp),
-                                    tint = MaterialTheme.colorScheme.onSecondary
+                                    tint = MaterialTheme.colorScheme.surfaceContainerHighest
                                 )
-                                Spacer(Modifier.width(8.dp))
+                                Spacer(Modifier.width(8.dp)) // Add spacing between the icon and text
                                 Text(
                                     text = "${viewModel.temperaturesStatsData!!["Indoor_9in1:"]} °C",
                                     fontSize = 25.sp,
-                                    color = MaterialTheme.colorScheme.surfaceTint
+                                    color = MaterialTheme.colorScheme.onSecondary
                                 )
                             }
                         }
@@ -348,18 +348,17 @@ fun TemperatureDatas() {
                             Row(
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Spacer(Modifier.width(4.dp)) // Keskitetään tätä ikonia hieman sisemmäs.
                                 Icon(
                                     painter = painterResource(id = R.drawable.ulkol_mp_tila_),
                                     contentDescription = "Outside Temperature Icon",
                                     Modifier.size(45.dp),
-                                    tint = MaterialTheme.colorScheme.onSecondary
+                                    tint = MaterialTheme.colorScheme.surfaceContainerHighest
                                 )
-                                Spacer(Modifier.width(4.dp)) // Tästä kompensoitu pois ikonin keskitys .dp
+                                Spacer(Modifier.width(8.dp)) // Add spacing between the icon and text
                                 Text(
                                     text = "${viewModel.temperaturesStatsData!!["Weather2"]} °C",
                                     fontSize = 25.sp,
-                                    color = MaterialTheme.colorScheme.surfaceTint
+                                    color = MaterialTheme.colorScheme.onSecondary
                                 )
                             }
                         }
