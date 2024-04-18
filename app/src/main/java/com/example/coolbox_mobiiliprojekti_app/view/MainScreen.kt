@@ -244,7 +244,7 @@ fun TemperatureDatas() {
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally),
                     fontSize = 20.sp,
-                    text = "Temperature data's",
+                    text = stringResource(id = R.string.mainscreen_temp_panel_title),
                     textAlign = TextAlign.Center
                 )
 
@@ -256,7 +256,7 @@ fun TemperatureDatas() {
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally),
                     fontSize = 20.sp,
-                    text = "Last updated:",
+                    text = stringResource(id = R.string.mainscreen_temp_updated),
                     textAlign = TextAlign.Center,
                     color = MaterialTheme.colorScheme.onSecondary
                 )
@@ -264,7 +264,8 @@ fun TemperatureDatas() {
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally),
                     fontSize = 20.sp,
-                    text = viewModel.lastFetchTime ?: "Not available",
+                    text = viewModel.lastFetchTime
+                        ?: stringResource(id = R.string.mainscreen_temp_available),
                     textAlign = TextAlign.Center,
                     color = MaterialTheme.colorScheme.surfaceTint
                 )

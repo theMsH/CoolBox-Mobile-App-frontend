@@ -15,8 +15,11 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 class TemperaturesViewModel : ViewModel() {
+
+    val systemLocale = Locale.getDefault()
 
     private val _temperaturesChartState = mutableStateOf(TemperaturesChartState())
     val temperaturesChartState: MutableState<TemperaturesChartState> = _temperaturesChartState
@@ -44,11 +47,16 @@ class TemperaturesViewModel : ViewModel() {
                 _temperaturesChartState.value = _temperaturesChartState.value.copy(loading = true)
                 _isLoading.value = true
                 // Tekee pyynnön palvelimelle ja odottaa vastausta.
-                val response = temperaturesApiService.getMostRecentValuesFrom4DifferentTemperatures()
+                val response =
+                    temperaturesApiService.getMostRecentValuesFrom4DifferentTemperatures()
 
                 // Saadaan "Last Updated" arvo, eli milloin data on haettu viimeksi
-                lastFetchTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
-
+                // Arvon formatointi on eri riippuen lokalisaatiosta
+                lastFetchTime = if (systemLocale.language == "fi") {
+                    LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd.MM.yy HH:mm"))
+                } else {
+                    LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM-dd-yy HH:mm"))
+                }
 
                 // Tarkistaa, että vastaus sisältää tarvittavan datan.
                 if (response.data.size >= 2 && response.data[1] is List<*>) {
@@ -57,8 +65,10 @@ class TemperaturesViewModel : ViewModel() {
                     // Käsittelee jokaisen anturin datan.
                     temperaturesList.forEach {
                         val fullSensorName = it["sensor"] as String
-                        val sensor = fullSensorName.split(" ")[0] // Ottaa vain anturin nimen ensimmäisen sanan.
-                        val c = (it["C"] as Double).toFloat() // Muuntaa Double-arvon Float-tyyppiseksi.
+                        val sensor =
+                            fullSensorName.split(" ")[0] // Ottaa vain anturin nimen ensimmäisen sanan.
+                        val c =
+                            (it["C"] as Double).toFloat() // Muuntaa Double-arvon Float-tyyppiseksi.
                         // Lisää uuden lämpötilatiedon listaan.
                         temperatureData.add(TemperaturesStatsData(sensor, c))
                     }
@@ -69,7 +79,8 @@ class TemperaturesViewModel : ViewModel() {
                 }
             } catch (e: Exception) {
                 // Jos virhe ilmenee, päivitetään graafin tila virhetilaksi ja lokitetaan virhe.
-                _temperaturesChartState.value = _temperaturesChartState.value.copy(error = e.toString())
+                _temperaturesChartState.value =
+                    _temperaturesChartState.value.copy(error = e.toString())
                 Log.e("Dorian", "Error in fetching/parsing temperatures", e)
             } finally {
                 // Lopuksi asetetaan graafin tila ei-lataavaksi.

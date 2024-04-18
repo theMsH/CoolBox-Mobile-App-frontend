@@ -29,6 +29,9 @@
     <string name="front_page">Front Page</string>
     <string name="temperature_data_not_available">Temperature data is not available</string>
     <string name="total_production_kwh">Total Production (kWh)</string>
+    <string name="mainscreen_temp_panel_title">Temperature data</string>
+    <string name="mainscreen_temp_updated">Last updated:</string>
+    <string name="mainscreen_temp_available">Not available</string>
 
     <string name="consumption_title">Consumption</string>
     <string name="con_graph_title">Total Consumption and Indoor Temperature</string>
