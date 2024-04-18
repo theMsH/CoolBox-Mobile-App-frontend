@@ -53,9 +53,11 @@ class TemperaturesViewModel : ViewModel() {
                 // Saadaan "Last Updated" arvo, eli milloin data on haettu viimeksi
                 // Arvon formatointi on eri riippuen lokalisaatiosta
                 lastFetchTime = if (systemLocale.language == "fi") {
-                    LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd.MM.yy HH:mm"))
+                    // patternin voi vaihtaa halutessa muotoon "dd.MM.yy", jos sen haluaa lyhyemmäksi
+                    LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd. MMM yyyy HH:mm"))
                 } else {
-                    LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM-dd-yy HH:mm"))
+                    // patternin voi vaihtaa halutessa muotoon "MM-dd-yy", jos sen haluaa lyhyemmäksi
+                    LocalDateTime.now().format(DateTimeFormatter.ofPattern("MMM dd yyyy h:mma"))
                 }
 
                 // Tarkistaa, että vastaus sisältää tarvittavan datan.
