@@ -59,4 +59,5 @@
     <string name="use_darkmode">Dark Mode</string>
 
     <string name="themes_title">Edit Themes</string>
+    <string name="battery_charge">Battery Charge</string>
 </resources>

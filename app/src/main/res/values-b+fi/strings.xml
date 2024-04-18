@@ -60,4 +60,5 @@
     <string name="use_darkmode">Tumma teema</string>
 
     <string name="themes_title">Muokkaa teemoja</string>
+    <string name="battery_charge">Akun varaus</string>
 </resources>
