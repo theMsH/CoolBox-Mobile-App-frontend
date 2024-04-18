@@ -1,5 +1,6 @@
 package com.example.coolbox_mobiiliprojekti_app.view
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,8 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Card
@@ -35,6 +35,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -44,13 +45,10 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.coolbox_mobiiliprojekti_app.R
 import com.example.coolbox_mobiiliprojekti_app.datastore.UserPreferences
-import com.example.coolbox_mobiiliprojekti_app.viewmodel.BatteryViewModel
 import com.example.coolbox_mobiiliprojekti_app.viewmodel.MainScreenViewModel
 import com.example.coolbox_mobiiliprojekti_app.viewmodel.ProductionViewModel
 import com.example.coolbox_mobiiliprojekti_app.viewmodel.ConsumptionViewModel
 import com.example.coolbox_mobiiliprojekti_app.viewmodel.TemperaturesViewModel
-import com.google.accompanist.swiperefresh.SwipeRefresh
-import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import java.time.LocalDate
 
 
@@ -62,11 +60,6 @@ fun MainScreen(
     goToProduction: () -> Unit
 ) {
     val mainScreenVm: MainScreenViewModel = viewModel()
-    val consumptionVm: ConsumptionViewModel = viewModel()
-    val productionVm: ProductionViewModel = viewModel()
-    val batteryVm: BatteryViewModel = viewModel()
-    val temperaturesVm: TemperaturesViewModel = viewModel()
-
     // DataStoren käyttöönotto
 
     val context = LocalContext.current
@@ -78,44 +71,12 @@ fun MainScreen(
     val batPanelVisible = preferenceDataStore.getBatteryActive.collectAsState(initial = true)
     val tempPanelVisible = preferenceDataStore.getTempActive.collectAsState(initial = true)
 
-    // Refreshauksen käyttöönotto:
-    val isLoadingProduction by productionVm.isLoading.collectAsState()
-    val isLoadingConsumption by consumptionVm.isLoading.collectAsState()
-    val isLoadingBattery by batteryVm.isLoading.collectAsState()
-    val isLoadingTemperatures by temperaturesVm.isLoading.collectAsState()
-    val isLoading =
-        isLoadingProduction || isLoadingConsumption || isLoadingBattery || isLoadingTemperatures
-
-    val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = isLoading)
-    val currentWeekStartDate by remember { mutableStateOf(LocalDate.now()) }
-
-    val refreshAllData = {
-        productionVm.fetchTotalProductionData(TimeInterval.MAIN, currentWeekStartDate)
-        consumptionVm.consumptionFetchData(TimeInterval.MAIN, currentWeekStartDate)
-        batteryVm.fetchBatteryCharge()
-        temperaturesVm.fetchTemperaturesData()
-    }
 
     Scaffold(
         topBar = {
             Surface(shadowElevation = 2.dp) {
                 CenterAlignedTopAppBar(
-                    title = {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Icon(painter = painterResource(id = R.drawable.coolapp_icon),
-                                 contentDescription = "CoolAppIcon",
-                                 Modifier.size(30.dp),
-                                 tint = MaterialTheme.colorScheme.onPrimaryContainer
-                            )
-                            Text(
-                                fontSize = 20.sp,
-                                text = "oolApp",
-                                color = MaterialTheme.colorScheme.onPrimaryContainer
-                            )
-                        }
-                    },
+                    title = { Text(text = stringResource(R.string.front_page)) },
                     actions = {
                         IconButton(
                             onClick = { onMenuClick() }
@@ -144,20 +105,12 @@ fun MainScreen(
                         Alignment.Center
                     )
                 )
-                else -> SwipeRefresh(
-                    state = swipeRefreshState,
-                    onRefresh = { refreshAllData() },
-                    indicator = { state, _ ->
-                        if (state == swipeRefreshState) {
-                            Box(modifier = Modifier.size(0.dp))
-                        }
-                    }) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .verticalScroll(rememberScrollState())
-                    ) {
-                        if (conPanelVisible.value) { // Jos boolean on tosi, näytetään paneeli
+                else -> LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                ) {
+                    if (conPanelVisible.value) { // Jos boolean on tosi, näytetään paneeli
+                        item {
                             Card(
                                 modifier = Modifier
                                     .wrapContentSize(Alignment.Center)
@@ -167,7 +120,9 @@ fun MainScreen(
                                 ConsumptionPanel7Days(goToConsumption)
                             }
                         }
-                        if (prodPanelVisible.value) {
+                    }
+                    if (prodPanelVisible.value) {
+                        item {
                             Card(
                                 modifier = Modifier
                                     .wrapContentSize(Alignment.Center)
@@ -177,7 +132,9 @@ fun MainScreen(
                                 ProductionPanel7Days(goToProduction)
                             }
                         }
-                        if (batPanelVisible.value) {
+                    }
+                    if (batPanelVisible.value) {
+                        item {
                             Card(
                                 modifier = Modifier
                                     .wrapContentSize(Alignment.Center)
@@ -187,20 +144,23 @@ fun MainScreen(
                                 BatteryChart()
                             }
                         }
-                        if (tempPanelVisible.value) {
+                    }
+                    if (tempPanelVisible.value) {
+                        item {
                             Card(
                                 modifier = Modifier
                                     .wrapContentSize(Alignment.Center)
                                     .fillMaxWidth()
                                     .padding(horizontal = 2.dp, vertical = 4.dp)
-                            ) {
+                            ){
                                 TemperatureDatas()
                             }
                         }
-                    } // Column loppu
-                }
+                    }
+
+                } // Column loppu
             }
-        } // Box loppuu
+        }
     }
 
 }
@@ -209,25 +169,15 @@ fun MainScreen(
 fun TemperatureDatas() {
     val viewModel: TemperaturesViewModel = viewModel()
 
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(20.dp)
-    ) {
+    Box(modifier = Modifier
+        .fillMaxWidth()
+        .padding(20.dp)) {
         // Tarkistetaan ViewModelin tilaa ja valitaan näytettävä sisältö sen mukaan.
         when {
             // Jos data on latautumassa, näytetään latausindikaattori keskellä.
-
-            viewModel.temperaturesChartState.value.loading ->
-                Box(
-                    modifier = Modifier
-                        .height(298.dp)
-                        .align(Alignment.Center)
-                ) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.align(Alignment.Center)
-                    )
-                }
+            viewModel.temperaturesChartState.value.loading -> CircularProgressIndicator(
+                modifier = Modifier.align(Alignment.Center)
+            )
 
             // Jos lämpötiladatat ovat tyhjiä tai null, näytetään virheviesti.
             viewModel.temperaturesStatsData.isNullOrEmpty() -> Text(
@@ -259,109 +209,110 @@ fun TemperatureDatas() {
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally),
                     fontSize = 20.sp,
-                    text = "Last updated:",
+                    text = "Last updated: \n${viewModel.lastFetchTime ?: "Not available"}",
                     textAlign = TextAlign.Center
                 )
-                Text(
-                    modifier = Modifier
-                        .align(Alignment.CenterHorizontally),
-                    fontSize = 20.sp,
-                    text = viewModel.lastFetchTime ?: "Not available",
-                    textAlign = TextAlign.Center,
-                    color = MaterialTheme.colorScheme.surfaceTint
-                )
 
                 Spacer(Modifier.height(20.dp))
 
-                Row(
+                Column(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 20.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                        .fillMaxWidth(),
+                    verticalArrangement = Arrangement.SpaceEvenly,
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.wc_internal_temperature_icon),
-                            contentDescription = "WC Internal Temperature Icon",
-                            Modifier.size(40.dp),
-                            tint = MaterialTheme.colorScheme.onSecondary
-                        )
-                        Spacer(Modifier.width(8.dp))
-                        Text(
-                            text = "${viewModel.temperaturesStatsData!!["Bathroom_9in1:"]} °C",
-                            fontSize = 25.sp,
-                            color = MaterialTheme.colorScheme.surfaceTint,
-                            textAlign = TextAlign.Center
-                        )
-                    }
+                    Row (
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ){
+                        Box(modifier = Modifier.weight(1f)) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.cold_bathtub_512_),
+                                    contentDescription = "WC Internal Temperature Icon",
+                                    Modifier.size(45.dp),
+                                    tint = MaterialTheme.colorScheme.surfaceContainerHighest
+                                )
+                                Spacer(Modifier.width(8.dp))
+                                Text(
+                                    text = "${viewModel.temperaturesStatsData!!["Bathroom_9in1:"]} °C",
+                                    fontSize = 25.sp,
+                                    color = MaterialTheme.colorScheme.onSecondary
+                                )
+                            }
+                        }
 
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.technology_box_temperature_icon),
-                            contentDescription = "Technology Box Temperature Icon",
-                            Modifier.size(45.dp),
-                            tint = MaterialTheme.colorScheme.onSecondary
-                        )
-                        Spacer(Modifier.width(8.dp))
-                        Text(
-                            text = "${viewModel.temperaturesStatsData!!["TB_9in1:"]} °C",
-                            fontSize = 25.sp,
-                            color = MaterialTheme.colorScheme.surfaceTint,
-                            textAlign = TextAlign.Center
-                        )
-                    }
-                } // Row end
+                        Box(modifier = Modifier.weight(1f)) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.tekniikkaboxin_sis_l_mp_tila),
+                                    contentDescription = "Technology Box Temperature Icon",
+                                    Modifier.size(45.dp),
+                                    tint = MaterialTheme.colorScheme.surfaceContainerHighest
+                                )
+                                Spacer(Modifier.width(8.dp))
+                                Text(
+                                    text = "${viewModel.temperaturesStatsData!!["TB_9in1:"]} °C",
+                                    fontSize = 25.sp,
+                                    color = MaterialTheme.colorScheme.onSecondary
+                                )
+                            }
+                        }
+                    } // Row end
 
-                // Väliä ylä- ja alarivien välillä
-                Spacer(Modifier.height(20.dp))
+                    Spacer(Modifier.height(20.dp))
 
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 20.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.indoor_temperature_icon),
-                            contentDescription = "Indoor Temperature Icon",
-                            Modifier.size(45.dp),
-                            tint = MaterialTheme.colorScheme.onSecondary
-                        )
-                        Spacer(Modifier.width(8.dp))
-                        Text(
-                            text = "${viewModel.temperaturesStatsData!!["Indoor_9in1:"]} °C",
-                            fontSize = 25.sp,
-                            color = MaterialTheme.colorScheme.surfaceTint,
-                            textAlign = TextAlign.Center
-                        )
-                    }
+                    Row (
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ){
+                        Box(modifier = Modifier.weight(1f)) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.indoor_temperature_icon),
+                                    contentDescription = "Indoor Temperature Icon",
+                                    Modifier.size(45.dp),
+                                    tint = MaterialTheme.colorScheme.surfaceContainerHighest
+                                )
+                                Spacer(Modifier.width(8.dp))
+                                Text(
+                                    text = "${viewModel.temperaturesStatsData!!["Indoor_9in1:"]} °C",
+                                    fontSize = 25.sp,
+                                    color = MaterialTheme.colorScheme.onSecondary
+                                )
+                            }
+                        }
 
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.outside_temperature_icon),
-                            contentDescription = "Outside Temperature Icon",
-                            Modifier.size(40.dp),
-                            tint = MaterialTheme.colorScheme.onSecondary
-                        )
-                        Spacer(Modifier.width(8.dp))
-                        Text(
-                            text = "${viewModel.temperaturesStatsData!!["Weather2"]} °C",
-                            fontSize = 25.sp,
-                            color = MaterialTheme.colorScheme.surfaceTint,
-                            textAlign = TextAlign.Center
-                        )
-                    }
-                } // Row end
-
+                        Box(modifier = Modifier.weight(1f)) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.ulkol_mp_tila_),
+                                    contentDescription = "Outside Temperature Icon",
+                                    Modifier.size(45.dp),
+                                    tint = MaterialTheme.colorScheme.surfaceContainerHighest
+                                )
+                                Spacer(Modifier.width(8.dp)) // Add spacing between the icon and text
+                                Text(
+                                    text = "${viewModel.temperaturesStatsData!!["Weather2"]} °C",
+                                    fontSize = 25.sp,
+                                    color = MaterialTheme.colorScheme.onSecondary
+                                )
+                            }
+                        }
+                    } // Row end
+                } // Column end
             }
         }
     }
@@ -391,15 +342,9 @@ fun ProductionPanel7Days(
     ) {
         when {
             // Latauspalkki
-            viewModel.productionChartState.value.loading -> Box(
-                modifier = Modifier
-                    .height(297.dp)
-                    .align(Alignment.Center)
-            ) {
-                CircularProgressIndicator(
-                    modifier = Modifier.align(Alignment.Center)
-                )
-            }
+            viewModel.productionChartState.value.loading -> CircularProgressIndicator(
+                modifier = Modifier.align(Alignment.Center)
+            )
 
             // Näytä sisältö
             else -> Column(
@@ -440,15 +385,9 @@ fun ConsumptionPanel7Days(
     ) {
         when {
             // Latauspalkki
-            viewModel.consumptionChartState.value.loading -> Box(
-                modifier = Modifier
-                    .height(297.dp)
-                    .align(Alignment.Center)
-            ) {
-                CircularProgressIndicator(
-                    modifier = Modifier.align(Alignment.Center)
-                )
-            }
+            viewModel.consumptionChartState.value.loading -> CircularProgressIndicator(
+                modifier = Modifier.align(Alignment.Center)
+            )
 
             // Näytä sisältö
             else -> Column(
