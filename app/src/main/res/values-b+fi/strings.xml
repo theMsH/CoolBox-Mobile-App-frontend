@@ -32,19 +32,19 @@
     <string name="total_production_kwh">Kokonaistuotto (kWh)</string>
 
     <string name="consumption_title">Kulutus</string>
-    <string name="con_graph_title">Kokonaiskulutus ja Sisälämpötila</string>
+    <string name="con_graph_title">Kokonaiskulutus ja sisälämpötila</string>
     <string name="months_text">Vuosi</string>
     <string name="days_text">Viikko</string>
     <string name="weeks_text">Kuukausi</string>
     <string name="hours_text">Päivä</string>
     <string name="total_con_text">Yhteensä</string>
     <string name="avg_con_text">Keskiarvo</string>
-    <string name="avg_temp_text">Avg lämpötila</string>
+    <string name="avg_temp_text">Ka.lämpötila</string>
 
     <string name="production_title">Tuotto</string>
     <string name="pro_graph_title_total">Kokonaistuotto</string>
-    <string name="pro_graph_title_solar">Aurinkoenergia Tuotto</string>
-    <string name="pro_graph_title_wind">Tuulienergia Tuotto</string>
+    <string name="pro_graph_title_solar">Aurinkoenergian tuotto</string>
+    <string name="pro_graph_title_wind">Tuulienergian tuotto</string>
     <string name="total_pro_text">Yhteensä</string>
     <string name="avg_pro_text">Keskiarvo</string>
     <string name="solar_text">Aurinko</string>
@@ -57,7 +57,7 @@
     <string name="pro_panel_name">Tuottopaneeli</string>
     <string name="bat_panel_name">Akkupaneeli</string>
     <string name="temp_panel_name">Lämpötilapaneeli</string>
-    <string name="use_darkmode">Tumma Teema</string>
+    <string name="use_darkmode">Tumma teema</string>
 
-    <string name="themes_title">Muokkaa Teemoja</string>
+    <string name="themes_title">Muokkaa teemoja</string>
 </resources>
