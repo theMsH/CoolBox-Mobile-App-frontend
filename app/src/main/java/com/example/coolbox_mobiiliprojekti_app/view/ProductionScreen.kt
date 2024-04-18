@@ -124,6 +124,7 @@ fun ProductionScreen(
 
     // Määritä nykyisen viikon ensimmäinen päivä
     var currentWeekStartDate by remember { mutableStateOf(LocalDate.now().startOfWeek()) }
+    val currentDate by remember { mutableStateOf(LocalDate.now()) }
     var currentWeekEndDate = currentWeekStartDate.plusDays(6)
 
     // Päivitä kulutustilastot ja lämpötilatilastot haettaessa dataa
@@ -266,25 +267,32 @@ fun ProductionScreen(
     // mukaan. Nimetään käyttöliittymässä näkyvä kuukausi ja päivä
     // localeForMonthAndDay-muuttujaan tallennetulla kielellä.
     val systemLocale = Locale.getDefault()
-    var localeForMonthAndDay = Locale("us", "US")
-    var monthName = currentWeekStartDate.month.getDisplayName(TextStyle.FULL, localeForMonthAndDay)
+    var localeForTimeIntervals = Locale("us", "US")
+    var monthName = currentWeekStartDate.month.getDisplayName(TextStyle.FULL, localeForTimeIntervals)
         .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() }
     var dayName = currentWeekStartDate.dayOfWeek.getDisplayName(
         TextStyle.FULL,
-        localeForMonthAndDay
+        localeForTimeIntervals
     ).replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() }
+    var currentDayAndMonth = "${currentWeekStartDate.dayOfMonth}/${currentWeekStartDate.monthValue}"
+    var currentWeekStartDayAndMonth = "${currentWeekStartDate.dayOfMonth}/${currentWeekStartDate.monthValue}"
+    var currentWeekEndDayAndMonth = "${currentWeekEndDate.dayOfMonth}/${currentWeekEndDate.monthValue}"
+
 
     if (systemLocale.language == "fi") {
-        localeForMonthAndDay = Locale("fi", "FI")
+        localeForTimeIntervals = Locale("fi", "FI")
         // Koska kuukausien ja päivien nimet ovat suomenkielisessä
         // käännöksessä partitiivimuodossa, pudotetaan kaksi viimeisintä
         // kirjainta pois.
-        monthName = currentWeekStartDate.month.getDisplayName(TextStyle.FULL, localeForMonthAndDay)
+        monthName = currentWeekStartDate.month.getDisplayName(TextStyle.FULL, localeForTimeIntervals)
             .dropLast(2)
         dayName = currentWeekStartDate.dayOfWeek.getDisplayName(
             TextStyle.FULL,
-            localeForMonthAndDay
+            localeForTimeIntervals
         ).dropLast(2)
+        currentDayAndMonth = "${currentDate.dayOfMonth}.${currentDate.monthValue}."
+        currentWeekStartDayAndMonth = "${currentWeekStartDate.dayOfMonth}.${currentWeekStartDate.monthValue}."
+        currentWeekEndDayAndMonth = "${currentWeekEndDate.dayOfMonth}.${currentWeekEndDate.monthValue}."
     }
 
     // Määritä näytön sisältö
@@ -586,12 +594,11 @@ fun ProductionScreen(
                                     Text(
                                         text = when (currentTimeInterval) {
                                             TimeInterval.DAYS -> {
-                                                "${currentWeekStartDate.dayOfMonth}/${currentWeekStartDate.monthValue} " +
-                                                "- ${currentWeekEndDate.dayOfMonth}/${currentWeekEndDate.monthValue}"
+                                                "$currentWeekStartDayAndMonth – $currentWeekEndDayAndMonth"
                                             }
 
                                             TimeInterval.HOURS -> {
-                                                dayName + " (${currentWeekStartDate.dayOfMonth}/${currentWeekStartDate.monthValue})"
+                                                "$dayName ($currentDayAndMonth)"
                                             }
 
                                             TimeInterval.WEEKS -> {
@@ -874,12 +881,11 @@ fun ProductionScreen(
                             Text(
                                 text = when (currentTimeInterval) {
                                     TimeInterval.DAYS -> {
-                                        "${currentWeekStartDate.dayOfMonth}/${currentWeekStartDate.monthValue} " +
-                                        "- ${currentWeekEndDate.dayOfMonth}/${currentWeekEndDate.monthValue}"
+                                        "$currentWeekStartDayAndMonth – $currentWeekEndDayAndMonth"
                                     }
 
                                     TimeInterval.HOURS -> {
-                                        dayName + " (${currentWeekStartDate.dayOfMonth}/${currentWeekStartDate.monthValue})"
+                                        "$dayName ($currentDayAndMonth)"
                                     }
 
                                     TimeInterval.WEEKS -> {
