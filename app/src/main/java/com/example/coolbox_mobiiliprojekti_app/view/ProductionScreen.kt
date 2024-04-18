@@ -700,7 +700,8 @@ fun ProductionScreen(
                         ) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = null
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.tertiary
                             )
                         }
                         Spacer(modifier = Modifier.weight(0.5f))
@@ -760,7 +761,8 @@ fun ProductionScreen(
                         ) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                                contentDescription = null
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.tertiary
                             )
                         }
                     }
@@ -845,7 +847,8 @@ fun ProductionScreen(
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .background(MaterialTheme.colorScheme.surfaceContainerLow)
+                                    .background(MaterialTheme.colorScheme.surfaceContainerLow
+                                    )
                                 ,
                                 horizontalArrangement = Arrangement.SpaceEvenly,
                                 verticalAlignment = Alignment.Bottom

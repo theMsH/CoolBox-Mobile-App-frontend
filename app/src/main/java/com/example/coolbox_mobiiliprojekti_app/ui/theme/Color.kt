@@ -31,7 +31,7 @@ val BackgroundColor = Color(0xFFE4ECF1)
 val GraphKwhColorPanel = Color(0xFF4E8AFF)
 val GraphKwhColor = Color(0xFF0D3E9E)
 val GraphTempColor = Color(0xFFE04646)
-val ProductionLineColorPanel = Color(0xFF19FF00)
+val ProductionLineColorPanel = Color(0xFF11B300)
 val ProductionLineColor = Color(0xFF008607)
 val TemperatureValuesColor = Color(0xFFFFEBEB)
 
