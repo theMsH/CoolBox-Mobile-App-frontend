@@ -50,6 +50,7 @@ import com.example.coolbox_mobiiliprojekti_app.viewmodel.ProductionViewModel
 import com.example.coolbox_mobiiliprojekti_app.viewmodel.ConsumptionViewModel
 import com.example.coolbox_mobiiliprojekti_app.viewmodel.TemperaturesViewModel
 import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import java.time.LocalDate
 
@@ -104,10 +105,11 @@ fun MainScreen(
                         Row(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Icon(painter = painterResource(id = R.drawable.coolapp_icon),
-                                 contentDescription = "CoolAppIcon",
-                                 Modifier.size(30.dp),
-                                 tint = MaterialTheme.colorScheme.onPrimaryContainer
+                            Icon(
+                                painter = painterResource(id = R.drawable.coolapp_icon),
+                                contentDescription = "CoolAppIcon",
+                                Modifier.size(30.dp),
+                                tint = MaterialTheme.colorScheme.onPrimaryContainer
                             )
                             Text(
                                 fontSize = 20.sp,
@@ -147,10 +149,12 @@ fun MainScreen(
                 else -> SwipeRefresh(
                     state = swipeRefreshState,
                     onRefresh = { refreshAllData() },
-                    indicator = { state, _ ->
-                        if (state == swipeRefreshState) {
-                            Box(modifier = Modifier.size(0.dp))
-                        }
+                    indicator = { state, refreshTrigger ->
+                        SwipeRefreshIndicator(
+                            state = state,
+                            refreshTriggerDistance = refreshTrigger,
+                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                        )
                     }) {
                     Column(
                         modifier = Modifier
@@ -209,9 +213,11 @@ fun MainScreen(
 fun TemperatureDatas() {
     val viewModel: TemperaturesViewModel = viewModel()
 
-    Box(modifier = Modifier
-        .fillMaxWidth()
-        .padding(20.dp)) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(20.dp)
+    ) {
         // Tarkistetaan ViewModelin tilaa ja valitaan näytettävä sisältö sen mukaan.
         when {
             // Jos data on latautumassa, näytetään latausindikaattori keskellä.
@@ -246,7 +252,6 @@ fun TemperatureDatas() {
 
                 // Viimeksi päivitetty lämpötila dataa.
 
-
                 Text(
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally),
@@ -272,12 +277,12 @@ fun TemperatureDatas() {
                     verticalArrangement = Arrangement.SpaceEvenly,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Row (
+                    Row(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp), // Add padding if needed
                         horizontalArrangement = Arrangement.SpaceBetween
-                    ){
+                    ) {
                         Box(modifier = Modifier.weight(1f)) {
                             Row(
                                 verticalAlignment = Alignment.CenterVertically
@@ -319,12 +324,12 @@ fun TemperatureDatas() {
 
                     Spacer(Modifier.height(20.dp)) // Spacer to add space between rows
 
-                    Row (
+                    Row(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp), // Add padding if needed
                         horizontalArrangement = Arrangement.SpaceBetween
-                    ){
+                    ) {
                         Box(modifier = Modifier.weight(1f)) {
                             Row(
                                 verticalAlignment = Alignment.CenterVertically
