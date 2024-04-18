@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
@@ -32,6 +34,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -46,6 +49,9 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.coolbox_mobiiliprojekti_app.R
 import com.example.coolbox_mobiiliprojekti_app.viewmodel.ConsumptionViewModel
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import kotlinx.coroutines.Job
 import java.time.DayOfWeek
 import java.time.LocalDate
@@ -74,23 +80,6 @@ fun ConsumptionScreen(
     var currentWeekStartDate by remember { mutableStateOf(LocalDate.now().startOfWeek()) }
     var currentWeekEndDate = currentWeekStartDate.plusDays(6)
 
-    // Haetaan localeForMonthAndDay-muuttujaan arvo käyttöjärjestelmän kielen
-    // mukaan. Nimetään käyttöliittymässä näkyvä kuukausi ja päivä
-    // localeForMonthAndDay-muuttujaan tallennetulla kielellä.
-    val systemLocale = Locale.getDefault()
-    var localeForMonthAndDay = Locale("us", "US")
-    var monthName = currentWeekStartDate.month.getDisplayName(TextStyle.FULL, localeForMonthAndDay).capitalize(Locale.ROOT)
-    var dayName = currentWeekStartDate.dayOfWeek.getDisplayName(TextStyle.FULL, localeForMonthAndDay).capitalize(Locale.ROOT)
-
-    if (systemLocale.language == "fi") {
-        localeForMonthAndDay = Locale("fi", "FI")
-        // Koska kuukausien ja päivien nimet ovat suomenkielisessä
-        // käännöksessä partitiivimuodossa, pudotetaan kaksi viimeisintä
-        // kirjainta pois.
-        monthName = currentWeekStartDate.month.getDisplayName(TextStyle.FULL, localeForMonthAndDay).dropLast(2)
-        dayName = currentWeekStartDate.dayOfWeek.getDisplayName(TextStyle.FULL, localeForMonthAndDay).dropLast(2)
-    }
-
     // Päivitä kulutustilastot ja lämpötilatilastot haettaessa dataa
     LaunchedEffect(key1 = currentWeekStartDate, key2 = Unit) {
         // Päivitä datan haku sen mukaan, mikä aikaväli on valittu
@@ -115,6 +104,52 @@ fun ConsumptionScreen(
                 viewModel.consumptionFetchData(TimeInterval.MAIN, currentWeekStartDate)
             }
         }
+    }
+
+    // Refreshauksen käyttöönotto:
+    val isLoading by viewModel.isLoading.collectAsState()
+    val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = isLoading)
+    val refreshData: () -> Unit
+
+    when (currentTimeInterval) {
+        TimeInterval.HOURS -> refreshData = {
+            viewModel.consumptionFetchData(TimeInterval.HOURS, currentWeekStartDate)
+        }
+
+        TimeInterval.WEEKS -> refreshData = {
+            viewModel.consumptionFetchData(TimeInterval.WEEKS, currentWeekStartDate)
+        }
+
+        TimeInterval.MONTHS -> refreshData = {
+            viewModel.consumptionFetchData(TimeInterval.MONTHS, currentWeekStartDate)
+        }
+
+        else -> refreshData = {
+            viewModel.consumptionFetchData(TimeInterval.DAYS, currentWeekStartDate)
+        }
+    }
+
+    // Haetaan localeForMonthAndDay-muuttujaan arvo käyttöjärjestelmän kielen
+    // mukaan. Nimetään käyttöliittymässä näkyvä kuukausi ja päivä
+    // localeForMonthAndDay-muuttujaan tallennetulla kielellä.
+    val systemLocale = Locale.getDefault()
+    var localeForMonthAndDay = Locale("us", "US")
+    var monthName = currentWeekStartDate.month.getDisplayName(TextStyle.FULL, localeForMonthAndDay)
+        .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() }
+    var dayName =
+        currentWeekStartDate.dayOfWeek.getDisplayName(TextStyle.FULL, localeForMonthAndDay)
+            .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() }
+
+    if (systemLocale.language == "fi") {
+        localeForMonthAndDay = Locale("fi", "FI")
+        // Koska kuukausien ja päivien nimet ovat suomenkielisessä
+        // käännöksessä partitiivimuodossa, pudotetaan kaksi viimeisintä
+        // kirjainta pois.
+        monthName = currentWeekStartDate.month.getDisplayName(TextStyle.FULL, localeForMonthAndDay)
+            .dropLast(2)
+        dayName =
+            currentWeekStartDate.dayOfWeek.getDisplayName(TextStyle.FULL, localeForMonthAndDay)
+                .dropLast(2)
     }
 
     // Määritä näytön sisältö
@@ -254,28 +289,236 @@ fun ConsumptionScreen(
                     )
 
                     // Näytä sisältö
-                    else -> Row(
-                        modifier = Modifier.fillMaxSize()
+                    else -> SwipeRefresh(
+                        state = swipeRefreshState,
+                        onRefresh = { refreshData() },
+                        indicator = { state, refreshTrigger ->
+                            SwipeRefreshIndicator(
+                                state = state,
+                                refreshTriggerDistance = refreshTrigger,
+                                contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                            )
+                        }
                     ) {
                         Column(
                             modifier = Modifier
-                                .fillMaxHeight()
+                                .fillMaxSize()
+                                .verticalScroll(rememberScrollState())
                         ) {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxHeight()
+                            ) {
+                                // Piirrä kaavio
+                                ConsumptionChart(
+                                    viewModel.consumptionStatsData,
+                                    viewModel.temperatureStatsData,
+                                    isLandscape = true
+                                )
+                            }
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxHeight()
+                            ) {
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    // Nuoli vasemmalle
+                                    IconButton(
+                                        onClick = {
+                                            when (currentTimeInterval) {
+                                                TimeInterval.DAYS -> {
+                                                    // Siirry edellisen viikon alkuun
+                                                    currentWeekStartDate =
+                                                        currentWeekStartDate.minusWeeks(1)
+                                                            .startOfWeek()
+
+                                                }
+
+                                                TimeInterval.HOURS -> {
+                                                    // Siirry edellisen päivän alkuun
+                                                    currentWeekStartDate =
+                                                        currentWeekStartDate.minusDays(1)
+
+                                                }
+
+                                                TimeInterval.WEEKS -> {
+                                                    // Siirry edellisen kuukauden alkuun
+                                                    currentWeekStartDate =
+                                                        currentWeekStartDate.minusMonths(1)
+                                                            .startOfWeek()
+
+                                                }
+
+                                                TimeInterval.MONTHS -> {
+                                                    // Siirry edellisen vuoden alkuun
+                                                    currentWeekStartDate =
+                                                        currentWeekStartDate.minusYears(1)
+                                                }
+
+                                                TimeInterval.MAIN -> TODO()
+                                            }
+                                        }
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                            contentDescription = null
+                                        )
+                                    }
+
+                                    // Näytä päivämäärä
+                                    Text(
+                                        text = when (currentTimeInterval) {
+                                            TimeInterval.DAYS -> {
+                                                "${currentWeekStartDate.dayOfMonth}/${currentWeekStartDate.monthValue} " +
+                                                        "- ${currentWeekEndDate.dayOfMonth}/${currentWeekEndDate.monthValue}"
+                                            }
+
+                                            TimeInterval.HOURS -> {
+                                                dayName + " (${currentWeekStartDate.dayOfMonth}/${currentWeekStartDate.monthValue})"
+                                            }
+
+                                            TimeInterval.WEEKS -> {
+                                                "$monthName ${currentWeekStartDate.year}"
+                                            }
+
+                                            TimeInterval.MONTHS -> {
+                                                "${currentWeekStartDate.year}"
+                                            }
+
+                                            TimeInterval.MAIN -> TODO()
+                                        },
+                                        fontSize = 30.sp
+                                    )
+
+                                    // Nuoli oikealle
+                                    IconButton(
+                                        onClick = {
+                                            // Siirry seuraavan aikavälin alkuun
+                                            when (currentTimeInterval) {
+                                                TimeInterval.DAYS -> {
+                                                    currentWeekStartDate =
+                                                        currentWeekStartDate.plusWeeks(1)
+                                                            .startOfWeek()
+                                                }
+
+                                                TimeInterval.HOURS -> {
+                                                    currentWeekStartDate =
+                                                        currentWeekStartDate.plusDays(1)
+                                                }
+
+                                                TimeInterval.WEEKS -> {
+                                                    currentWeekStartDate =
+                                                        currentWeekStartDate.plusMonths(1)
+                                                            .startOfWeek()
+                                                }
+
+                                                TimeInterval.MONTHS -> {
+                                                    currentWeekStartDate =
+                                                        currentWeekStartDate.plusYears(1)
+                                                }
+
+                                                TimeInterval.MAIN -> TODO()
+                                            }
+                                        }
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                                            contentDescription = null
+                                        )
+                                    }
+                                }
+
+                                Spacer(Modifier.height(16.dp))
+
+                                // Näytä yhteenveto
+                                Text(
+                                    modifier = Modifier
+                                        .padding(vertical = 10.dp)
+                                        .align(Alignment.CenterHorizontally),
+                                    text = stringResource(R.string.total_con_text) + ":  ${
+                                        String.format(
+                                            Locale.US,
+                                            "%.2f",
+                                            viewModel.consumptionStatsData?.values?.sum() ?: 0f
+                                        )
+                                    } kwh",
+                                    fontSize = 20.sp
+                                )
+
+                                // Näytä keskiarvo
+                                Text(
+                                    modifier = Modifier
+                                        .padding(vertical = 10.dp)
+                                        .align(Alignment.CenterHorizontally),
+                                    text = stringResource(R.string.avg_con_text) + ":  ${
+                                        String.format(
+                                            Locale.US,
+                                            "%.2f",
+                                            viewModel.consumptionStatsData?.values?.average() ?: 0f
+                                        )
+                                    } kwh",
+                                    fontSize = 20.sp
+                                )
+
+                                // Näytä keskimääräinen lämpötila
+                                Text(
+                                    modifier = Modifier
+                                        .padding(vertical = 10.dp)
+                                        .align(Alignment.CenterHorizontally),
+                                    text = stringResource(R.string.avg_temp_text) + ":  ${
+                                        String.format(
+                                            Locale.US,
+                                            "%.1f",
+                                            viewModel.temperatureStatsData?.values?.average() ?: 0f
+                                        )
+                                    } °C",
+                                    textAlign = TextAlign.Center,
+                                    fontSize = 20.sp, // Aseta tekstin koko 16 sp (scaled pixels)
+                                )
+                            }
+                        }
+                    }
+                }
+            } else {
+                when {
+                    // Latauspalkki
+                    viewModel.consumptionChartState.value.loading -> CircularProgressIndicator(
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+
+                    // Näytä sisältö
+                    else -> SwipeRefresh(
+                        state = swipeRefreshState,
+                        onRefresh = { refreshData() },
+                        indicator = { state, refreshTrigger ->
+                            SwipeRefreshIndicator(
+                                state = state,
+                                refreshTriggerDistance = refreshTrigger,
+                                contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                            )
+                        }
+                    ) {
+                        Column(
+                            Modifier
+                                .fillMaxSize()
+                                .verticalScroll(rememberScrollState()),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+
                             // Piirrä kaavio
                             ConsumptionChart(
                                 viewModel.consumptionStatsData,
                                 viewModel.temperatureStatsData,
-                                isLandscape = true
+                                isLandscape = false
                             )
-                        }
-                        Column(
-                            modifier = Modifier
-                                .fillMaxHeight()
-                        ) {
+                            Spacer(Modifier.height(15.dp))
+
+                            // Piirrä nuolinapit ja niiden välissä oleva aikaväli
                             Row(
-                                modifier = Modifier
-                                    .fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 // Nuoli vasemmalle
@@ -285,8 +528,7 @@ fun ConsumptionScreen(
                                             TimeInterval.DAYS -> {
                                                 // Siirry edellisen viikon alkuun
                                                 currentWeekStartDate =
-                                                    currentWeekStartDate.minusWeeks(1)
-                                                        .startOfWeek()
+                                                    currentWeekStartDate.minusWeeks(1).startOfWeek()
 
                                             }
 
@@ -317,9 +559,11 @@ fun ConsumptionScreen(
                                 ) {
                                     Icon(
                                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                        contentDescription = null
+                                        contentDescription = null,
+                                        tint = MaterialTheme.colorScheme.tertiary
                                     )
                                 }
+                                Spacer(modifier = Modifier.weight(0.5f))
 
                                 // Näytä päivämäärä
                                 Text(
@@ -345,6 +589,7 @@ fun ConsumptionScreen(
                                     },
                                     fontSize = 30.sp
                                 )
+                                Spacer(modifier = Modifier.weight(0.5f))
 
                                 // Nuoli oikealle
                                 IconButton(
@@ -353,8 +598,7 @@ fun ConsumptionScreen(
                                         when (currentTimeInterval) {
                                             TimeInterval.DAYS -> {
                                                 currentWeekStartDate =
-                                                    currentWeekStartDate.plusWeeks(1)
-                                                        .startOfWeek()
+                                                    currentWeekStartDate.plusWeeks(1).startOfWeek()
                                             }
 
                                             TimeInterval.HOURS -> {
@@ -364,8 +608,7 @@ fun ConsumptionScreen(
 
                                             TimeInterval.WEEKS -> {
                                                 currentWeekStartDate =
-                                                    currentWeekStartDate.plusMonths(1)
-                                                        .startOfWeek()
+                                                    currentWeekStartDate.plusMonths(1).startOfWeek()
                                             }
 
                                             TimeInterval.MONTHS -> {
@@ -379,294 +622,131 @@ fun ConsumptionScreen(
                                 ) {
                                     Icon(
                                         imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                                        contentDescription = null
+                                        contentDescription = null,
+                                        tint = MaterialTheme.colorScheme.tertiary
                                     )
                                 }
                             }
 
-                            Spacer(Modifier.height(16.dp))
+                            Spacer(modifier = Modifier.weight(0.3f))
 
-                            // Näytä yhteenveto
-                            Text(
-                                modifier = Modifier
-                                    .padding(vertical = 10.dp)
-                                    .align(Alignment.CenterHorizontally),
-                                text = stringResource(R.string.total_con_text) + ":  ${
-                                    String.format(
-                                        Locale.US,
-                                        "%.2f",
-                                        viewModel.consumptionStatsData?.values?.sum() ?: 0f
-                                    )
-                                } kwh",
-                                fontSize = 20.sp
-                            )
-
-                            // Näytä keskiarvo
-                            Text(
-                                modifier = Modifier
-                                    .padding(vertical = 10.dp)
-                                    .align(Alignment.CenterHorizontally),
-                                text = stringResource(R.string.avg_con_text) + ":  ${
-                                    String.format(
-                                        Locale.US,
-                                        "%.2f",
-                                        viewModel.consumptionStatsData?.values?.average() ?: 0f
-                                    )
-                                } kwh",
-                                fontSize = 20.sp
-                            )
-
-                            // Näytä keskimääräinen lämpötila
-                            Text(
-                                modifier = Modifier
-                                    .padding(vertical = 10.dp)
-                                    .align(Alignment.CenterHorizontally),
-                                text = stringResource(R.string.avg_temp_text) + ":  ${
-                                    String.format(
-                                        Locale.US,
-                                        "%.1f",
-                                        viewModel.temperatureStatsData?.values?.average() ?: 0f
-                                    )
-                                } °C",
-                                textAlign = TextAlign.Center,
-                                fontSize = 20.sp, // Aseta tekstin koko 16 sp (scaled pixels)
-                            )
-                        }
-                    }
-                }
-            } else {
-                when {
-                    // Latauspalkki
-                    viewModel.consumptionChartState.value.loading -> CircularProgressIndicator(
-                        modifier = Modifier.align(Alignment.Center)
-                    )
-
-                    // Näytä sisältö
-                    else -> Column(
-                        Modifier.fillMaxSize(),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-
-                        // Piirrä kaavio
-                        ConsumptionChart(
-                            viewModel.consumptionStatsData,
-                            viewModel.temperatureStatsData,
-                            isLandscape = false
-                        )
-                        Spacer(Modifier.height(15.dp))
-
-                        // Piirrä nuolinapit ja niiden välissä oleva aikaväli
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            // Nuoli vasemmalle
-                            IconButton(
-                                onClick = {
-                                    when (currentTimeInterval) {
-                                        TimeInterval.DAYS -> {
-                                            // Siirry edellisen viikon alkuun
-                                            currentWeekStartDate =
-                                                currentWeekStartDate.minusWeeks(1).startOfWeek()
-
-                                        }
-                                        TimeInterval.HOURS -> {
-                                            // Siirry edellisen päivän alkuun
-                                            currentWeekStartDate = currentWeekStartDate.minusDays(1)
-
-                                        }
-                                        TimeInterval.WEEKS -> {
-                                            // Siirry edellisen kuukauden alkuun
-                                            currentWeekStartDate =
-                                                currentWeekStartDate.minusMonths(1).startOfWeek()
-
-                                        }
-                                        TimeInterval.MONTHS -> {
-                                            // Siirry edellisen vuoden alkuun
-                                            currentWeekStartDate =
-                                                currentWeekStartDate.minusYears(1)
-                                        }
-                                        TimeInterval.MAIN -> TODO()
-                                    }
-                                }
+                            // Data summary
+                            Column(
+                                verticalArrangement = Arrangement.Center
                             ) {
-                                Icon(
-                                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                    contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.tertiary
-                                )
-                            }
-                            Spacer(modifier = Modifier.weight(0.5f))
-
-                            // Näytä päivämäärä
-                            Text(
-                                text = when (currentTimeInterval) {
-                                    TimeInterval.DAYS -> {
-                                        "${currentWeekStartDate.dayOfMonth}/${currentWeekStartDate.monthValue} " +
-                                                "- ${currentWeekEndDate.dayOfMonth}/${currentWeekEndDate.monthValue}"
-                                    }
-                                    TimeInterval.HOURS -> {
-                                        dayName + " (${currentWeekStartDate.dayOfMonth}/${currentWeekStartDate.monthValue})"
-                                    }
-                                    TimeInterval.WEEKS -> {
-                                        "$monthName ${currentWeekStartDate.year}"
-                                    }
-                                    TimeInterval.MONTHS -> {
-                                        "${currentWeekStartDate.year}"
-                                    }
-                                    TimeInterval.MAIN -> TODO()
-                                },
-                                fontSize = 30.sp
-                            )
-                            Spacer(modifier = Modifier.weight(0.5f))
-
-                            // Nuoli oikealle
-                            IconButton(
-                                onClick = {
-                                    // Siirry seuraavan aikavälin alkuun
-                                    when (currentTimeInterval) {
-                                        TimeInterval.DAYS -> {
-                                            currentWeekStartDate =
-                                                currentWeekStartDate.plusWeeks(1).startOfWeek()
-                                        }
-                                        TimeInterval.HOURS -> {
-                                            currentWeekStartDate = currentWeekStartDate.plusDays(1)
-                                        }
-                                        TimeInterval.WEEKS -> {
-                                            currentWeekStartDate =
-                                                currentWeekStartDate.plusMonths(1).startOfWeek()
-                                        }
-                                        TimeInterval.MONTHS -> {
-                                            currentWeekStartDate = currentWeekStartDate.plusYears(1)
-                                        }
-                                        TimeInterval.MAIN -> TODO()
-                                    }
-                                }
-                            ) {
-                                Icon(
-                                    imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                                    contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.tertiary
-                                )
-                            }
-                        }
-
-                        Spacer(modifier = Modifier.weight(0.3f))
-
-                        // Data summary
-                        Column(
-                            verticalArrangement = Arrangement.Center
-                        ) {
-                            Card(
-                                colors = CardDefaults.cardColors(
-                                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-                                    contentColor = MaterialTheme.colorScheme.onTertiary
-                                )
-                            ) {
-                                Row(
-                                    modifier = Modifier.padding(30.dp),
-                                    horizontalArrangement = Arrangement.Center
+                                Card(
+                                    colors = CardDefaults.cardColors(
+                                        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                                        contentColor = MaterialTheme.colorScheme.onTertiary
+                                    )
                                 ) {
-                                    // Values text
-                                    Column {
-                                        // Display total consumption text
-                                        Text(
-                                            modifier = Modifier
-                                                .padding(vertical = 16.dp),
-                                            text = stringResource(R.string.total_con_text) + ":",
-                                            fontSize = 24.sp
-                                        )
-                                        // Display average consumption text
-                                        Text(
-                                            modifier = Modifier
-                                                .padding(vertical = 16.dp),
-                                            text = stringResource(R.string.avg_con_text) + ":",
-                                            fontSize = 24.sp
-                                        )
-                                        // Display average temperature text
-                                        Text(
-                                            modifier = Modifier
-                                                .padding(vertical = 16.dp),
-                                            text = stringResource(R.string.avg_temp_text) + ":",
-                                            fontSize = 24.sp,
-                                        )
-                                    }
-                                    Spacer(Modifier.width(35.dp))
-
-                                    // Values value + unit
-                                    Column(
-                                        horizontalAlignment = Alignment.End
+                                    Row(
+                                        modifier = Modifier.padding(30.dp),
+                                        horizontalArrangement = Arrangement.Center
                                     ) {
-                                        // Display total consumption data
-                                        Text(
-                                            modifier = Modifier
-                                                .padding(vertical = 16.dp),
-                                            text = String.format(
-                                                Locale.US,
-                                                "%.2f",
-                                                viewModel.consumptionStatsData?.values?.sum() ?: 0f
-                                            ),
-                                            fontSize = 24.sp,
-                                            color = MaterialTheme.colorScheme.inverseSurface
-                                        )
-                                        // Display average consumption data
-                                        Text(
-                                            modifier = Modifier
-                                                .padding(vertical = 16.dp),
-                                            text = String.format(
-                                                Locale.US,
-                                                "%.2f",
-                                                viewModel.consumptionStatsData?.values?.average()
-                                                    ?: 0f
-                                            ),
-                                            fontSize = 24.sp,
-                                            color = MaterialTheme.colorScheme.inverseSurface
-                                        )
-                                        // Display average temperature data
-                                        Text(
-                                            modifier = Modifier
-                                                .padding(vertical = 16.dp),
-                                            text = String.format(
-                                                Locale.US,
-                                                "%.1f",
-                                                viewModel.temperatureStatsData?.values?.average()
-                                                    ?: 0f
-                                            ),
-                                            fontSize = 24.sp,
-                                            color = MaterialTheme.colorScheme.inverseSurface
-                                        )
-                                    }
-                                    Spacer(Modifier.width(8.dp))
+                                        // Values text
+                                        Column {
+                                            // Display total consumption text
+                                            Text(
+                                                modifier = Modifier
+                                                    .padding(vertical = 16.dp),
+                                                text = stringResource(R.string.total_con_text) + ":",
+                                                fontSize = 24.sp
+                                            )
+                                            // Display average consumption text
+                                            Text(
+                                                modifier = Modifier
+                                                    .padding(vertical = 16.dp),
+                                                text = stringResource(R.string.avg_con_text) + ":",
+                                                fontSize = 24.sp
+                                            )
+                                            // Display average temperature text
+                                            Text(
+                                                modifier = Modifier
+                                                    .padding(vertical = 16.dp),
+                                                text = stringResource(R.string.avg_temp_text) + ":",
+                                                fontSize = 24.sp,
+                                            )
+                                        }
+                                        Spacer(Modifier.width(35.dp))
 
-                                    // Values value + unit
-                                    Column {
-                                        // Display total consumption data
-                                        Text(
-                                            modifier = Modifier
-                                                .padding(vertical = 16.dp),
-                                            text = "kwh",
-                                            fontSize = 24.sp,
-                                        )
-                                        // Display average consumption data
-                                        Text(
-                                            modifier = Modifier
-                                                .padding(vertical = 16.dp),
-                                            text = "kwh",
-                                            fontSize = 24.sp,
-                                        )
-                                        // Display average temperature data
-                                        Text(
-                                            modifier = Modifier
-                                                .padding(vertical = 16.dp),
-                                            text = "°C",
-                                            fontSize = 24.sp,
-                                        )
+                                        // Values value + unit
+                                        Column(
+                                            horizontalAlignment = Alignment.End
+                                        ) {
+                                            // Display total consumption data
+                                            Text(
+                                                modifier = Modifier
+                                                    .padding(vertical = 16.dp),
+                                                text = String.format(
+                                                    Locale.US,
+                                                    "%.2f",
+                                                    viewModel.consumptionStatsData?.values?.sum()
+                                                        ?: 0f
+                                                ),
+                                                fontSize = 24.sp,
+                                                color = MaterialTheme.colorScheme.inverseSurface
+                                            )
+                                            // Display average consumption data
+                                            Text(
+                                                modifier = Modifier
+                                                    .padding(vertical = 16.dp),
+                                                text = String.format(
+                                                    Locale.US,
+                                                    "%.2f",
+                                                    viewModel.consumptionStatsData?.values?.average()
+                                                        ?: 0f
+                                                ),
+                                                fontSize = 24.sp,
+                                                color = MaterialTheme.colorScheme.inverseSurface
+                                            )
+                                            // Display average temperature data
+                                            Text(
+                                                modifier = Modifier
+                                                    .padding(vertical = 16.dp),
+                                                text = String.format(
+                                                    Locale.US,
+                                                    "%.1f",
+                                                    viewModel.temperatureStatsData?.values?.average()
+                                                        ?: 0f
+                                                ),
+                                                fontSize = 24.sp,
+                                                color = MaterialTheme.colorScheme.inverseSurface
+                                            )
+                                        }
+                                        Spacer(Modifier.width(8.dp))
+
+                                        // Values value + unit
+                                        Column {
+                                            // Display total consumption data
+                                            Text(
+                                                modifier = Modifier
+                                                    .padding(vertical = 16.dp),
+                                                text = "kwh",
+                                                fontSize = 24.sp,
+                                            )
+                                            // Display average consumption data
+                                            Text(
+                                                modifier = Modifier
+                                                    .padding(vertical = 16.dp),
+                                                text = "kwh",
+                                                fontSize = 24.sp,
+                                            )
+                                            // Display average temperature data
+                                            Text(
+                                                modifier = Modifier
+                                                    .padding(vertical = 16.dp),
+                                                text = "°C",
+                                                fontSize = 24.sp,
+                                            )
+                                        }
                                     }
                                 }
-                            }
 
-                        } // End of datasummary
+                            } // End of datasummary
 
-                        Spacer(modifier = Modifier.weight(0.7f))
+                            Spacer(modifier = Modifier.weight(0.7f))
+                        }
                     }
                 }
             } // End of vertical (else)
