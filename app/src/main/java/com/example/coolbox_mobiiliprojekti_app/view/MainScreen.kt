@@ -245,12 +245,23 @@ fun TemperatureDatas() {
                 Spacer(Modifier.height(5.dp))
 
                 // Viimeksi päivitetty lämpötila dataa.
+
+
                 Text(
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally),
                     fontSize = 20.sp,
-                    text = "Last updated: \n${viewModel.lastFetchTime ?: "Not available"}",
-                    textAlign = TextAlign.Center
+                    text = "Last updated:",
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.onSecondary
+                )
+                Text(
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally),
+                    fontSize = 20.sp,
+                    text = viewModel.lastFetchTime ?: "Not available",
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.surfaceTint
                 )
 
                 Spacer(Modifier.height(20.dp))
@@ -275,13 +286,13 @@ fun TemperatureDatas() {
                                     painter = painterResource(id = R.drawable.tekniikkaboxin_sis_l_mp_tila),
                                     contentDescription = "WC Internal Temperature Icon",
                                     Modifier.size(45.dp),
-                                    tint = MaterialTheme.colorScheme.surfaceContainerHighest
+                                    tint = MaterialTheme.colorScheme.onSecondary
                                 )
                                 Spacer(Modifier.width(8.dp))
                                 Text(
                                     text = "${viewModel.temperaturesStatsData!!["Bathroom_9in1:"]} °C",
                                     fontSize = 25.sp,
-                                    color = MaterialTheme.colorScheme.onSecondary
+                                    color = MaterialTheme.colorScheme.surfaceTint
                                 )
                             }
                         }
@@ -294,13 +305,13 @@ fun TemperatureDatas() {
                                     painter = painterResource(id = R.drawable.tekniikkaboxin_sis_l_mp_tila),
                                     contentDescription = "Technology Box Temperature Icon",
                                     Modifier.size(45.dp),
-                                    tint = MaterialTheme.colorScheme.surfaceContainerHighest
+                                    tint = MaterialTheme.colorScheme.onSecondary
                                 )
                                 Spacer(Modifier.width(8.dp))
                                 Text(
                                     text = "${viewModel.temperaturesStatsData!!["TB_9in1:"]} °C",
                                     fontSize = 25.sp,
-                                    color = MaterialTheme.colorScheme.onSecondary
+                                    color = MaterialTheme.colorScheme.surfaceTint
                                 )
                             }
                         }
@@ -322,13 +333,13 @@ fun TemperatureDatas() {
                                     painter = painterResource(id = R.drawable.indoor_temperature_icon),
                                     contentDescription = "Indoor Temperature Icon",
                                     Modifier.size(45.dp),
-                                    tint = MaterialTheme.colorScheme.surfaceContainerHighest
+                                    tint = MaterialTheme.colorScheme.onSecondary
                                 )
                                 Spacer(Modifier.width(8.dp))
                                 Text(
                                     text = "${viewModel.temperaturesStatsData!!["Indoor_9in1:"]} °C",
                                     fontSize = 25.sp,
-                                    color = MaterialTheme.colorScheme.onSecondary
+                                    color = MaterialTheme.colorScheme.surfaceTint
                                 )
                             }
                         }
@@ -337,17 +348,18 @@ fun TemperatureDatas() {
                             Row(
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
+                                Spacer(Modifier.width(4.dp)) // Keskitetään tätä ikonia hieman sisemmäs.
                                 Icon(
                                     painter = painterResource(id = R.drawable.ulkol_mp_tila_),
                                     contentDescription = "Outside Temperature Icon",
                                     Modifier.size(45.dp),
-                                    tint = MaterialTheme.colorScheme.surfaceContainerHighest
+                                    tint = MaterialTheme.colorScheme.onSecondary
                                 )
-                                Spacer(Modifier.width(8.dp)) // Add spacing between the icon and text
+                                Spacer(Modifier.width(4.dp)) // Tästä kompensoitu pois ikonin keskitys .dp
                                 Text(
                                     text = "${viewModel.temperaturesStatsData!!["Weather2"]} °C",
                                     fontSize = 25.sp,
-                                    color = MaterialTheme.colorScheme.onSecondary
+                                    color = MaterialTheme.colorScheme.surfaceTint
                                 )
                             }
                         }
