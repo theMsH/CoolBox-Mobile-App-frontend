@@ -35,12 +35,6 @@ val ProductionLineColorPanel = Color(0xFF11B300)
 val ProductionLineColor = Color(0xFF008607)
 val TemperatureValuesColor = Color(0xFFFFEBEB)
 
-val GoodBatteryChargeColor = Color.Green
-val SatisfyingBatteryChargeColor = Color.Yellow
-val TolerableBatteryChargeColor = Color(0xFFFFA500)
-val BadBatteryChargeColor = Color.Red
-
-
 // Dark colors
 val TextsColorDark = Color(0xFF8E9ECE)
 
@@ -72,8 +66,3 @@ val GraphTempColorDark = Color(0xFFFF8484)
 val ProductionLineColorPanelDark = Color(0xFF32B639)
 val ProductionLineColorDark = Color(0xFF32B639)
 val TemperatureValuesColorDark = Color(0xFFD83C3C)
-
-val GoodBatteryChargeColorDark = Color(0xFF6DD640)
-val SatisfyingBatteryChargeColorDark = Color(0xFFD6D440)
-val TolerableBatteryChargeColorDark = Color(0xFFD67040)
-val BadBatteryChargeColorDark = Color(0xFFEB3838)

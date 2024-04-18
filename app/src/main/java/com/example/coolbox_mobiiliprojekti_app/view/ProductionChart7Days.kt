@@ -44,6 +44,7 @@ import com.patrykandpatrick.vico.core.model.CartesianChartModelProducer
 import com.patrykandpatrick.vico.core.model.ExtraStore
 import com.patrykandpatrick.vico.core.model.lineSeries
 import com.patrykandpatrick.vico.core.axis.formatter.AxisValueFormatter
+import java.util.Locale
 
 @Composable
 fun ProductionChart7Days(
@@ -65,6 +66,8 @@ fun ProductionChart7Days(
             chartValues.model.extraStore[labelListKey][x.toInt()]
         }
 
+    val systemLocale = Locale.getDefault()
+
     // Käynnistetään effect, joka reagoi productionStatsDatan muutoksiin
     LaunchedEffect(key1 = productionStatsData) {
         viewModel.productionStatsData?.let { productionStatsData ->
@@ -77,20 +80,14 @@ fun ProductionChart7Days(
                     val parts = date.split("-")
                     val month = parts[1].toInt().toString()
                     val day = parts[2].toInt().toString()
-                    val formattedDate = "$day.$month."
+                    var formattedDate = "$day/$month"
+                    if (systemLocale.language == "fi") {
+                        formattedDate = "$day.$month."
+                    }
                     formattedDate
                 }.toList()
 
                 val productions = productionStatsData.values.toList()
-
-                // Tulostetaan dataa debug-tarkoituksissa
-//                Log.d("Dorian", "TUOTTOPÄIVÄT: $dates")
-//                Log.d("Dorian", "Splitatut tuottopäivät: $splittedDates")
-//                Log.d("Dorian", "TUOTOT: $productions")
-
-                // Muotoillaan päivämäärät päivän nimiksi
-                // val datesFormatted = formatToDateToDayOfWeek(dates)
-                // Log.d("Dorian", "dates $datesFormatted  productions $productions")
 
                 // Luodaan sarakkeet tuottodatalle
                 lineSeries {

@@ -41,6 +41,7 @@ import com.patrykandpatrick.vico.core.model.ExtraStore
 import com.patrykandpatrick.vico.core.model.columnSeries
 import com.patrykandpatrick.vico.core.axis.formatter.AxisValueFormatter
 import com.patrykandpatrick.vico.core.component.shape.Shapes
+import java.util.Locale
 
 @Composable
 fun ConsumptionChart7Days(
@@ -63,6 +64,8 @@ fun ConsumptionChart7Days(
             chartValues.model.extraStore[labelListKey][x.toInt()]
         }
 
+    val systemLocale = Locale.getDefault()
+
     // Käynnistetään effect, joka reagoi consumptionStatsData:n ja temperatureStatsData:n muutoksiin
     LaunchedEffect(key1 = consumptionStatsData) {
         viewModel.consumptionStatsData?.let { consumptionStatsData ->
@@ -75,7 +78,10 @@ fun ConsumptionChart7Days(
                     val parts = date.split("-")
                     val month = parts[1].toInt().toString()
                     val day = parts[2].toInt().toString()
-                    val formattedDate = "$day.$month."
+                    var formattedDate = "$day/$month"
+                    if (systemLocale.language == "fi") {
+                        formattedDate = "$day.$month."
+                    }
                     formattedDate
                 }.toList()
 

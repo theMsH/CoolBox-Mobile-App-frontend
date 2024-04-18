@@ -1,6 +1,7 @@
 package com.example.coolbox_mobiiliprojekti_app.view
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,9 +12,11 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -24,6 +27,7 @@ import co.yml.charts.ui.piechart.charts.DonutPieChart
 import co.yml.charts.ui.piechart.models.PieChartConfig
 import co.yml.charts.ui.piechart.models.PieChartData
 import com.example.coolbox_mobiiliprojekti_app.R
+import com.example.coolbox_mobiiliprojekti_app.datastore.UserPreferences
 import com.example.coolbox_mobiiliprojekti_app.viewmodel.BatteryViewModel
 import kotlin.math.round
 
@@ -34,6 +38,9 @@ fun BatteryChart() {
     val stateOfCharge: Float = viewModel.batteryChartState.value.soc
     val missingCharge: Float = fullCharge - stateOfCharge
 
+    val context = LocalContext.current
+    val darkTheme = UserPreferences(context).getDarkMode.collectAsState(isSystemInDarkTheme()).value
+
     // Määritellään graafin väri akun varauksen mukaan:
     var red = 255
     var green = 0
@@ -42,11 +49,19 @@ fun BatteryChart() {
         red = round(255 - (stateOfCharge - 60) * 10).toInt()
         if (red < 0) red = 0
         green = 255
+        if (darkTheme) green = 150
     }
     else if (stateOfCharge > 20) {
         red = 255
+        if (darkTheme) red = 150
         green = round((stateOfCharge - 20) * 7).toInt()
+        if (darkTheme && green > 255) {
+            green = 150
+        }
         if (green > 255) green = 255
+    }
+    else {
+        if (darkTheme) red = 150
     }
 
     val customColor = Color(red, green, 0)
