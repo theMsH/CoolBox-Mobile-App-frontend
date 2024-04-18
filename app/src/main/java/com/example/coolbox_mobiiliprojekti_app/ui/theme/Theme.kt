@@ -12,6 +12,7 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
@@ -39,7 +40,7 @@ private val DarkColorScheme = darkColorScheme(
     surfaceVariant = PanelColorDark,                        // Paneelit (cards), disabled Toggle slider tausta.
     onSurfaceVariant = TextsColorDark,                      // Titlet Cardseissa, menuitemit, hamburgericon, textfield placeholder ja silmä
     surfaceTint = TemperatureValuesColorDark,               // Ei vaikuta defaultisti mihinkään tässä softassa.
-    //inverseSurface = Color.Red,
+    inverseSurface = Color.White,                           // Ei vaikuta defaultisti mihinkään tässä softassa.
     inverseOnSurface = PanelTextButtonColorDark,            // Ei vaikuta defaultisti mihinkään tässä softassa.
     //error = Color.Red,
     //onError = Color.Red,
@@ -75,7 +76,7 @@ private val LightColorScheme = lightColorScheme(
     surfaceVariant = PanelColor,                        // Paneelit (cards), disabled Toggle slider tausta.
     onSurfaceVariant = TextsColor,                      // Titlet Cardseissa, menuitemit, hamburgericon, textfield placeholder ja silmä
     surfaceTint = TemperatureValuesColor,               // Ei vaikuta defaultisti mihinkään tässä softassa.
-    //inverseSurface = Color.Red,
+    inverseSurface = Color.Black,                       // Ei vaikuta defaultisti mihinkään tässä softassa.
     inverseOnSurface = PanelTextButtonColor,            // Ei vaikuta defaultisti mihinkään tässä softassa.
     //error = Color.Red,
     //onError = Color.Red,

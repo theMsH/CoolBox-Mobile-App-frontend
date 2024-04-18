@@ -18,6 +18,8 @@ import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -451,7 +453,7 @@ fun ConsumptionScreen(
                             viewModel.temperatureStatsData,
                             isLandscape = false
                         )
-                        Spacer(Modifier.height(30.dp))
+                        Spacer(Modifier.height(15.dp))
 
                         // Piirrä nuolinapit ja niiden välissä oleva aikaväli
                         Row(
@@ -467,26 +469,22 @@ fun ConsumptionScreen(
                                                 currentWeekStartDate.minusWeeks(1).startOfWeek()
 
                                         }
-
                                         TimeInterval.HOURS -> {
                                             // Siirry edellisen päivän alkuun
                                             currentWeekStartDate = currentWeekStartDate.minusDays(1)
 
                                         }
-
                                         TimeInterval.WEEKS -> {
                                             // Siirry edellisen kuukauden alkuun
                                             currentWeekStartDate =
                                                 currentWeekStartDate.minusMonths(1).startOfWeek()
 
                                         }
-
                                         TimeInterval.MONTHS -> {
                                             // Siirry edellisen vuoden alkuun
                                             currentWeekStartDate =
                                                 currentWeekStartDate.minusYears(1)
                                         }
-
                                         TimeInterval.MAIN -> TODO()
                                     }
                                 }
@@ -506,19 +504,15 @@ fun ConsumptionScreen(
                                         "${currentWeekStartDate.dayOfMonth}/${currentWeekStartDate.monthValue} " +
                                                 "- ${currentWeekEndDate.dayOfMonth}/${currentWeekEndDate.monthValue}"
                                     }
-
                                     TimeInterval.HOURS -> {
                                         dayName + " (${currentWeekStartDate.dayOfMonth}/${currentWeekStartDate.monthValue})"
                                     }
-
                                     TimeInterval.WEEKS -> {
                                         "$monthName ${currentWeekStartDate.year}"
                                     }
-
                                     TimeInterval.MONTHS -> {
                                         "${currentWeekStartDate.year}"
                                     }
-
                                     TimeInterval.MAIN -> TODO()
                                 },
                                 fontSize = 30.sp
@@ -534,20 +528,16 @@ fun ConsumptionScreen(
                                             currentWeekStartDate =
                                                 currentWeekStartDate.plusWeeks(1).startOfWeek()
                                         }
-
                                         TimeInterval.HOURS -> {
                                             currentWeekStartDate = currentWeekStartDate.plusDays(1)
                                         }
-
                                         TimeInterval.WEEKS -> {
                                             currentWeekStartDate =
                                                 currentWeekStartDate.plusMonths(1).startOfWeek()
                                         }
-
                                         TimeInterval.MONTHS -> {
                                             currentWeekStartDate = currentWeekStartDate.plusYears(1)
                                         }
-
                                         TimeInterval.MAIN -> TODO()
                                     }
                                 }
@@ -559,91 +549,127 @@ fun ConsumptionScreen(
                                 )
                             }
                         }
-                        Column(
-                            modifier = Modifier.fillMaxSize(),
-                            verticalArrangement = Arrangement.SpaceAround
-                        ) {
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.Center
-                            ) {
-                                // Values text
-                                Column(
-                                    horizontalAlignment = Alignment.Start
-                                ) {
-                                    // Display total consumption text
-                                    Text(
-                                        modifier = Modifier
-                                            .padding(vertical = 16.dp),
-                                        text = stringResource(R.string.total_con_text) + ":",
-                                        fontSize = 24.sp
-                                    )
-                                    // Display average consumption text
-                                    Text(
-                                        modifier = Modifier
-                                            .padding(vertical = 16.dp),
-                                        text = stringResource(R.string.avg_con_text) + ":",
-                                        fontSize = 24.sp
-                                    )
-                                    // Display average temperature text
-                                    Text(
-                                        modifier = Modifier
-                                            .padding(vertical = 16.dp),
-                                        text = stringResource(R.string.avg_temp_text) + ":",
-                                        fontSize = 24.sp,
-                                    )
-                                }
-                                Spacer(Modifier.width(35.dp))
 
-                                // Values value + unit
-                                Column(
-                                    horizontalAlignment = Alignment.End
+                        Spacer(modifier = Modifier.weight(0.3f))
+
+                        // Data summary
+                        Column(
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Card(
+                                colors = CardDefaults.cardColors(
+                                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                                    contentColor = MaterialTheme.colorScheme.onTertiary
+                                )
+                            ) {
+                                Row(
+                                    modifier = Modifier.padding(30.dp),
+                                    horizontalArrangement = Arrangement.Center
                                 ) {
-                                    // Display total consumption data
-                                    Text(
-                                        modifier = Modifier
-                                            .padding(vertical = 16.dp),
-                                        text = "${
-                                            String.format(
+                                    // Values text
+                                    Column {
+                                        // Display total consumption text
+                                        Text(
+                                            modifier = Modifier
+                                                .padding(vertical = 16.dp),
+                                            text = stringResource(R.string.total_con_text) + ":",
+                                            fontSize = 24.sp
+                                        )
+                                        // Display average consumption text
+                                        Text(
+                                            modifier = Modifier
+                                                .padding(vertical = 16.dp),
+                                            text = stringResource(R.string.avg_con_text) + ":",
+                                            fontSize = 24.sp
+                                        )
+                                        // Display average temperature text
+                                        Text(
+                                            modifier = Modifier
+                                                .padding(vertical = 16.dp),
+                                            text = stringResource(R.string.avg_temp_text) + ":",
+                                            fontSize = 24.sp,
+                                        )
+                                    }
+                                    Spacer(Modifier.width(35.dp))
+
+                                    // Values value + unit
+                                    Column(
+                                        horizontalAlignment = Alignment.End
+                                    ) {
+                                        // Display total consumption data
+                                        Text(
+                                            modifier = Modifier
+                                                .padding(vertical = 16.dp),
+                                            text = String.format(
                                                 Locale.US,
                                                 "%.2f",
                                                 viewModel.consumptionStatsData?.values?.sum() ?: 0f
-                                            )
-                                        } kwh",
-                                        fontSize = 24.sp,
-                                    )
-                                    // Display average consumption data
-                                    Text(
-                                        modifier = Modifier
-                                            .padding(vertical = 16.dp),
-                                        text = "${
-                                            String.format(
+                                            ),
+                                            fontSize = 24.sp,
+                                            color = MaterialTheme.colorScheme.inverseSurface
+                                        )
+                                        // Display average consumption data
+                                        Text(
+                                            modifier = Modifier
+                                                .padding(vertical = 16.dp),
+                                            text = String.format(
                                                 Locale.US,
                                                 "%.2f",
-                                                viewModel.consumptionStatsData?.values?.average() ?: 0f
-                                            )
-                                        } kwh",
-                                        fontSize = 24.sp,
-                                    )
-                                    // Display average temperature data
-                                    Text(
-                                        modifier = Modifier
-                                            .padding(vertical = 16.dp),
-                                        text = "${
-                                            String.format(
+                                                viewModel.consumptionStatsData?.values?.average()
+                                                    ?: 0f
+                                            ),
+                                            fontSize = 24.sp,
+                                            color = MaterialTheme.colorScheme.inverseSurface
+                                        )
+                                        // Display average temperature data
+                                        Text(
+                                            modifier = Modifier
+                                                .padding(vertical = 16.dp),
+                                            text = String.format(
                                                 Locale.US,
                                                 "%.1f",
-                                                viewModel.temperatureStatsData?.values?.average() ?: 0f
-                                            )
-                                        } °C",
-                                        fontSize = 24.sp,
-                                    )
+                                                viewModel.temperatureStatsData?.values?.average()
+                                                    ?: 0f
+                                            ),
+                                            fontSize = 24.sp,
+                                            color = MaterialTheme.colorScheme.inverseSurface
+                                        )
+                                    }
+                                    Spacer(Modifier.width(8.dp))
+
+                                    // Values value + unit
+                                    Column {
+                                        // Display total consumption data
+                                        Text(
+                                            modifier = Modifier
+                                                .padding(vertical = 16.dp),
+                                            text = "kwh",
+                                            fontSize = 24.sp,
+                                        )
+                                        // Display average consumption data
+                                        Text(
+                                            modifier = Modifier
+                                                .padding(vertical = 16.dp),
+                                            text = "kwh",
+                                            fontSize = 24.sp,
+                                        )
+                                        // Display average temperature data
+                                        Text(
+                                            modifier = Modifier
+                                                .padding(vertical = 16.dp),
+                                            text = "°C",
+                                            fontSize = 24.sp,
+                                        )
+                                    }
                                 }
                             }
-                        }
+
+                        } // End of datasummary
+
+                        Spacer(modifier = Modifier.weight(0.7f))
                     }
                 }
-            }
+            } // End of vertical (else)
         }
     }
 }

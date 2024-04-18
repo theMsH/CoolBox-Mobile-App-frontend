@@ -22,6 +22,8 @@ import androidx.compose.material.icons.filled.Brightness5
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedButton
@@ -713,19 +715,15 @@ fun ProductionScreen(
                                     "${currentWeekStartDate.dayOfMonth}/${currentWeekStartDate.monthValue} " +
                                             "- ${currentWeekEndDate.dayOfMonth}/${currentWeekEndDate.monthValue}"
                                 }
-
                                 TimeInterval.HOURS -> {
                                     dayName + " (${currentWeekStartDate.dayOfMonth}/${currentWeekStartDate.monthValue})"
                                 }
-
                                 TimeInterval.WEEKS -> {
                                     "$monthName ${currentWeekStartDate.year}"
                                 }
-
                                 TimeInterval.MONTHS -> {
                                     "${currentWeekStartDate.year}"
                                 }
-
                                 TimeInterval.MAIN -> TODO()
                             },
                             fontSize = 30.sp
@@ -741,20 +739,16 @@ fun ProductionScreen(
                                         currentWeekStartDate =
                                             currentWeekStartDate.plusWeeks(1).startOfWeek()
                                     }
-
                                     TimeInterval.HOURS -> {
                                         currentWeekStartDate = currentWeekStartDate.plusDays(1)
                                     }
-
                                     TimeInterval.WEEKS -> {
                                         currentWeekStartDate =
                                             currentWeekStartDate.plusMonths(1).startOfWeek()
                                     }
-
                                     TimeInterval.MONTHS -> {
                                         currentWeekStartDate = currentWeekStartDate.plusYears(1)
                                     }
-
                                     TimeInterval.MAIN -> TODO()
                                 }
                             }
@@ -766,41 +760,45 @@ fun ProductionScreen(
                             )
                         }
                     }
-                    Spacer(Modifier.height(30.dp))
 
+                    Spacer(modifier = Modifier.weight(0.4f))
+
+                    // Summary data
                     Column(
-                        modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.SpaceBetween
+                        verticalArrangement = Arrangement.Center
                     ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.Center
+                        Card(
+                            colors = CardDefaults.cardColors(
+                                containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                                contentColor = MaterialTheme.colorScheme.onTertiary
+                            )
                         ) {
-                            // Values text
-                            Column(
-                                horizontalAlignment = Alignment.Start
+                            Row(
+                                Modifier.padding(30.dp),
+                                horizontalArrangement = Arrangement.Center
                             ) {
-                                Text(
-                                    modifier = Modifier.padding(vertical = 16.dp),
-                                    text = stringResource(R.string.total_pro_text) + ":",
-                                    fontSize = 24.sp,
-                                )
-                                Text(
-                                    modifier = Modifier.padding(vertical = 16.dp),
-                                    text = stringResource(R.string.avg_pro_text) + ":",
-                                    fontSize = 24.sp
-                                )
-                            }
-                            Spacer(Modifier.width(35.dp))
+                                // Values text
+                                Column {
+                                    Text(
+                                        modifier = Modifier.padding(vertical = 16.dp),
+                                        text = stringResource(R.string.total_pro_text) + ":",
+                                        fontSize = 24.sp
+                                    )
+                                    Text(
+                                        modifier = Modifier.padding(vertical = 16.dp),
+                                        text = stringResource(R.string.avg_pro_text) + ":",
+                                        fontSize = 24.sp
+                                    )
+                                }
+                                Spacer(Modifier.width(35.dp))
 
-                            // Values value + unit
-                            Column(
-                                horizontalAlignment = Alignment.End
-                            ) {
-                                Text(
-                                    modifier = Modifier.padding(vertical = 16.dp),
-                                    text = "${
-                                        String.format(
+                                // Values
+                                Column(
+                                    horizontalAlignment = Alignment.End
+                                ) {
+                                    Text(
+                                        modifier = Modifier.padding(vertical = 16.dp),
+                                        text = String.format(
                                             Locale.US,
                                             "%.2f",
                                             when (currentProductionType) {
@@ -808,20 +806,20 @@ fun ProductionScreen(
                                                     viewModel.windStatsData?.values?.sum() ?: 0f
                                                 }
                                                 ProductionTypeInterval.Total -> {
-                                                    viewModel.productionStatsData?.values?.sum() ?: 0f
+                                                    viewModel.productionStatsData?.values?.sum()
+                                                        ?: 0f
                                                 }
                                                 ProductionTypeInterval.Solar -> {
                                                     viewModel.solarStatsData?.values?.sum() ?: 0f
                                                 }
                                             }
-                                        )
-                                    } kWh",
-                                    fontSize = 24.sp
-                                )
-                                Text(
-                                    modifier = Modifier .padding(vertical = 16.dp),
-                                    text = "${
-                                        String.format(
+                                        ),
+                                        fontSize = 24.sp,
+                                        color = MaterialTheme.colorScheme.inverseSurface
+                                    )
+                                    Text(
+                                        modifier = Modifier.padding(vertical = 16.dp),
+                                        text = String.format(
                                             Locale.US,
                                             "%.2f",
                                             when (currentProductionType) {
@@ -829,77 +827,99 @@ fun ProductionScreen(
                                                     viewModel.windStatsData?.values?.average() ?: 0f
                                                 }
                                                 ProductionTypeInterval.Total -> {
-                                                    viewModel.productionStatsData?.values?.average() ?: 0f
+                                                    viewModel.productionStatsData?.values?.average()
+                                                        ?: 0f
                                                 }
                                                 ProductionTypeInterval.Solar -> {
-                                                    viewModel.solarStatsData?.values?.average() ?: 0f
+                                                    viewModel.solarStatsData?.values?.average()
+                                                        ?: 0f
                                                 }
                                             }
-                                        )
-                                    } kWh",
-                                    fontSize = 24.sp
-                                )
+                                        ),
+                                        fontSize = 24.sp,
+                                        color = MaterialTheme.colorScheme.inverseSurface
+                                    )
+                                }
+                                Spacer(Modifier.width(8.dp))
+
+                                // Units
+                                Column {
+                                    Text(
+                                        modifier = Modifier.padding(vertical = 16.dp),
+                                        text = "kWh",
+                                        fontSize = 24.sp
+                                    )
+                                    Text(
+                                        modifier = Modifier.padding(vertical = 16.dp),
+                                        text = "kWh",
+                                        fontSize = 24.sp
+                                    )
+                                }
                             }
                         }
-
-                        // Upper BottomBar
-                        Surface(tonalElevation = 10.dp) {
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .background(MaterialTheme.colorScheme.surfaceContainerLow
-                                    )
-                                ,
-                                horizontalArrangement = Arrangement.SpaceEvenly,
-                                verticalAlignment = Alignment.Bottom
-                            ) {
-                                // Solar-nappi
-                                ElevatedButton(
-                                    enabled = currentProductionType != ProductionTypeInterval.Solar,
-                                    onClick = {
-                                        // Lisää logiikka aurinko dataan siirtymiseen
-                                        currentProductionType = ProductionTypeInterval.Solar
-                                        viewModel.fetchData(TimeInterval.DAYS, currentWeekStartDate)
-                                    },
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Filled.Brightness5,
-                                        contentDescription = "Solar"
-                                    )
-                                }
-
-                                // Wind-nappi
-                                ElevatedButton(
-                                    enabled = currentProductionType != ProductionTypeInterval.Wind,
-                                    onClick = {
-                                        // Lisää logiikka tuuli dataan siirtymiseen
-                                        currentProductionType = ProductionTypeInterval.Wind
-                                        viewModel.fetchData(TimeInterval.DAYS, currentWeekStartDate)
-
-                                    },
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Filled.Air,
-                                        contentDescription = "Wind"
-                                    )
-                                }
-                                // Total Production-nappi
-                                ElevatedButton(
-                                    enabled = currentProductionType != ProductionTypeInterval.Total,
-                                    onClick = {
-                                        // Lisää logiikka total production dataan siirtymiseen
-                                        currentProductionType = ProductionTypeInterval.Total
-                                    },
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Filled.BatteryChargingFull,
-                                        contentDescription = "Total Production"
-                                    )
-                                }
-                            }
-                        }// End of upper bottombar
-
                     }
+
+                    Spacer(modifier = Modifier.weight(0.6f))
+
+                    // Upper BottomBar
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(
+                                MaterialTheme.colorScheme.surfaceContainerLow
+                            ),
+                        horizontalArrangement = Arrangement.SpaceEvenly
+                    ) {
+                        // Solar-nappi
+                        ElevatedButton(
+                            enabled = currentProductionType != ProductionTypeInterval.Solar,
+                            onClick = {
+                                // Lisää logiikka aurinko dataan siirtymiseen
+                                currentProductionType = ProductionTypeInterval.Solar
+                                viewModel.fetchData(
+                                    TimeInterval.DAYS,
+                                    currentWeekStartDate
+                                )
+                            },
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.Brightness5,
+                                contentDescription = "Solar"
+                            )
+                        }
+
+                        // Wind-nappi
+                        ElevatedButton(
+                            enabled = currentProductionType != ProductionTypeInterval.Wind,
+                            onClick = {
+                                // Lisää logiikka tuuli dataan siirtymiseen
+                                currentProductionType = ProductionTypeInterval.Wind
+                                viewModel.fetchData(
+                                    TimeInterval.DAYS,
+                                    currentWeekStartDate
+                                )
+
+                            },
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.Air,
+                                contentDescription = "Wind"
+                            )
+                        }
+                        // Total Production-nappi
+                        ElevatedButton(
+                            enabled = currentProductionType != ProductionTypeInterval.Total,
+                            onClick = {
+                                // Lisää logiikka total production dataan siirtymiseen
+                                currentProductionType = ProductionTypeInterval.Total
+                            },
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.BatteryChargingFull,
+                                contentDescription = "Total Production"
+                            )
+                        }
+                    } // End of upper bottombar
 
                 } // end of else (vertical layout)
             }
