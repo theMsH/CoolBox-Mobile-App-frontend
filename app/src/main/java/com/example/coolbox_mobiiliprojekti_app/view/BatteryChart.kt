@@ -4,10 +4,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -30,6 +30,7 @@ import com.example.coolbox_mobiiliprojekti_app.R
 import com.example.coolbox_mobiiliprojekti_app.datastore.UserPreferences
 import com.example.coolbox_mobiiliprojekti_app.viewmodel.BatteryViewModel
 import kotlin.math.round
+
 
 @Composable
 fun BatteryChart() {
@@ -115,11 +116,9 @@ fun BatteryChart() {
                     text = stringResource(R.string.battery_charge),
                     textAlign = TextAlign.Center
                 )
-                Box() {
+                Box(Modifier.fillMaxSize(0.5f)) {
                     DonutPieChart(
                         modifier = Modifier
-                            .width(140.dp)
-                            .height(140.dp)
                             .background(color = MaterialTheme.colorScheme.secondary),
                         pieChartData = donutChartData,
                         pieChartConfig = donutChartConfig
