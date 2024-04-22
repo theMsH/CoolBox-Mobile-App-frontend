@@ -23,3 +23,13 @@ data class ConsumptionData(
     @SerializedName("total_kwh")
     val totalKwh: Float, // Kokonaiskulutus kilowattitunteina.
 )
+
+// Tämä luokka kuvaa kulutustietojen vastausta, joka sisältää kulutusdatan keskiarvon.
+data class ConsumptionAvgStatsResponse(
+
+    val data: List<ConsumptionAvgData> // Kulutusdatan lista.
+)
+data class ConsumptionAvgData(
+    @SerializedName("avg_kwh")
+    val avgKwh: Float, // Keskiarvo kilowattitunteina.
+)

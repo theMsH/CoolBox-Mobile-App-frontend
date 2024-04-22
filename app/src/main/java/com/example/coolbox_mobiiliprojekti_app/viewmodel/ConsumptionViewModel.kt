@@ -7,8 +7,10 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.coolbox_mobiiliprojekti_app.api.consumptionApiService
+import com.example.coolbox_mobiiliprojekti_app.model.ConsumptionAvgStatsResponse
 import com.example.coolbox_mobiiliprojekti_app.model.ConsumptionChartState
 import com.example.coolbox_mobiiliprojekti_app.model.ConsumptionStatsResponse
+import com.example.coolbox_mobiiliprojekti_app.model.TemperatureAvgStatsResponse
 import com.example.coolbox_mobiiliprojekti_app.model.TemperatureStatsResponse
 import com.example.coolbox_mobiiliprojekti_app.view.TimeInterval
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,6 +31,14 @@ class ConsumptionViewModel : ViewModel() {
     var temperatureStatsData by mutableStateOf<Map<String, Float>?>(null)
         private set
 
+    // Keskiarvoisen-kulutusdatan seuraava tilamuuttuja
+    var consumptionAvgStatsData by mutableStateOf<Float?>(null)
+        private set
+
+    // Keskiarvoisen-lämpötiladatan seuraava tilamuuttuja
+    var temperatureAvgStatsData by mutableStateOf<Float?>(null)
+        private set
+
     // Refreshaukseen liittyvät apumuuttujat:
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
@@ -43,18 +53,30 @@ class ConsumptionViewModel : ViewModel() {
                     TimeInterval.HOURS -> {
                         fetchHourlyConsumptionsData(date.toString())
                         fetchHourlyTemperatureData(date.toString())
+
+                        fetchHourlyAvgConsumptionsData(date.toString())
+//                        fetchHourlyAvgTemperatureData(date.toString())
                     }
                     TimeInterval.DAYS -> {
                         fetchDailyConsumptionsData(date.toString())
                         fetchDailyTemperatureData(date.toString())
+
+                        fetchDailyAvgConsumptionsData(date.toString())
+//                        fetchDailyAvgTemperatureData(date.toString())
                     }
                     TimeInterval.WEEKS -> {
                         fetchWeeklyConsumptionsData(date.toString())
                         fetchWeeklyTemperatureData(date.toString())
+
+                        fetchWeeklyAvgConsumptionsData(date.toString())
+//                        fetchWeeklyAvgTemperatureData(date.toString())
                     }
                     TimeInterval.MONTHS -> {
                         fetchMonthlyConsumptionsData(date.toString())
                         fetchMonthlyTemperatureData(date.toString())
+
+                        fetchMonthlyAvgConsumptionsData(date.toString())
+//                        fetchMonthlyAvgTemperatureData(date.toString())
                     }
                     TimeInterval.MAIN -> {
                         fetch7DayConsumptionData(date.toString())
@@ -117,15 +139,67 @@ class ConsumptionViewModel : ViewModel() {
         val response = consumptionApiService.getMonthlyTemperaturesData(date)
         handleTemperatureStatsResponse(response)
     }
+
     // Funktio 7 päivän kokonaiskulujen hakemiseen
     private suspend fun fetch7DayConsumptionData(date: String) {
         val response = consumptionApiService.getSevenDayConsumptionsData(date)
         handleConsumptionStatsResponse(response)
     }
+
     // Funktio 7 päivän lämpötieto hakemiseen
     private suspend fun fetch7DayTemperatureData(date: String) {
         val response = consumptionApiService.getSevenDayTemperaturesData(date)
         handleTemperatureStatsResponse(response)
+    }
+
+
+    // Funktiot tunneittaisen lämpötiladatan hakemiseen
+    private suspend fun fetchHourlyAvgTemperatureData(date: String) {
+        val response = consumptionApiService.getAvgHourlyTemperaturesData(date)
+        handleAvgTemperatureStatsResponse(response)
+    }
+
+    // Funktiot tunneittaisen kulutusdatan hakemiseen
+    private suspend fun fetchHourlyAvgConsumptionsData(date: String) {
+        val response = consumptionApiService.getAvgHourlyConsumptionsData(date)
+        handleAvgConsumptionStatsResponse(response)
+    }
+
+    // Funktiot viikoittaisen lämpötiladatan hakemiseen
+    private suspend fun fetchDailyAvgTemperatureData(date: String) {
+        val response = consumptionApiService.getAvgDailyTemperaturesData(date)
+        handleAvgTemperatureStatsResponse(response)
+    }
+
+    // Funktiot viikoittaisen kulutusdatan hakemiseen
+    private suspend fun fetchDailyAvgConsumptionsData(date: String) {
+        val response = consumptionApiService.getAvgDailyConsumptionsData(date)
+        Log.d("Dorian", "fetchDailyAvgConsumptionsData response $response")
+        handleAvgConsumptionStatsResponse(response)
+    }
+
+    // Funktiot viikoittaisen lämpötiladatan hakemiseen
+    private suspend fun fetchWeeklyAvgTemperatureData(date: String) {
+        val response = consumptionApiService.getAvgWeeklyTemperaturesData(date)
+        handleAvgTemperatureStatsResponse(response)
+    }
+
+    // Funktiot viikoittaisen kulutusdatan hakemiseen
+    private suspend fun fetchWeeklyAvgConsumptionsData(date: String) {
+        val response = consumptionApiService.getAvgWeeklyConsumptionsData(date)
+        handleAvgConsumptionStatsResponse(response)
+    }
+
+    // Funktio kuukausittaisen kulutusdatan hakemiseen
+    private suspend fun fetchMonthlyAvgConsumptionsData(date: String) {
+        val response = consumptionApiService.getAvgMonthlyConsumptionsData(date)
+        handleAvgConsumptionStatsResponse(response)
+    }
+
+    // Funktio kuukausittaisen lämpötiladatan hakemiseen
+    private suspend fun fetchMonthlyAvgTemperatureData(date: String) {
+        val response = consumptionApiService.getAvgMonthlyTemperaturesData(date)
+        handleAvgTemperatureStatsResponse(response)
     }
 
     // Käsittelee kulutustilastojen vastauksen ja päivittää kulutusdatan
@@ -170,5 +244,15 @@ class ConsumptionViewModel : ViewModel() {
                 "handleConsumptionStatsResponse didn't receive the right data, suspicious of a name change :("
             )
         }
+    }
+
+    // Käsittelee kulutustilastojen keskiarvoisen vastauksen ja päivittää kulutusdatan
+    private fun handleAvgConsumptionStatsResponse(response: ConsumptionAvgStatsResponse) {
+        consumptionAvgStatsData = response.data.firstOrNull()?.avgKwh
+    }
+
+    // Käsittelee lämpötilatilastojen keskiarvoisen vastauksen ja päivittää lämpötiladatan
+    private fun handleAvgTemperatureStatsResponse(response: TemperatureAvgStatsResponse) {
+        temperatureAvgStatsData = response.data.firstOrNull()?.temperature
     }
 }

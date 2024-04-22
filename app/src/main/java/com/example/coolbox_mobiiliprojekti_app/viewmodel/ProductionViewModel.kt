@@ -8,6 +8,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.coolbox_mobiiliprojekti_app.api.productionApiService
+import com.example.coolbox_mobiiliprojekti_app.model.ProductionAvgStatsResponse
 import com.example.coolbox_mobiiliprojekti_app.model.ProductionChartState
 import com.example.coolbox_mobiiliprojekti_app.model.ProductionStatsResponse
 import com.example.coolbox_mobiiliprojekti_app.model.SolarStatsResponse
@@ -30,6 +31,10 @@ class ProductionViewModel(
     var productionStatsData by mutableStateOf<Map<String, Float>?>(null)
         private set
 
+    // Keskiarvoisen-tuottodatan seuraava tilamuuttuja
+    var productionAvgStatsData by mutableStateOf<Float?>(null)
+        private set
+
     // Refreshaukseen liittyvät apumuuttujat:
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
@@ -43,15 +48,23 @@ class ProductionViewModel(
                 when (interval) {
                     TimeInterval.HOURS -> {
                         fetchHourlyProductionsData(date.toString())
+
+                        fetchAvgHourlyProductionsData(date.toString())
                     }
                     TimeInterval.DAYS -> {
                         fetchDailyProductionsData(date.toString())
+
+                        fetchAvgDailyProductionsData(date.toString())
                     }
                     TimeInterval.WEEKS -> {
                         fetchWeeklyProductionsData(date.toString())
+
+                        fetchAvgWeeklyProductionsData(date.toString())
                     }
                     TimeInterval.MONTHS -> {
                         fetchMonthlyProductionsData(date.toString())
+
+                        fetchAvgMonthlyProductionsData(date.toString())
                     }
                     TimeInterval.MAIN -> {
                         fetch7DayProductionData(date.toString())
@@ -68,8 +81,6 @@ class ProductionViewModel(
 
     // Funktiot päivittäisen Tuottodatan hakemiseen
     private suspend fun fetchDailyProductionsData(date: String) {
-        Log.d("Dorian", "fetchDailyProductionsData is called")
-
         val response = productionApiService.getDailyProductionsData(date)
         handleProductionStatsResponse(response)
     }
@@ -98,6 +109,30 @@ class ProductionViewModel(
         handleProductionStatsResponse(response)
     }
 
+    // Funktiot tunneittaisen Tuottodatan hakemiseen
+    private suspend fun fetchAvgHourlyProductionsData(date: String) {
+        val response = productionApiService.getAvgHourlyProductionsData(date)
+        handleAvgProductionStatsResponse(response)
+    }
+
+    // Funktiot päivittäisen Tuottodatan hakemiseen
+    private suspend fun fetchAvgDailyProductionsData(date: String) {
+        val response = productionApiService.getAvgDailyProductionsData(date)
+        handleAvgProductionStatsResponse(response)
+    }
+
+    // Funktiot viikoittaisen Tuottodatan hakemiseen
+    private suspend fun fetchAvgWeeklyProductionsData(date: String) {
+        val response = productionApiService.getAvgWeeklyProductionsData(date)
+        handleAvgProductionStatsResponse(response)
+    }
+
+    // Funktio kuukausittaisen Tuottodatan hakemiseen
+    private suspend fun fetchAvgMonthlyProductionsData(date: String) {
+        val response = productionApiService.getAvgMonthlyProductionsData(date)
+        handleAvgProductionStatsResponse(response)
+    }
+
     // Käsittelee Tuottotilastojen vastauksen ja päivittää Tuottodatan
     private fun handleProductionStatsResponse(response: ProductionStatsResponse) {
         if (response.data.all { it.date != null }) {
@@ -119,6 +154,12 @@ class ProductionViewModel(
             )
         }
     }
+
+    // Käsittelee tuottotilastojen keskiarvoisen vastauksen ja päivittää Tuottodatan
+    private fun handleAvgProductionStatsResponse(response: ProductionAvgStatsResponse) {
+        productionAvgStatsData = response.data.firstOrNull()?.avgKwh
+    }
+
 
     // Tuulidataa seuraava tilamuuttuja
     var windStatsData by mutableStateOf<Map<String, Float>?>(null)

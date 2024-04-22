@@ -22,3 +22,13 @@ data class ProductionData(
     @SerializedName("total_kwh")
     val totalKwh: Float, // Kokonaistuotto kilowattitunteina.
 )
+
+// Tämä luokka kuvaa tuottotietojen vastausta, joka sisältää seitsemän edellispäivän tuottodatan.
+data class ProductionAvgStatsResponse(
+    val data: List<ProductionAvgData>
+)
+
+data class ProductionAvgData(
+    @SerializedName("avg_kwh")
+    val avgKwh: Float, // Keskiarvo kilowattitunteina.
+)
