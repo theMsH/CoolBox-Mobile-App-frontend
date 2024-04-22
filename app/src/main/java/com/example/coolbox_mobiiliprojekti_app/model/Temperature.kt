@@ -17,3 +17,15 @@ data class TemperatureStatsData(
     val temperature: Float, // Kokonaiskulutus kilowattitunteina
     val error: String? = null, // Virheviesti (mahdollinen)
 )
+
+// Tämä on TemperatureStatsResponse-luokka, joka sisältää keskiarvon lämpötilatiedoista.
+data class TemperatureAvgStatsResponse(
+    val data: List<TemperatureAvgStatsData> // Data sisältää lämpötiladatan listana.
+)
+data class TemperatureAvgStatsData(
+    @SerializedName("avg_C")
+    val temperature: Float, // Kokonaiskulutus kilowattitunteina
+    val error: String? = null, // Virheviesti (mahdollinen)
+)
+
+

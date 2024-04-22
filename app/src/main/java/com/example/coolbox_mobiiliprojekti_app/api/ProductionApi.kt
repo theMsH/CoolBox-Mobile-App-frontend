@@ -1,7 +1,9 @@
 package com.example.coolbox_mobiiliprojekti_app.api
 
+import com.example.coolbox_mobiiliprojekti_app.model.ProductionAvgStatsResponse
 import com.example.coolbox_mobiiliprojekti_app.model.ProductionStatsResponse
 import com.example.coolbox_mobiiliprojekti_app.model.SolarStatsResponse
+import com.example.coolbox_mobiiliprojekti_app.model.TemperatureStatsResponse
 import com.example.coolbox_mobiiliprojekti_app.model.WindStatsResponse
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -40,6 +42,29 @@ interface ProductionApiService {
     @GET("measurement/production/total/monthly/{date}")
     suspend fun getMonthlyProductionsData(@Path("date") date: String): ProductionStatsResponse
 
+    // Hae keskiarvo tunneittaisesta tuottotiedot annetun päivämäärän perusteella.
+    // @param date: Päivämäärä merkkijonona muodossa "YYYY-MM-DD".
+    // @return TemperatureStatsResponse: Vastaus, joka sisältää sisälämpötilatiedot.
+    @GET("measurement/production/total/avg/day/{date}")
+    suspend fun getAvgHourlyProductionsData(@Path("date") date: String): ProductionAvgStatsResponse
+
+    // Hae keskiarvo päivittäiset tuottotiedot annetun päivämäärän perusteella.
+    // @param date: Päivämäärä merkkijonona muodossa "YYYY-MM-DD".
+    // @return TemperatureStatsResponse: Vastaus, joka sisältää sisälämpötilatiedot.
+    @GET("measurement/production/total/avg/week/{date}")
+    suspend fun getAvgDailyProductionsData(@Path("date") date: String): ProductionAvgStatsResponse
+
+    // Hae keskiarvo viikoittaiset tuottotiedot annetun päivämäärän perusteella.
+    // @param date: Päivämäärä merkkijonona muodossa "YYYY-MM-DD".
+    // @return TemperatureStatsResponse: Vastaus, joka sisältää sisälämpötilatiedot.
+    @GET("measurement/production/total/avg/month/{date}")
+    suspend fun getAvgWeeklyProductionsData(@Path("date") date: String): ProductionAvgStatsResponse
+
+    // Hae keskiarvo kuukausittaiset tuottotiedot annetun päivämäärän perusteella.
+    // @param date: Päivämäärä merkkijonona muodossa "YYYY-MM-DD".
+    // @return TemperatureStatsResponse: Vastaus, joka sisältää sisälämpötilatiedot.
+    @GET("measurement/production/total/avg/year/{date}")
+    suspend fun getAvgMonthlyProductionsData(@Path("date") date: String): ProductionAvgStatsResponse
 
 
 

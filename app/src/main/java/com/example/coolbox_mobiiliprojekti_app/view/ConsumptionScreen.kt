@@ -708,7 +708,7 @@ fun ConsumptionScreen(
                                                 text = String.format(
                                                     Locale.US,
                                                     "%.2f",
-                                                    viewModel.consumptionStatsData?.values?.average()
+                                                    viewModel.consumptionAvgStatsData
                                                     ?: 0f
                                                 ),
                                                 fontSize = 24.sp,

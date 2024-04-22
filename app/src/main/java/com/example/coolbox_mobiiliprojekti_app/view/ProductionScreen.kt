@@ -955,11 +955,13 @@ fun ProductionScreen(
                                 ) {
                                     // Values text
                                     Column {
+                                        // Display total production text
                                         Text(
                                             modifier = Modifier.padding(vertical = 16.dp),
                                             text = stringResource(R.string.total_pro_text) + ":",
                                             fontSize = 24.sp
                                         )
+                                        // Display average production text
                                         Text(
                                             modifier = Modifier.padding(vertical = 16.dp),
                                             text = stringResource(R.string.avg_pro_text) + ":",
@@ -972,6 +974,7 @@ fun ProductionScreen(
                                     Column(
                                         horizontalAlignment = Alignment.End
                                     ) {
+                                        // Display total production data
                                         Text(
                                             modifier = Modifier.padding(vertical = 16.dp),
                                             text = String.format(
@@ -996,6 +999,7 @@ fun ProductionScreen(
                                             fontSize = 24.sp,
                                             color = MaterialTheme.colorScheme.inverseSurface
                                         )
+                                        // Display average production data
                                         Text(
                                             modifier = Modifier.padding(vertical = 16.dp),
                                             text = String.format(
@@ -1008,7 +1012,7 @@ fun ProductionScreen(
                                                     }
 
                                                     ProductionTypeInterval.Total -> {
-                                                        viewModel.productionStatsData?.values?.average()
+                                                        viewModel.productionAvgStatsData
                                                         ?: 0f
                                                     }
 
