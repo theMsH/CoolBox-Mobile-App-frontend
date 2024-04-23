@@ -487,7 +487,7 @@ fun ConsumptionScreen(
                                         String.format(
                                             Locale.US,
                                             "%.1f",
-                                            viewModel.temperatureStatsData?.values?.average() ?: 0f
+                                            viewModel.temperatureAvgStatsData ?: 0f
                                         )
                                     } °C",
                                     textAlign = TextAlign.Center,

@@ -253,7 +253,6 @@ class ConsumptionViewModel : ViewModel() {
 
     // Käsittelee lämpötilatilastojen keskiarvoisen vastauksen ja päivittää lämpötiladatan
     private fun handleAvgTemperatureStatsResponse(response: TemperatureAvgStatsResponse) {
-        temperatureAvgStatsData = response.data.avgTemp //.firstOrNull()?.temperature
-        println("LÄMPÖTILADATA! $temperatureAvgStatsData")
+        temperatureAvgStatsData = response.data.avgTemp
     }
 }

@@ -20,7 +20,7 @@ data class TemperatureStatsData(
 
 // Tämä on TemperatureStatsResponse-luokka, joka sisältää keskiarvon lämpötilatiedoista.
 data class TemperatureAvgStatsResponse(
-    val data: TemperatureAvgStatsData // Data sisältää lämpötiladatan listana.
+    val data: TemperatureAvgStatsData
 )
 data class TemperatureAvgStatsData(
     @SerializedName("avg_temp")
