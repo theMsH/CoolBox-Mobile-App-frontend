@@ -100,25 +100,25 @@ interface ConsumptionApiService {
     // Hae keskiarvo tunneittaisesta sisälämpötilatiedot annetun päivämäärän perusteella.
     // @param date: Päivämäärä merkkijonona muodossa "YYYY-MM-DD".
     // @return TemperatureStatsResponse: Vastaus, joka sisältää sisälämpötilatiedot.
-    @GET("measurement/temperature/avg/indoor/hourly/{date}")
+    @GET("measurement/temperature/avg/indoor/day/{date}")
     suspend fun getAvgHourlyTemperaturesData(@Path("date") date: String): TemperatureAvgStatsResponse
 
     // Hae keskiarvo päivittäiset sisälämpötilatiedot annetun päivämäärän perusteella.
     // @param date: Päivämäärä merkkijonona muodossa "YYYY-MM-DD".
     // @return TemperatureStatsResponse: Vastaus, joka sisältää sisälämpötilatiedot.
-    @GET("measurement/temperature/avg/indoor/daily/{date}")
+    @GET("measurement/temperature/avg/indoor/week/{date}")
     suspend fun getAvgDailyTemperaturesData(@Path("date") date: String): TemperatureAvgStatsResponse
 
     // Hae keskiarvo viikoittaiset sisälämpötilatiedot annetun päivämäärän perusteella.
     // @param date: Päivämäärä merkkijonona muodossa "YYYY-MM-DD".
     // @return TemperatureStatsResponse: Vastaus, joka sisältää sisälämpötilatiedot.
-    @GET("measurement/temperature/avg/indoor/monthly/{date}")
+    @GET("measurement/temperature/avg/indoor/month/{date}")
     suspend fun getAvgWeeklyTemperaturesData(@Path("date") date: String): TemperatureAvgStatsResponse
 
     // Hae keskiarvo kuukausittaiset sisälämpötilatiedot annetun päivämäärän perusteella.
     // @param date: Päivämäärä merkkijonona muodossa "YYYY-MM-DD".
     // @return TemperatureStatsResponse: Vastaus, joka sisältää sisälämpötilatiedot.
-    @GET("measurement/temperature/avg/indoor/monthly/{date}")
+    @GET("measurement/temperature/avg/indoor/year/{date}")
     suspend fun getAvgMonthlyTemperaturesData(@Path("date") date: String): TemperatureAvgStatsResponse
 
 }

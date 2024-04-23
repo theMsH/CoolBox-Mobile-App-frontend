@@ -721,7 +721,7 @@ fun ConsumptionScreen(
                                                 text = String.format(
                                                     Locale.US,
                                                     "%.1f",
-                                                    viewModel.temperatureStatsData?.values?.average()
+                                                    viewModel.temperatureAvgStatsData
                                                     ?: 0f
                                                 ),
                                                 fontSize = 24.sp,

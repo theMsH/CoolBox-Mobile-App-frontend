@@ -55,28 +55,28 @@ class ConsumptionViewModel : ViewModel() {
                         fetchHourlyTemperatureData(date.toString())
 
                         fetchHourlyAvgConsumptionsData(date.toString())
-//                        fetchHourlyAvgTemperatureData(date.toString())
+                        fetchHourlyAvgTemperatureData(date.toString())
                     }
                     TimeInterval.DAYS -> {
                         fetchDailyConsumptionsData(date.toString())
                         fetchDailyTemperatureData(date.toString())
 
                         fetchDailyAvgConsumptionsData(date.toString())
-//                        fetchDailyAvgTemperatureData(date.toString())
+                        fetchDailyAvgTemperatureData(date.toString())
                     }
                     TimeInterval.WEEKS -> {
                         fetchWeeklyConsumptionsData(date.toString())
                         fetchWeeklyTemperatureData(date.toString())
 
                         fetchWeeklyAvgConsumptionsData(date.toString())
-//                        fetchWeeklyAvgTemperatureData(date.toString())
+                        fetchWeeklyAvgTemperatureData(date.toString())
                     }
                     TimeInterval.MONTHS -> {
                         fetchMonthlyConsumptionsData(date.toString())
                         fetchMonthlyTemperatureData(date.toString())
 
                         fetchMonthlyAvgConsumptionsData(date.toString())
-//                        fetchMonthlyAvgTemperatureData(date.toString())
+                        fetchMonthlyAvgTemperatureData(date.toString())
                     }
                     TimeInterval.MAIN -> {
                         fetch7DayConsumptionData(date.toString())
@@ -253,6 +253,7 @@ class ConsumptionViewModel : ViewModel() {
 
     // Käsittelee lämpötilatilastojen keskiarvoisen vastauksen ja päivittää lämpötiladatan
     private fun handleAvgTemperatureStatsResponse(response: TemperatureAvgStatsResponse) {
-        temperatureAvgStatsData = response.data.firstOrNull()?.temperature
+        temperatureAvgStatsData = response.data.avgTemp //.firstOrNull()?.temperature
+        println("LÄMPÖTILADATA! $temperatureAvgStatsData")
     }
 }
