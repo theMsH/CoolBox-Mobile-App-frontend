@@ -35,6 +35,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -69,6 +70,7 @@ class MainActivity : ComponentActivity() {
                     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
                     val scope = rememberCoroutineScope()
                     val navBackStackEntry by navController.currentBackStackEntryAsState()
+                    val context = LocalContext.current
 
                     // Autologinin takia luodaan loginViewModel täällä.
                     val loginVm: LoginViewModel = viewModel()
@@ -326,7 +328,7 @@ class MainActivity : ComponentActivity() {
                                         navController.navigateUp()
                                         Toast.makeText(
                                             this@MainActivity,
-                                            "New account registered!",
+                                            context.getString(R.string.account_register_toast),
                                             Toast.LENGTH_SHORT
                                         ).show()
                                     },

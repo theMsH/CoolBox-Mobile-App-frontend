@@ -19,6 +19,7 @@
     <string name="user_not_found">Käyttäjänimi tai salasana on väärin!</string>
     <string name="user">Kirjautuneena käyttäjällä: </string>
     <string name="state_of_charge">Akun varaus</string>
+    <string name="account_register_toast">Uusi käyttäjä rekisteröity!</string>
 
     <string name="code_500">500 Internal Server Error</string>
     <string name="retry">Yritä uudelleen</string>

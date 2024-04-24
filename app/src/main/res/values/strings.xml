@@ -18,6 +18,7 @@
     <string name="user_not_found">Username or password is incorrect!</string>
     <string name="user">Logged in as: </string>
     <string name="state_of_charge">State of charge</string>
+    <string name="account_register_toast">New account registered!</string>
 
     <string name="code_500">500 Internal Server Error</string>
     <string name="retry">Retry</string>
