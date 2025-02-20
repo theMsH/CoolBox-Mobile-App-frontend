@@ -12,4 +12,4 @@ School team-project that tracks
 - Android studio: New -> Project from version control
   - Build gradle
   - Make sure [backend](https://github.com/theMsH/CoolBox-Mobile-App-backend) is running
-  - Note: there is no dummy data, data used in this project came from a real world house via mqqt
+  - Note: there is no dummy data, data used in this project came from a real world house via [mqqt](https://github.com/theMsH/CoolBox-Mobile-App-mqtt)
